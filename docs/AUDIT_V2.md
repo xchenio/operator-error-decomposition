@@ -50,12 +50,32 @@ requires a new output directory. Local checkpoints are ignored by Git.
 Forced interruption at step 2 and recovery to step 5 on CPU produced bit-identical model tensors
 and training/diagnostic histories versus continuous execution. GPU determinism is not yet tested.
 L-BFGS recovery is explicitly unsupported and rejected, not silently advertised as resumable.
-FNO now saves/restores sampling state and checks data/config identity; its exact-resume integration
-test remains outstanding. Runner logs stdout/stderr, rejects changed manifest identities, and
+FNO now saves/restores sampling state and checks data/config identity; its CPU integration test
+also passed a forced step-2 interruption followed by bit-identical final model tensors.
+Runner logs stdout/stderr, rejects changed manifest identities, and
 records keyboard interruption. Abrupt power loss may leave status “running”; checkpoints are
 the recovery source, not that status label.
 
 ## Next experiments
+
+### Completed frozen-basis pilot
+
+`python scripts/probe_coefficients.py` ran 1000 Adam steps for a new 3-layer, width-128
+coefficient MLP on 200 labeled training functions, with the seed-0 saved trunk frozen.
+Coordinates are orthonormalized; a per-input constant coefficient is allowed (relaxed bias).
+All values below are full-grid test relative Frobenius, not historical mean relative L2.
+
+| Fixed trunk | Original | Supervised coefficient fit | Offline projection oracle |
+|---|---:|---:|---:|
+| MLP baseline | 1.002217 | 0.876922 | 0.856052 |
+| Analytic alignment | 0.790710 | 0.697375 | 0.646002 |
+| Random alignment | 0.799133 | 0.692224 | 0.645677 |
+| Fourier | 0.711125 | 0.570444 | 0.495834 |
+
+This supports further investigation of fixed-basis coefficient prediction. It uses solution
+labels, input normalization, and a relaxed bias; it does not isolate optimizer effects or
+establish superiority of a zero-data physics method. One trunk seed and one fit seed only.
+Raw records and per-50-step histories are under `results/coefficient_pilot/`.
 
 1. Fixed-trunk optimal coefficients are now available as an offline projection reference.
    Fit a branch to these coefficients on training functions; evaluate held-out functions to
@@ -66,4 +86,5 @@ the recovery source, not that status label.
 
 Public source checked: https://huggingface.co/datasets/pdebench/Burgers/tree/main lists
 1D_Burgers_Sols_Nu0.001.hdf5 at about 8.23 GB. Disk F has about 466 GB free. File size is not
-a blocker. No public-data result has been claimed or generated in this audit phase.
+a blocker. Download has started with pinned revision and publisher SHA-256 verification;
+no public-data training result has been claimed or generated in this audit phase.

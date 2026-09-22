@@ -2,6 +2,15 @@
 
 ## 2026-09-22 — second audit and actual recovery implementation
 
+- Completed `python scripts/probe_coefficients.py`: four fixed-trunk supervised pilot runs,
+  1000 steps each. Results and limitations recorded in AUDIT_V2.md.
+- Ran `python tests/test_fno_resume.py`: CPU FNO final tensors were bit-identical after
+  simulated interruption and restart versus continuous training.
+- Started pinned PDEBench download using `python -u -B scripts/download_pdebench.py`.
+  Expected 8,232,968,312 bytes; revision and publisher SHA-256 embedded in the script.
+  Live state: external_data/pdebench/download_status.json (local, ignored by Git).
+  Resume by rerunning that command after interruption. Completion requires checksum validation.
+
 - Ran `python tests/test_projection_audit.py`: three tests passed (known omitted-mode
   counterexample, bias/Pythagoras, rank deficiency).
 - Ran `python scripts/audit_checkpoints.py`: 35 checkpoints completed, each independently
