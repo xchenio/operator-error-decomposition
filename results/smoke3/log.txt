@@ -1,0 +1,37 @@
+[pde] dr: trunk_dim=2, sensors=101, grid=4141, coef=12  kwargs={}
+[device] cuda
+[data] grid=(4141, 2), train=200, val=50, test=50
+
+=== dr_pi_align_nd0_arandom1.0_s0 ===
+  init diag: captured=0.9731 eff_rank=1.36 angle_mean=61.4deg
+  step    300 | loss 1.067e+00 | val relL2 0.9992 | pde=1.702e-01 ic=1.680e-04 bc=2.129e-04 align=8.959e-01
+  [stage physics] 300 steps in 10.6s
+  final diag: captured=0.9939 eff_rank=2.64 angle_mean=49.9deg
+[done] dr_pi_align_nd0_arandom1.0_s0 | test relL2=0.9888 captured=0.9939 (12s)
+
+=== dr_pi_align_nd0_arandomgauss1.0_s0 ===
+  init diag: captured=0.9731 eff_rank=1.36 angle_mean=61.4deg
+  step    300 | loss 1.168e+00 | val relL2 1.0177 | pde=1.698e-01 ic=2.387e-05 bc=1.182e-04 align=9.986e-01
+  [stage physics] 300 steps in 6.9s
+  final diag: captured=0.9822 eff_rank=1.38 angle_mean=59.0deg
+[done] dr_pi_align_nd0_arandomgauss1.0_s0 | test relL2=1.0149 captured=0.9822 (7s)
+
+=== dr_pi_ortho_nd0_arandom1.0_s0|ow1.0 ===
+  init diag: captured=0.9731 eff_rank=1.36 angle_mean=61.4deg
+  step    300 | loss 4.732e-01 | val relL2 0.9908 | pde=1.706e-01 ic=1.869e-04 bc=2.075e-04 ortho=3.021e-01
+  [stage physics] 300 steps in 8.9s
+  final diag: captured=0.9824 eff_rank=3.00 angle_mean=58.7deg
+[done] dr_pi_ortho_nd0_arandom1.0_s0 | test relL2=0.9935 captured=0.9824 (9s)
+
+=== dr_pi_ortho_nd0_arandomgauss1.0_s0|ow1.0 ===
+  init diag: captured=0.9731 eff_rank=1.36 angle_mean=61.4deg
+  step    300 | loss 4.732e-01 | val relL2 0.9908 | pde=1.706e-01 ic=1.869e-04 bc=2.075e-04 ortho=3.021e-01
+  [stage physics] 300 steps in 9.3s
+  final diag: captured=0.9824 eff_rank=3.00 angle_mean=58.7deg
+[done] dr_pi_ortho_nd0_arandomgauss1.0_s0 | test relL2=0.9935 captured=0.9824 (9s)
+
+[saved] F:\Desktop\temp\pinode_align\results\smoke3\summary.csv
+  tag=dr_pi_align_nd0_arandom1.0_s0 | test_rel_l2=0.9888 | captured_final=0.9939 | eff_rank_final=2.6357
+  tag=dr_pi_align_nd0_arandomgauss1.0_s0 | test_rel_l2=1.0149 | captured_final=0.9822 | eff_rank_final=1.3840
+  tag=dr_pi_ortho_nd0_arandom1.0_s0|ow1.0 | test_rel_l2=0.9935 | captured_final=0.9824 | eff_rank_final=3.0015
+  tag=dr_pi_ortho_nd0_arandomgauss1.0_s0|ow1.0 | test_rel_l2=0.9935 | captured_final=0.9824 | eff_rank_final=3.0015

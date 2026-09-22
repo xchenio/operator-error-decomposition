@@ -1,0 +1,13 @@
+[pde] dr: trunk_dim=2, sensors=101, grid=4141, coef=12  kwargs={}
+[device] cuda
+[data] grid=(4141, 2), train=200, val=50, test=50
+
+=== dr-w32-g3_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.9878 eff_rank=1.70 angle_mean=51.0deg
+  step    300 | loss 9.958e+00 | val relL2 26.9103 | pde=5.995e+00 ic=1.571e+00 bc=2.392e+00
+  [stage physics] 300 steps in 9.5s
+  final diag: captured=0.9894 eff_rank=1.43 angle_mean=49.7deg
+[done] dr-w32-g3_pi_baseline_nd0_anone1.0_s0 | test relL2=23.7585 captured=0.9894 (11s)
+
+[saved] F:\Desktop\temp\pinode_align\results\smoke5\summary.csv
+  tag=dr-w32-g3_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=23.7585 | captured_final=0.9894 | eff_rank_final=1.4283

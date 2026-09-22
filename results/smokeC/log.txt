@@ -1,0 +1,14 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64-causal100_pi_causal_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step    200 | loss 2.320e+00 | val relL2 0.9989 | pde=1.210e-04 ic=2.318e+00 bc=1.601e-03
+  step    400 | loss 1.318e+00 | val relL2 0.9983 | pde=5.886e-05 ic=1.317e+00 bc=7.934e-04
+  [stage physics] 400 steps in 32.1s
+  final diag: captured=0.7043 eff_rank=1.57 angle_mean=73.0deg
+[done] burgers-w64-causal100_pi_causal_nd0_aprior1.0_s0 | test relL2=0.9998 captured=0.7043 (34s)
+
+[saved] F:\Desktop\temp\pinode_align\results\smokeC\summary.csv
+  tag=burgers-w64-causal100_pi_causal_nd0_aprior1.0_s0 | test_rel_l2=0.9998 | captured_final=0.7043 | eff_rank_final=1.5736

@@ -1,0 +1,140 @@
+{
+  "val_rel_l2": 1.1207668781280518,
+  "train_rel_l2": 1.0992754697799683,
+  "test_rel_l2": 1.0766137838363647,
+  "lb_init": 0.6182689868525252,
+  "lb_final": 0.5636682988948498,
+  "opt_gap": 0.5129454849415149,
+  "opt_gap_train": 0.5356071708851184,
+  "gen_gap": -0.022661685943603516,
+  "final_diag": {
+    "captured_energy": 0.6822780488209863,
+    "angle_min_deg": 5.047247603439166,
+    "angle_mean_deg": 63.724862762384305,
+    "angle_max_deg": 89.9516310201305,
+    "grassmann": 4.896794176752466,
+    "eff_rank": 1.320129034277552,
+    "cond": 3468587.201659304
+  },
+  "init_diag": {
+    "captured_energy": 0.617743459896352,
+    "angle_min_deg": 6.01858891206942,
+    "angle_mean_deg": 67.65094511799441,
+    "angle_max_deg": 89.97239169193492,
+    "grassmann": 5.0803093950907625,
+    "eff_rank": 1.3053833343394947,
+    "cond": 10643979.02812657
+  },
+  "final_sv": [
+    1.0,
+    0.27254733875785847,
+    0.06708447421675583,
+    0.004341463779170676,
+    0.0023856642661051045,
+    0.0022090845979531796,
+    0.00037195033928645105,
+    0.00011049614445849055,
+    5.019943383290507e-05,
+    2.0589905519362464e-05,
+    1.3275150244027354e-05,
+    6.314865654899389e-06,
+    3.1054481851667775e-06,
+    2.009296058738559e-06,
+    8.977724842717285e-07,
+    2.8830181911575403e-07
+  ],
+  "history": {
+    "step": [
+      5
+    ],
+    "loss": [
+      2.0832948684692383
+    ],
+    "val_rel_l2": [
+      1.1207668781280518
+    ]
+  },
+  "diag_history": {
+    "step": [
+      0,
+      5
+    ],
+    "captured_energy": [
+      0.617743459896352,
+      0.6822780488209863
+    ],
+    "eff_rank": [
+      1.3053833343394947,
+      1.320129034277552
+    ],
+    "angle_mean_deg": [
+      67.65094511799441,
+      63.724862762384305
+    ],
+    "cond": [
+      10643979.02812657,
+      3468587.201659304
+    ]
+  },
+  "meta": {
+    "cfg": {
+      "pde": "burgers",
+      "method": "pi_baseline",
+      "n_data": 0,
+      "seed": 0,
+      "align_kind": "none",
+      "align_weight": 1.0,
+      "ortho_weight": 0.0,
+      "causal": 0.0,
+      "causal_M": 20,
+      "lbfgs_steps": 200,
+      "steps": 5,
+      "lr": 0.001,
+      "pretrain_frac": 0.25,
+      "n_train": 200,
+      "n_val": 50,
+      "n_test": 50,
+      "eval_every": 5,
+      "diag_every": 5,
+      "grad_clip": null,
+      "data_split": "train",
+      "pde_kwargs": {
+        "nu": 0.02,
+        "Nx": 256,
+        "Nx_store": 128
+      },
+      "model_kwargs": {
+        "init_gain": 1.0,
+        "trunk_type": "mlp",
+        "width": 16
+      },
+      "sampling_kwargs": {},
+      "lambdas_override": {}
+    },
+    "n_params": 87073,
+    "n_probe": 4096,
+    "n_data_used": 0,
+    "align_rank": 0,
+    "diag_rank": 16,
+    "stages": [
+      {
+        "kind": "physics",
+        "steps": 5,
+        "align": 0.0,
+        "freeze_trunk": false,
+        "trunk_lr_mult": 1.0,
+        "lambdas": {}
+      }
+    ],
+    "wall_time": 4.391021013259888,
+    "code_hash": "1004674a170c7ce1",
+    "env": {
+      "python": "3.11.16",
+      "torch": "2.14.0+cu130",
+      "numpy": "2.4.6",
+      "device": "cpu",
+      "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+      "cuda": "13.0"
+    }
+  }
+}

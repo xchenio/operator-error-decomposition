@@ -1,0 +1,79 @@
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.2279 eff_rank=17.47 angle_mean=77.8deg
+  step   5000 | loss 4.708e-01 | val relL2 0.7655 | pde=4.165e-02 ic=4.157e-01 bc=1.344e-02
+  step  10000 | loss 3.589e-01 | val relL2 0.6203 | pde=9.393e-02 ic=2.473e-01 bc=1.774e-02
+  step  15000 | loss 2.863e-01 | val relL2 0.6612 | pde=5.310e-02 ic=2.211e-01 bc=1.213e-02
+  step  20000 | loss 2.722e-01 | val relL2 0.6452 | pde=5.091e-02 ic=2.096e-01 bc=1.170e-02
+  step  25000 | loss 3.257e-01 | val relL2 0.5986 | pde=9.077e-02 ic=2.279e-01 bc=7.060e-03
+  step  30000 | loss 2.825e-01 | val relL2 0.6050 | pde=6.689e-02 ic=2.085e-01 bc=7.109e-03
+  step  35000 | loss 2.476e-01 | val relL2 0.6378 | pde=6.233e-02 ic=1.796e-01 bc=5.677e-03
+  step  40000 | loss 2.496e-01 | val relL2 0.6503 | pde=4.847e-02 ic=1.966e-01 bc=4.506e-03
+  step  45000 | loss 1.958e-01 | val relL2 0.6164 | pde=4.402e-02 ic=1.449e-01 bc=6.919e-03
+  step  50000 | loss 3.060e-01 | val relL2 0.5931 | pde=5.793e-02 ic=2.407e-01 bc=7.368e-03
+  [stage physics] 50000 steps in 3058.3s
+  final diag: captured=0.9446 eff_rank=6.85 angle_mean=39.9deg
+  final relL2: train=0.5489 val=0.5931 test=0.5983
+[done] burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=0.5983 captured=0.9446 (3061s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expS50k\summary.csv
+  tag=burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.5489 | test_rel_l2=0.5983 | captured_final=0.9446 | eff_rank_final=6.8455
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   5000 | loss 1.259e+00 | val relL2 0.7807 | pde=1.028e-01 ic=1.135e+00 bc=2.064e-02
+  step  10000 | loss 1.663e+00 | val relL2 0.7291 | pde=1.262e-01 ic=1.486e+00 bc=5.064e-02
+  step  15000 | loss 1.184e+00 | val relL2 0.7005 | pde=1.414e-01 ic=1.018e+00 bc=2.471e-02
+  step  20000 | loss 1.385e+00 | val relL2 0.6864 | pde=2.004e-01 ic=1.169e+00 bc=1.496e-02
+  step  25000 | loss 1.401e+00 | val relL2 0.6837 | pde=2.122e-01 ic=1.170e+00 bc=1.921e-02
+  step  30000 | loss 1.205e+00 | val relL2 0.6672 | pde=1.968e-01 ic=9.790e-01 bc=2.900e-02
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   5000 | loss 1.259e+00 | val relL2 0.7807 | pde=1.028e-01 ic=1.135e+00 bc=2.064e-02
+  step  10000 | loss 1.663e+00 | val relL2 0.7291 | pde=1.262e-01 ic=1.486e+00 bc=5.064e-02
+  step  15000 | loss 1.184e+00 | val relL2 0.7005 | pde=1.414e-01 ic=1.018e+00 bc=2.471e-02
+  step  20000 | loss 1.385e+00 | val relL2 0.6864 | pde=2.004e-01 ic=1.169e+00 bc=1.496e-02
+  step  25000 | loss 1.401e+00 | val relL2 0.6837 | pde=2.122e-01 ic=1.170e+00 bc=1.921e-02
+  step  30000 | loss 1.205e+00 | val relL2 0.6672 | pde=1.968e-01 ic=9.790e-01 bc=2.900e-02
+  step  35000 | loss 1.028e+00 | val relL2 0.6676 | pde=1.544e-01 ic=8.587e-01 bc=1.448e-02
+  step  40000 | loss 9.580e-01 | val relL2 0.6407 | pde=1.635e-01 ic=7.827e-01 bc=1.188e-02
+  step  45000 | loss 1.134e+00 | val relL2 0.6350 | pde=1.910e-01 ic=9.346e-01 bc=8.804e-03
+  step  50000 | loss 9.225e-01 | val relL2 0.6247 | pde=1.478e-01 ic=7.575e-01 bc=1.732e-02
+  [stage physics] 50000 steps in 3087.9s
+  final diag: captured=0.9640 eff_rank=8.78 angle_mean=38.4deg
+  final relL2: train=0.6048 val=0.6247 test=0.6139
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.6139 captured=0.9640 (3092s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expS50k\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6048 | test_rel_l2=0.6139 | captured_final=0.9640 | eff_rank_final=8.7779
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] 已有结果
+
+[saved] F:\Desktop\temp\pinode_align\results\expS50k\summary.csv
+  tag=burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.5489 | test_rel_l2=0.5983 | captured_final=0.9446 | eff_rank_final=6.8455
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] 已有结果
+
+[saved] F:\Desktop\temp\pinode_align\results\expS50k\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6048 | test_rel_l2=0.6139 | captured_final=0.9640 | eff_rank_final=8.7779

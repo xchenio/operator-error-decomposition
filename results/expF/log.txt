@@ -1,0 +1,17 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-fourier-w64_pi_align_nd0_aprior1.0_s0 ===
+  init diag: captured=0.8667 eff_rank=14.44 angle_mean=56.4deg
+  step   2000 | loss 2.153e+00 | val relL2 0.9802 | pde=6.633e-02 ic=1.999e+00 bc=7.536e-03 align=7.985e-02
+  step   4000 | loss 2.204e+00 | val relL2 0.9632 | pde=1.984e-02 ic=2.140e+00 bc=1.807e-03 align=4.233e-02
+  step   6000 | loss 1.918e+00 | val relL2 0.9642 | pde=8.676e-03 ic=1.888e+00 bc=1.278e-03 align=2.022e-02
+  step   8000 | loss 2.097e+00 | val relL2 0.9662 | pde=4.739e-03 ic=2.081e+00 bc=2.174e-03 align=9.687e-03
+  step  10000 | loss 2.116e+00 | val relL2 0.9572 | pde=3.313e-03 ic=2.107e+00 bc=1.247e-03 align=4.474e-03
+  [stage physics] 10000 steps in 604.9s
+  final diag: captured=0.9446 eff_rank=17.84 angle_mean=46.2deg
+[done] burgers-fourier-w64_pi_align_nd0_aprior1.0_s0 | test relL2=0.9518 captured=0.9446 (607s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expF\summary.csv
+  tag=burgers-fourier-w64_pi_align_nd0_aprior1.0_s0 | test_rel_l2=0.9518 | captured_final=0.9446 | eff_rank_final=17.8389

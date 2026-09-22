@@ -1,0 +1,65 @@
+[pde] dr: trunk_dim=2, sensors=101, grid=4141, coef=12  kwargs={}
+[device] cuda
+[data] grid=(4141, 2), train=200, val=50, test=50
+
+=== dr-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.9752 eff_rank=1.36 angle_mean=64.8deg
+  step   2500 | loss 2.879e-01 | val relL2 0.9768 | pde=2.877e-01 ic=5.098e-05 bc=1.675e-04
+  step   5000 | loss 2.084e-01 | val relL2 0.9864 | pde=2.083e-01 ic=3.186e-05 bc=4.630e-05
+  step   7500 | loss 2.545e-01 | val relL2 0.9939 | pde=2.545e-01 ic=4.284e-06 bc=3.091e-05
+  step  10000 | loss 2.706e-01 | val relL2 0.9877 | pde=2.706e-01 ic=8.019e-06 bc=2.637e-05
+  [stage physics] 10000 steps in 294.6s
+  final diag: captured=0.9774 eff_rank=1.75 angle_mean=68.0deg
+[done] dr-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.9857 captured=0.9774 (296s)
+
+=== dr-w64_pi_align_nd0_aprior1.0_s0 ===
+  init diag: captured=0.9752 eff_rank=1.36 angle_mean=64.8deg
+  step   2500 | loss 3.348e-01 | val relL2 0.9808 | pde=2.869e-01 ic=4.838e-04 bc=1.001e-04 align=4.731e-02
+  step   5000 | loss 2.285e-01 | val relL2 0.9796 | pde=2.055e-01 ic=7.756e-05 bc=1.598e-05 align=2.289e-02
+  step   7500 | loss 2.726e-01 | val relL2 0.9892 | pde=2.542e-01 ic=2.758e-05 bc=2.113e-05 align=1.834e-02
+  step  10000 | loss 2.802e-01 | val relL2 0.9844 | pde=2.710e-01 ic=1.906e-05 bc=4.970e-06 align=9.200e-03
+  [stage physics] 10000 steps in 343.7s
+  final diag: captured=0.9987 eff_rank=22.64 angle_mean=30.5deg
+[done] dr-w64_pi_align_nd0_aprior1.0_s0 | test relL2=0.9839 captured=0.9987 (344s)
+
+=== dr-w64_pi_align_nd0_arandom1.0_s0 ===
+  init diag: captured=0.9752 eff_rank=1.36 angle_mean=64.8deg
+  step   2500 | loss 8.545e-01 | val relL2 0.9832 | pde=2.891e-01 ic=4.025e-04 bc=6.554e-05 align=5.650e-01
+  step   5000 | loss 5.360e-01 | val relL2 0.9668 | pde=2.063e-01 ic=1.282e-04 bc=2.435e-04 align=3.293e-01
+  step   7500 | loss 4.447e-01 | val relL2 0.9952 | pde=2.548e-01 ic=1.151e-04 bc=5.854e-05 align=1.897e-01
+  step  10000 | loss 4.082e-01 | val relL2 0.9905 | pde=2.714e-01 ic=2.646e-05 bc=9.842e-06 align=1.367e-01
+  [stage physics] 10000 steps in 347.3s
+  final diag: captured=0.9958 eff_rank=31.50 angle_mean=37.1deg
+[done] dr-w64_pi_align_nd0_arandom1.0_s0 | test relL2=0.9904 captured=0.9958 (347s)
+
+=== dr-w64_pi_ortho_nd0_aprior1.0_s0|ow1.0 ===
+  init diag: captured=0.9752 eff_rank=1.36 angle_mean=64.8deg
+  step   2500 | loss 4.719e-01 | val relL2 0.9812 | pde=2.873e-01 ic=8.330e-05 bc=1.204e-04 ortho=1.844e-01
+  step   5000 | loss 3.581e-01 | val relL2 0.9864 | pde=2.071e-01 ic=5.105e-05 bc=5.844e-05 ortho=1.509e-01
+  step   7500 | loss 3.821e-01 | val relL2 0.9721 | pde=2.546e-01 ic=1.361e-05 bc=3.817e-05 ortho=1.274e-01
+  step  10000 | loss 3.982e-01 | val relL2 0.9749 | pde=2.709e-01 ic=5.053e-05 bc=3.380e-05 ortho=1.273e-01
+  [stage physics] 10000 steps in 332.4s
+  final diag: captured=0.9985 eff_rank=7.00 angle_mean=44.3deg
+[done] dr-w64_pi_ortho_nd0_aprior1.0_s0 | test relL2=0.9696 captured=0.9985 (333s)
+
+=== dr-w64_pi_ortho_nd0_arandom1.0_s0|ow1.0 ===
+  init diag: captured=0.9752 eff_rank=1.36 angle_mean=64.8deg
+  step   2500 | loss 4.719e-01 | val relL2 0.9812 | pde=2.873e-01 ic=8.330e-05 bc=1.204e-04 ortho=1.844e-01
+  step   5000 | loss 3.581e-01 | val relL2 0.9864 | pde=2.071e-01 ic=5.105e-05 bc=5.844e-05 ortho=1.509e-01
+  step   7500 | loss 3.821e-01 | val relL2 0.9721 | pde=2.546e-01 ic=1.361e-05 bc=3.817e-05 ortho=1.274e-01
+[pde] dr: trunk_dim=2, sensors=101, grid=4141, coef=12  kwargs={}
+[device] cuda
+[data] grid=(4141, 2), train=200, val=50, test=50
+
+=== dr-fourier-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.9862 eff_rank=15.69 angle_mean=43.2deg
+  step   2500 | loss 2.923e-01 | val relL2 0.9520 | pde=2.920e-01 ic=1.343e-04 bc=1.905e-04
+  step   5000 | loss 2.064e-01 | val relL2 0.9554 | pde=2.062e-01 ic=1.664e-04 bc=5.805e-05
+  step   7500 | loss 2.547e-01 | val relL2 0.9762 | pde=2.546e-01 ic=4.451e-05 bc=2.850e-05
+  step  10000 | loss 2.719e-01 | val relL2 0.9683 | pde=2.719e-01 ic=1.537e-05 bc=2.017e-05
+  [stage physics] 10000 steps in 384.0s
+  final diag: captured=0.9980 eff_rank=3.74 angle_mean=40.2deg
+[done] dr-fourier-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.9624 captured=0.9980 (385s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expD\summary.csv
+  tag=dr-fourier-w64_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=0.9624 | captured_final=0.9980 | eff_rank_final=3.7389

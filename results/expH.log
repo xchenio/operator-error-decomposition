@@ -1,0 +1,20 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_default_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64_pi_baseline_nd0_anone1.0_s0|icw1.0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   1500 | loss 2.206e+00 | val relL2 0.9985 | pde=1.351e-05 ic=2.206e+00 bc=3.857e-04
+  step   3000 | loss 1.925e+00 | val relL2 0.9988 | pde=6.251e-06 ic=1.925e+00 bc=4.791e-04
+  step   4500 | loss 1.860e+00 | val relL2 1.0008 | pde=2.396e-05 ic=1.860e+00 bc=2.972e-04
+  step   6000 | loss 1.914e+00 | val relL2 0.9997 | pde=3.810e-05 ic=1.914e+00 bc=2.127e-04
+  [stage physics] 6000 steps in 307.3s
+  final diag: captured=0.6930 eff_rank=1.43 angle_mean=74.5deg
+[done] burgers-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.9999 captured=0.6930 (309s)
+
+=== burgers-w64_pi_baseline_nd0_anone1.0_s0|icw10.0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   1500 | loss 2.206e+01 | val relL2 0.9986 | pde=1.140e-04 ic=2.206e+00 bc=5.328e-04
+  step   3000 | loss 1.926e+01 | val relL2 1.0012 | pde=4.244e-05 ic=1.925e+00 bc=2.023e-04
+  step   4500 | loss 1.860e+01 | val relL2 0.9985 | pde=1.684e-04 ic=1.860e+00 bc=1.652e-04

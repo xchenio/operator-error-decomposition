@@ -1,0 +1,18 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64_pi_lbfgs_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2500 | loss 1.559e+00 | val relL2 0.8000 | pde=6.749e-02 ic=1.462e+00 bc=2.946e-02
+  step   5000 | loss 1.259e+00 | val relL2 0.7807 | pde=1.028e-01 ic=1.135e+00 bc=2.064e-02
+  step   7500 | loss 1.407e+00 | val relL2 0.7426 | pde=1.302e-01 ic=1.251e+00 bc=2.587e-02
+  step  10000 | loss 1.663e+00 | val relL2 0.7291 | pde=1.262e-01 ic=1.486e+00 bc=5.064e-02
+  [stage physics] 10000 steps in 626.6s
+  [stage lbfgs] 200 steps in 433.2s
+  final diag: captured=0.9565 eff_rank=1.05 angle_mean=42.0deg
+[done] burgers-w64_pi_lbfgs_nd0_anone1.0_s0 | test relL2=2.0036 captured=0.9565 (1062s)
+
+=== burgers-w64_pi_align_lbfgs_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2500 | loss 1.526e+00 | val relL2 0.7487 | pde=1.367e-01 ic=1.182e+00 bc=2.377e-02 align=1.833e-01

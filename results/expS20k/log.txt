@@ -1,0 +1,54 @@
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.2279 eff_rank=17.47 angle_mean=77.8deg
+  step   5000 | loss 4.708e-01 | val relL2 0.7655 | pde=4.165e-02 ic=4.157e-01 bc=1.344e-02
+  step  10000 | loss 3.589e-01 | val relL2 0.6203 | pde=9.393e-02 ic=2.473e-01 bc=1.774e-02
+  step  15000 | loss 2.863e-01 | val relL2 0.6612 | pde=5.310e-02 ic=2.211e-01 bc=1.213e-02
+  step  20000 | loss 2.722e-01 | val relL2 0.6452 | pde=5.091e-02 ic=2.096e-01 bc=1.170e-02
+  [stage physics] 20000 steps in 1286.4s
+  final diag: captured=0.9309 eff_rank=6.46 angle_mean=44.9deg
+  final relL2: train=0.6131 val=0.6452 test=0.6427
+[done] burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=0.6427 captured=0.9309 (1289s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expS20k\summary.csv
+  tag=burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6131 | test_rel_l2=0.6427 | captured_final=0.9309 | eff_rank_final=6.4560
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   5000 | loss 1.259e+00 | val relL2 0.7807 | pde=1.028e-01 ic=1.135e+00 bc=2.064e-02
+  step  10000 | loss 1.663e+00 | val relL2 0.7291 | pde=1.262e-01 ic=1.486e+00 bc=5.064e-02
+  step  15000 | loss 1.184e+00 | val relL2 0.7005 | pde=1.414e-01 ic=1.018e+00 bc=2.471e-02
+  step  20000 | loss 1.385e+00 | val relL2 0.6864 | pde=2.004e-01 ic=1.169e+00 bc=1.496e-02
+  [stage physics] 20000 steps in 896.7s
+  final diag: captured=0.9524 eff_rank=6.13 angle_mean=42.6deg
+  final relL2: train=0.6808 val=0.6864 test=0.6736
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.6736 captured=0.9524 (899s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expS20k\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6808 | test_rel_l2=0.6736 | captured_final=0.9524 | eff_rank_final=6.1313
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] 已有结果
+
+[saved] F:\Desktop\temp\pinode_align\results\expS20k\summary.csv
+  tag=burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6131 | test_rel_l2=0.6427 | captured_final=0.9309 | eff_rank_final=6.4560
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] 已有结果
+
+[saved] F:\Desktop\temp\pinode_align\results\expS20k\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6808 | test_rel_l2=0.6736 | captured_final=0.9524 | eff_rank_final=6.1313

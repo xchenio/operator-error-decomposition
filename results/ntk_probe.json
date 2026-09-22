@@ -1,0 +1,94 @@
+[
+  {
+    "ckpt": "burgers-w32_pi_baseline_nd0_anone1.0_s0",
+    "method": "pi_baseline",
+    "align_kind": "none",
+    "seed": 0,
+    "trunk_ntk": {
+      "eff_rank": 2.7237966875069874,
+      "cond": 355849.85037965776,
+      "top1_energy_share": 0.6653072061202531
+    },
+    "output_ntk": {
+      "eff_rank_entropy": 1.465846355131816,
+      "cond": 12210102655.127382,
+      "top1_share": 0.9172617659866604,
+      "ev_ratio_top1_top10": 4552.521286782667
+    },
+    "hessian": {
+      "loss": 1.0966261625289917,
+      "grad_norm": 2.336625099182129,
+      "hess_lambda_max": 959.3084716796875,
+      "sharpness": 437.3908376704108
+    }
+  },
+  {
+    "ckpt": "burgers-w64_pi_align_nd0_aprior1.0_s1",
+    "method": "pi_align",
+    "align_kind": "prior",
+    "seed": 1,
+    "trunk_ntk": {
+      "eff_rank": 9.001226950245812,
+      "cond": 24063.615083148077,
+      "top1_energy_share": 0.29312444926052933
+    },
+    "output_ntk": {
+      "eff_rank_entropy": 3.826476809249512,
+      "cond": 32303772172.03778,
+      "top1_share": 0.5424860888556524,
+      "ev_ratio_top1_top10": 150.34301269801037
+    },
+    "hessian": {
+      "loss": 1.5280420780181885,
+      "grad_norm": 8.046306610107422,
+      "hess_lambda_max": 430.2621765136719,
+      "sharpness": 140.78871999117501
+    }
+  },
+  {
+    "ckpt": "burgers-w64_pi_baseline_nd0_anone1.0_s1",
+    "method": "pi_baseline",
+    "align_kind": "none",
+    "seed": 1,
+    "trunk_ntk": {
+      "eff_rank": 4.085392884406816,
+      "cond": 5829307.29184271,
+      "top1_energy_share": 0.47267079408964285
+    },
+    "output_ntk": {
+      "eff_rank_entropy": 1.7045016699625248,
+      "cond": 4151081559.0797462,
+      "top1_share": 0.8736193962916784,
+      "ev_ratio_top1_top10": 2379.7417260604466
+    },
+    "hessian": {
+      "loss": 1.7531719207763672,
+      "grad_norm": 4.184117794036865,
+      "hess_lambda_max": 1034.77001953125,
+      "sharpness": 295.1136757520668
+    }
+  },
+  {
+    "ckpt": "burgers-w64_pi_baseline_nd0_anone1.0_s2",
+    "method": "pi_baseline",
+    "align_kind": "none",
+    "seed": 2,
+    "trunk_ntk": {
+      "eff_rank": 4.192667352750554,
+      "cond": 5702779.311007001,
+      "top1_energy_share": 0.42566689897967763
+    },
+    "output_ntk": {
+      "eff_rank_entropy": 1.9985468813814071,
+      "cond": 5142078842.226444,
+      "top1_share": 0.803470851901097,
+      "ev_ratio_top1_top10": 4885.480021097061
+    },
+    "hessian": {
+      "loss": 1.4811502695083618,
+      "grad_norm": 4.597056865692139,
+      "hess_lambda_max": 2020.3695068359375,
+      "sharpness": 682.0271880673386
+    }
+  }
+]

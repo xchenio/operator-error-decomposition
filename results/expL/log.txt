@@ -1,0 +1,99 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2000 | loss 1.921e+00 | val relL2 0.9072 | pde=5.456e-02 ic=1.839e+00 bc=2.741e-02
+  step   4000 | loss 1.707e+00 | val relL2 0.7805 | pde=1.257e-01 ic=1.544e+00 bc=3.731e-02
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  step   8000 | loss 1.542e+00 | val relL2 0.7502 | pde=1.340e-01 ic=1.377e+00 bc=3.159e-02
+  step  10000 | loss 1.663e+00 | val relL2 0.7291 | pde=1.262e-01 ic=1.486e+00 bc=5.064e-02
+  [stage physics] 10000 steps in 435.4s
+  final diag: captured=0.9471 eff_rank=4.47 angle_mean=45.6deg
+[done] burgers-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7213 captured=0.9471 (437s)
+
+=== burgers-w64_pi_align_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2000 | loss 1.780e+00 | val relL2 0.7615 | pde=1.564e-01 ic=1.395e+00 bc=2.571e-02 align=2.032e-01
+  step   4000 | loss 1.586e+00 | val relL2 0.7274 | pde=1.685e-01 ic=1.223e+00 bc=4.632e-02 align=1.484e-01
+  step   6000 | loss 1.323e+00 | val relL2 0.6911 | pde=1.353e-01 ic=1.039e+00 bc=3.504e-02 align=1.139e-01
+  step   8000 | loss 1.400e+00 | val relL2 0.6839 | pde=1.756e-01 ic=1.107e+00 bc=3.225e-02 align=8.511e-02
+  step  10000 | loss 1.498e+00 | val relL2 0.6744 | pde=2.109e-01 ic=1.180e+00 bc=3.729e-02 align=6.922e-02
+  [stage physics] 10000 steps in 480.7s
+  final diag: captured=0.9544 eff_rank=10.46 angle_mean=43.2deg
+[done] burgers-w64_pi_align_nd0_aprior1.0_s0 | test relL2=0.6672 captured=0.9544 (481s)
+
+=== burgers-w64_pi_align_nd0_arandom1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2000 | loss 2.517e+00 | val relL2 0.7928 | pde=1.189e-01 ic=1.537e+00 bc=2.349e-02 align=8.382e-01
+  step   4000 | loss 2.270e+00 | val relL2 0.7641 | pde=1.597e-01 ic=1.321e+00 bc=2.686e-02 align=7.625e-01
+  step   6000 | loss 2.062e+00 | val relL2 0.7011 | pde=1.731e-01 ic=1.126e+00 bc=4.790e-02 align=7.146e-01
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64_pi_align_nd0_arandom1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2000 | loss 2.492e+00 | val relL2 0.7919 | pde=1.149e-01 ic=1.516e+00 bc=2.332e-02 align=8.380e-01
+  step   4000 | loss 2.302e+00 | val relL2 0.7652 | pde=1.630e-01 ic=1.339e+00 bc=2.880e-02 align=7.710e-01
+  step   6000 | loss 2.063e+00 | val relL2 0.7089 | pde=1.481e-01 ic=1.165e+00 bc=2.359e-02 align=7.260e-01
+  step   8000 | loss 2.063e+00 | val relL2 0.6931 | pde=2.104e-01 ic=1.150e+00 bc=3.633e-02 align=6.663e-01
+  step  10000 | loss 2.096e+00 | val relL2 0.6959 | pde=2.547e-01 ic=1.223e+00 bc=3.858e-02 align=5.802e-01
+  [stage physics] 10000 steps in 416.6s
+  final diag: captured=0.9398 eff_rank=11.59 angle_mean=45.1deg
+[done] burgers-w64_pi_align_nd0_arandom1.0_s0 | test relL2=0.6988 captured=0.9398 (419s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expL\summary.csv
+  tag=burgers-w64_pi_align_nd0_arandom1.0_s0 | test_rel_l2=0.6988 | captured_final=0.9398 | eff_rank_final=11.5890
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64-ortho1_pi_ortho_nd0_anone1.0_s0|ow1.0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2000 | loss 1.838e+00 | val relL2 0.7910 | pde=9.643e-02 ic=1.580e+00 bc=2.668e-02 ortho=1.350e-01
+  step   4000 | loss 1.785e+00 | val relL2 0.7914 | pde=1.050e-01 ic=1.557e+00 bc=2.711e-02 ortho=9.567e-02
+  step   6000 | loss 1.637e+00 | val relL2 0.7810 | pde=6.929e-02 ic=1.452e+00 bc=3.055e-02 ortho=8.550e-02
+  step   8000 | loss 1.545e+00 | val relL2 0.7260 | pde=1.379e-01 ic=1.303e+00 bc=3.050e-02 ortho=7.399e-02
+  step  10000 | loss 1.631e+00 | val relL2 0.7239 | pde=1.342e-01 ic=1.403e+00 bc=2.832e-02 ortho=6.551e-02
+  [stage physics] 10000 steps in 439.6s
+  final diag: captured=0.9449 eff_rank=14.04 angle_mean=46.1deg
+[done] burgers-w64-ortho1_pi_ortho_nd0_anone1.0_s0 | test relL2=0.7114 captured=0.9449 (442s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expL\summary.csv
+  tag=burgers-w64-ortho1_pi_ortho_nd0_anone1.0_s0|ow1.0 | test_rel_l2=0.7114 | captured_final=0.9449 | eff_rank_final=14.0411
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-fourier-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.8667 eff_rank=14.44 angle_mean=56.4deg
+  step   2000 | loss 1.462e+00 | val relL2 0.7539 | pde=2.882e-01 ic=1.153e+00 bc=2.097e-02
+  step   4000 | loss 1.340e+00 | val relL2 0.7302 | pde=2.485e-01 ic=1.054e+00 bc=3.714e-02
+  step   6000 | loss 1.203e+00 | val relL2 0.6901 | pde=2.834e-01 ic=8.922e-01 bc=2.698e-02
+  step   8000 | loss 1.210e+00 | val relL2 0.6846 | pde=1.687e-01 ic=1.008e+00 bc=3.326e-02
+  step  10000 | loss 1.414e+00 | val relL2 0.6632 | pde=3.378e-01 ic=1.043e+00 bc=3.350e-02
+  [stage physics] 10000 steps in 524.9s
+  final diag: captured=0.9642 eff_rank=8.00 angle_mean=39.4deg
+[done] burgers-fourier-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.6651 captured=0.9642 (526s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expL\summary.csv
+  tag=burgers-fourier-w64_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=0.6651 | captured_final=0.9642 | eff_rank_final=8.0009
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-fourier-w64_pi_align_nd0_aprior1.0_s0 ===
+  init diag: captured=0.8667 eff_rank=14.44 angle_mean=56.4deg
+  step   2000 | loss 1.549e+00 | val relL2 0.7529 | pde=2.975e-01 ic=1.148e+00 bc=2.410e-02 align=7.903e-02
+  step   4000 | loss 1.366e+00 | val relL2 0.7273 | pde=2.377e-01 ic=1.051e+00 bc=3.016e-02 align=4.712e-02
+  step   6000 | loss 1.189e+00 | val relL2 0.6946 | pde=2.138e-01 ic=9.145e-01 bc=2.934e-02 align=3.103e-02
+  step   8000 | loss 1.255e+00 | val relL2 0.6792 | pde=2.311e-01 ic=9.689e-01 bc=3.198e-02 align=2.332e-02
+  step  10000 | loss 1.442e+00 | val relL2 0.6728 | pde=3.148e-01 ic=1.087e+00 bc=1.882e-02 align=2.111e-02
+  [stage physics] 10000 steps in 585.3s
+  final diag: captured=0.9566 eff_rank=10.04 angle_mean=43.7deg
+[done] burgers-fourier-w64_pi_align_nd0_aprior1.0_s0 | test relL2=0.6680 captured=0.9566 (587s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expL\summary.csv
+  tag=burgers-fourier-w64_pi_align_nd0_aprior1.0_s0 | test_rel_l2=0.6680 | captured_final=0.9566 | eff_rank_final=10.0398

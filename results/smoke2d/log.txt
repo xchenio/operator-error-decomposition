@@ -1,0 +1,14 @@
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+  step    100 | loss 7.093e-01 | val relL2 1.0048 | pde=9.947e-05 ic=7.081e-01 bc=1.081e-03
+  step    200 | loss 6.471e-01 | val relL2 1.0053 | pde=2.450e-05 ic=6.463e-01 bc=7.302e-04
+  [stage physics] 200 steps in 12.5s
+  final diag: captured=0.2950 eff_rank=1.49 angle_mean=78.5deg
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0067 captured=0.2950 (15s)
+
+[saved] F:\Desktop\temp\pinode_align\results\smoke2d\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=1.0067 | captured_final=0.2950 | eff_rank_final=1.4917

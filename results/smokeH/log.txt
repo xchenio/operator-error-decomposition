@@ -1,0 +1,14 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'hard_ic': True}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_hard_icTrue-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step    200 | loss 1.228e+03 | val relL2 2.2626 | pde=1.228e+03 bc=1.300e-02
+  step    400 | loss 6.385e+02 | val relL2 2.2580 | pde=6.385e+02 bc=1.398e-02
+  [stage physics] 400 steps in 26.6s
+  final diag: captured=0.7099 eff_rank=2.28 angle_mean=72.2deg
+[done] burgers_hard_icTrue-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=2.1302 captured=0.7099 (29s)
+
+[saved] F:\Desktop\temp\pinode_align\results\smokeH\summary.csv
+  tag=burgers_hard_icTrue-w64_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=2.1302 | captured_final=0.7099 | eff_rank_final=2.2760

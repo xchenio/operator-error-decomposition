@@ -1,0 +1,319 @@
+'eed' ²»ÊÇÄÚ²¿»òÍâ²¿ÃüÁî£¬Ò²²»ÊÇ¿ÉÔËĞĞµÄ³ÌĞò
+»òÅú´¦ÀíÎÄ¼ş¡£
+'ï¼›è¿™ä¸ªå¯¹ç…§æ²¡åšï¼Œåœ°æ¿ç»“è®ºä¸èƒ½è¿›è®ºæ–‡ã€?' ²»ÊÇÄÚ²¿»òÍâ²¿ÃüÁî£¬Ò²²»ÊÇ¿ÉÔËĞĞµÄ³ÌĞò
+»òÅú´¦ÀíÎÄ¼ş¡£
+'›¸è¦†ç›–ï¼ˆä¸' ²»ÊÇÄÚ²¿»òÍâ²¿ÃüÁî£¬Ò²²»ÊÇ¿ÉÔËĞĞµÄ³ÌĞò
+»òÅú´¦ÀíÎÄ¼ş¡£
+########## A) data_only ç›‘ç£ä¸Šç•Œ ##########
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_data_only_nd0_anone1.0_s0 ===
+  [skip] å·²æœ‰ç»“æœ
+
+=== burgers2d-w32_data_only_nd0_anone1.0_s1 ===
+  [skip] å·²æœ‰ç»“æœ
+
+=== burgers2d-w32_data_only_nd0_anone1.0_s2 ===
+  [skip] å·²æœ‰ç»“æœ
+
+[saved] F:\Desktop\temp\pinode_align\results\expDO\summary.csv
+  tag=burgers2d-w32_data_only_nd0_anone1.0_s0 | train_rel_l2=0.8467 | test_rel_l2=0.8627 | captured_final=0.4481 | eff_rank_final=8.0012
+  tag=burgers2d-w32_data_only_nd0_anone1.0_s1 | train_rel_l2=0.8587 | test_rel_l2=0.8766 | captured_final=0.4504 | eff_rank_final=6.8610
+  tag=burgers2d-w32_data_only_nd0_anone1.0_s2 | train_rel_l2=0.8473 | test_rel_l2=0.8637 | captured_final=0.4448 | eff_rank_final=7.5838
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s0 ===
+  [skip] å·²æœ‰ç»“æœ
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s1 ===
+  [skip] å·²æœ‰ç»“æœ
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s2 ===
+  [skip] å·²æœ‰ç»“æœ
+
+[saved] F:\Desktop\temp\pinode_align\results\expDO\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s0 | train_rel_l2=0.5181 | test_rel_l2=0.5716 | captured_final=0.9396 | eff_rank_final=7.8731
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s1 | train_rel_l2=0.5281 | test_rel_l2=0.5673 | captured_final=0.9385 | eff_rank_final=7.9933
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s2 | train_rel_l2=0.5883 | test_rel_l2=0.6063 | captured_final=0.9446 | eff_rank_final=5.5893
+########## C) å?seed é‡è·‘ 5 æ¬¡ï¼šsigma_repeat ##########
+'™åœ°æ¿ä¸»è¦æ˜¯æ•°å€¼å™ªå£°ï¼Œä¸æ˜¯å¯¹é½çš„æ•ˆæ?' ²»ÊÇÄÚ²¿»òÍâ²¿ÃüÁî£¬Ò²²»ÊÇ¿ÉÔËĞĞµÄ³ÌĞò
+»òÅú´¦ÀíÎÄ¼ş¡£
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 287.8s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (291s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d1\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 335.6s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (339s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d2\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 410.5s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (414s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d3\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 414.6s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (418s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d4\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 410.5s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (414s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d5\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 407.2s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (410s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d1\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 421.3s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (424s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d2\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 396.1s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (400s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d3\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 380.1s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (384s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d4\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 328.2s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (331s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d5\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+########## B) æ­¥æ•°æ”¶æ•›æ‰«æ ##########
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] å·²æœ‰ç»“æœ
+
+[saved] F:\Desktop\temp\pinode_align\results\expS20k\summary.csv
+  tag=burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6131 | test_rel_l2=0.6427 | captured_final=0.9309 | eff_rank_final=6.4560
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] å·²æœ‰ç»“æœ
+
+[saved] F:\Desktop\temp\pinode_align\results\expS50k\summary.csv
+  tag=burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.5489 | test_rel_l2=0.5983 | captured_final=0.9446 | eff_rank_final=6.8455
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] å·²æœ‰ç»“æœ
+
+[saved] F:\Desktop\temp\pinode_align\results\expS20k\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6808 | test_rel_l2=0.6736 | captured_final=0.9524 | eff_rank_final=6.1313
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] å·²æœ‰ç»“æœ
+
+[saved] F:\Desktop\temp\pinode_align\results\expS50k\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6048 | test_rel_l2=0.6139 | captured_final=0.9640 | eff_rank_final=8.7779
+########## æ±‡æ€?##########
+
+setting                        arm                 n      LB   train    test  opt(LB->train) gen(train->test)
+------------------------------------------------------------------------------------------------------------
+burgers2d|nu=default|w=32      align prior         5  0.6539  0.8108  0.8205          0.1569           0.0097   test_std=0.0421
+burgers2d|nu=default|w=32      align random        5  0.6279  0.7821  0.7910          0.1542           0.0089   test_std=0.0165
+burgers2d|nu=default|w=32      baseline            5  0.8493  1.0031  1.0034          0.1537           0.0003   test_std=0.0011
+burgers2d|nu=default|w=32      fourier-trunk/pi_baseline  5  0.4806  0.6742  0.6933          0.1936           0.0191   test_std=0.0199
+burgers2d|nu=default|w=32      ortho               5  0.8375  1.0014  1.0016          0.1640           0.0002   test_std=0.0010
+
+[aggregate] æŒ‰ test è¯¯å·®åŠ æƒå¹³å‡ï¼ˆn=5 ç»„ï¼‰
+   lb             0.7094   ( 80.7% of total)
+   opt_gap_train  0.1632   ( 18.6% of total)
+   gen_gap        0.0067   (  0.8% of total)
+   total          0.8793
+
+åˆ¤è¯»ï¼šgen_gap å¤§ â‡’ å¯¹æ–°è¾“å…¥å‡½æ•°çš„æ³›åŒ–å—é™ï¼ˆä¸æ˜¯ä¼˜åŒ–é—®é¢˜ï¼‰ï¼›
+      opt_gap_train å¤§ â‡’ ä¼˜åŒ–/branch å®¹é‡å—é™ï¼›
+      LB å¤§ â‡’ è¡¨ç¤ºå—é™ã€‚
+
+[saved] F:\Desktop\temp\pinode_align\results\attribution_2d.json
+
+setting                        arm                 n      LB   train    test  opt(LB->train) gen(train->test)
+------------------------------------------------------------------------------------------------------------
+burgers2d|nu=default|w=32      fourier-trunk/pi_baseline  1  0.2491  0.5810  0.6205          0.3319           0.0395   test_std=0.0000
+burgers|nu=0.02|w=64           baseline            1  0.2039  0.6428  0.6438          0.4389           0.0010   test_std=0.0000
+
+[aggregate] æŒ‰ test è¯¯å·®åŠ æƒå¹³å‡ï¼ˆn=2 ç»„ï¼‰
+   lb             0.2261   ( 35.8% of total)
+   opt_gap_train  0.3864   ( 61.1% of total)
+   gen_gap        0.0199   (  3.1% of total)
+   total          0.6323
+
+åˆ¤è¯»ï¼šgen_gap å¤§ â‡’ å¯¹æ–°è¾“å…¥å‡½æ•°çš„æ³›åŒ–å—é™ï¼ˆä¸æ˜¯ä¼˜åŒ–é—®é¢˜ï¼‰ï¼›
+      opt_gap_train å¤§ â‡’ ä¼˜åŒ–/branch å®¹é‡å—é™ï¼›
+      LB å¤§ â‡’ è¡¨ç¤ºå—é™ã€‚
+
+[saved] F:\Desktop\temp\pinode_align\results\attribution_steps.json
+[done] reference sweeps finished

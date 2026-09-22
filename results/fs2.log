@@ -1,0 +1,317 @@
+[8/10] w64 nu=0.01  seeds 0,1,2,3,4
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.01, 'Nx': 512, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx512_Nx_store128_nu0.01_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s0 ===
+  [skip] 已有结果
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s1 ===
+  [skip] 已有结果
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s2 ===
+  [skip] 已有结果
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s3 ===
+  [skip] 已有结果
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s4 ===
+  [skip] 已有结果
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s0 ===
+  init diag: captured=0.5987 eff_rank=1.45 angle_mean=75.0deg
+  step   1500 | loss 1.855e+00 | val relL2 0.8039 | pde=1.645e-01 ic=1.448e+00 bc=1.494e-02 align=2.269e-01
+  step   3000 | loss 1.508e+00 | val relL2 0.7948 | pde=1.393e-01 ic=1.169e+00 bc=3.307e-02 align=1.668e-01
+  step   4500 | loss 1.435e+00 | val relL2 0.7658 | pde=1.458e-01 ic=1.119e+00 bc=3.999e-02 align=1.305e-01
+  step   6000 | loss 1.391e+00 | val relL2 0.7641 | pde=1.630e-01 ic=1.093e+00 bc=2.807e-02 align=1.072e-01
+  [stage physics] 6000 steps in 191.5s
+  final diag: captured=0.9205 eff_rank=9.39 angle_mean=46.2deg
+[done] burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s0 | test relL2=0.7585 captured=0.9205 (193s)
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s1 ===
+  init diag: captured=0.5931 eff_rank=1.44 angle_mean=75.3deg
+  step   1500 | loss 2.255e+00 | val relL2 0.8017 | pde=1.494e-01 ic=1.818e+00 bc=4.205e-02 align=2.456e-01
+  step   3000 | loss 1.771e+00 | val relL2 0.7903 | pde=1.595e-01 ic=1.414e+00 bc=4.330e-02 align=1.535e-01
+  step   4500 | loss 1.527e+00 | val relL2 0.7616 | pde=1.980e-01 ic=1.190e+00 bc=2.909e-02 align=1.101e-01
+  step   6000 | loss 1.404e+00 | val relL2 0.7429 | pde=2.153e-01 ic=1.068e+00 bc=3.428e-02 align=8.689e-02
+  [stage physics] 6000 steps in 199.5s
+  final diag: captured=0.9258 eff_rank=10.51 angle_mean=45.3deg
+[done] burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s1 | test relL2=0.7333 captured=0.9258 (200s)
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s2 ===
+  init diag: captured=0.5827 eff_rank=1.47 angle_mean=75.7deg
+  step   1500 | loss 1.526e+00 | val relL2 0.8283 | pde=1.526e-01 ic=1.066e+00 bc=9.449e-02 align=2.132e-01
+  step   3000 | loss 1.708e+00 | val relL2 0.7641 | pde=1.521e-01 ic=1.360e+00 bc=3.374e-02 align=1.613e-01
+  step   4500 | loss 1.452e+00 | val relL2 0.7499 | pde=1.736e-01 ic=1.138e+00 bc=1.794e-02 align=1.223e-01
+  step   6000 | loss 1.585e+00 | val relL2 0.7461 | pde=1.534e-01 ic=1.307e+00 bc=2.318e-02 align=1.016e-01
+  [stage physics] 6000 steps in 190.7s
+  final diag: captured=0.9207 eff_rank=10.40 angle_mean=46.7deg
+[done] burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s2 | test relL2=0.7417 captured=0.9207 (191s)
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s3 ===
+  init diag: captured=0.5932 eff_rank=1.66 angle_mean=75.5deg
+  step   1500 | loss 1.381e+00 | val relL2 0.8303 | pde=6.538e-02 ic=1.035e+00 bc=2.666e-02 align=2.535e-01
+  step   3000 | loss 1.858e+00 | val relL2 0.8100 | pde=1.604e-01 ic=1.463e+00 bc=4.511e-02 align=1.895e-01
+  step   4500 | loss 1.681e+00 | val relL2 0.7686 | pde=1.960e-01 ic=1.330e+00 bc=2.111e-02 align=1.339e-01
+  step   6000 | loss 1.292e+00 | val relL2 0.7580 | pde=1.279e-01 ic=1.043e+00 bc=2.007e-02 align=1.006e-01
+  [stage physics] 6000 steps in 197.1s
+  final diag: captured=0.9234 eff_rank=9.09 angle_mean=46.1deg
+[done] burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s3 | test relL2=0.7542 captured=0.9234 (197s)
+
+=== burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s4 ===
+  init diag: captured=0.5868 eff_rank=1.49 angle_mean=75.4deg
+  step   1500 | loss 2.205e+00 | val relL2 0.7901 | pde=1.550e-01 ic=1.780e+00 bc=5.097e-02 align=2.193e-01
+  step   3000 | loss 1.511e+00 | val relL2 0.7604 | pde=1.688e-01 ic=1.170e+00 bc=2.470e-02 align=1.468e-01
+  step   4500 | loss 1.418e+00 | val relL2 0.7515 | pde=1.742e-01 ic=1.086e+00 bc=4.404e-02 align=1.143e-01
+  step   6000 | loss 1.270e+00 | val relL2 0.7355 | pde=1.330e-01 ic=1.022e+00 bc=2.363e-02 align=9.156e-02
+  [stage physics] 6000 steps in 191.9s
+  final diag: captured=0.9247 eff_rank=10.26 angle_mean=45.0deg
+[done] burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s4 | test relL2=0.7449 captured=0.9247 (192s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expV\summary.csv
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=0.7981 | captured_final=0.9093 | eff_rank_final=3.3663
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s1 | test_rel_l2=0.8009 | captured_final=0.8975 | eff_rank_final=3.4766
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s2 | test_rel_l2=0.8050 | captured_final=0.8654 | eff_rank_final=3.8010
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s3 | test_rel_l2=0.7991 | captured_final=0.9148 | eff_rank_final=4.4480
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s4 | test_rel_l2=0.7963 | captured_final=0.8834 | eff_rank_final=3.7020
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s0 | test_rel_l2=0.7585 | captured_final=0.9205 | eff_rank_final=9.3856
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s1 | test_rel_l2=0.7333 | captured_final=0.9258 | eff_rank_final=10.5114
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s2 | test_rel_l2=0.7417 | captured_final=0.9207 | eff_rank_final=10.3964
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s3 | test_rel_l2=0.7542 | captured_final=0.9234 | eff_rank_final=9.0870
+  tag=burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s4 | test_rel_l2=0.7449 | captured_final=0.9247 | eff_rank_final=10.2639
+[9/10] w24 nu=0.02  seeds 0,1,2,3,4
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6142 eff_rank=1.60 angle_mean=71.9deg
+  step   1500 | loss 2.106e+00 | val relL2 0.9726 | pde=1.841e-02 ic=2.071e+00 bc=1.668e-02
+  step   3000 | loss 1.469e+00 | val relL2 0.7968 | pde=1.276e-01 ic=1.320e+00 bc=2.085e-02
+  step   4500 | loss 1.375e+00 | val relL2 0.7665 | pde=1.392e-01 ic=1.205e+00 bc=3.121e-02
+  step   6000 | loss 1.364e+00 | val relL2 0.7472 | pde=1.277e-01 ic=1.214e+00 bc=2.236e-02
+  [stage physics] 6000 steps in 145.6s
+  final diag: captured=0.8472 eff_rank=4.31 angle_mean=54.5deg
+[done] burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7428 captured=0.8472 (147s)
+
+=== burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s1 ===
+  init diag: captured=0.6129 eff_rank=1.55 angle_mean=72.3deg
+  step   1500 | loss 2.174e+00 | val relL2 0.8634 | pde=4.533e-02 ic=2.117e+00 bc=1.205e-02
+  step   3000 | loss 1.754e+00 | val relL2 0.7973 | pde=1.278e-01 ic=1.595e+00 bc=3.131e-02
+  step   4500 | loss 1.585e+00 | val relL2 0.7721 | pde=1.132e-01 ic=1.434e+00 bc=3.824e-02
+  step   6000 | loss 1.474e+00 | val relL2 0.7550 | pde=1.419e-01 ic=1.269e+00 bc=6.303e-02
+  [stage physics] 6000 steps in 145.8s
+  final diag: captured=0.8485 eff_rank=4.41 angle_mean=54.4deg
+[done] burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s1 | test relL2=0.7405 captured=0.8485 (146s)
+
+=== burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s2 ===
+  init diag: captured=0.6034 eff_rank=1.20 angle_mean=72.6deg
+  step   1500 | loss 1.520e+00 | val relL2 0.9648 | pde=2.320e-02 ic=1.471e+00 bc=2.633e-02
+  step   3000 | loss 1.665e+00 | val relL2 0.7884 | pde=9.499e-02 ic=1.544e+00 bc=2.546e-02
+  step   4500 | loss 1.585e+00 | val relL2 0.7940 | pde=1.249e-01 ic=1.420e+00 bc=4.017e-02
+  step   6000 | loss 1.707e+00 | val relL2 0.7518 | pde=1.229e-01 ic=1.537e+00 bc=4.703e-02
+  [stage physics] 6000 steps in 144.6s
+  final diag: captured=0.8374 eff_rank=4.60 angle_mean=54.6deg
+[done] burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s2 | test relL2=0.7632 captured=0.8374 (145s)
+
+=== burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s3 ===
+  init diag: captured=0.6179 eff_rank=1.75 angle_mean=71.9deg
+  step   1500 | loss 1.394e+00 | val relL2 1.0372 | pde=3.444e-02 ic=1.342e+00 bc=1.728e-02
+  step   3000 | loss 1.680e+00 | val relL2 0.7791 | pde=1.042e-01 ic=1.558e+00 bc=1.774e-02
+  step   4500 | loss 1.622e+00 | val relL2 0.7477 | pde=1.529e-01 ic=1.448e+00 bc=2.071e-02
+  step   6000 | loss 1.284e+00 | val relL2 0.7456 | pde=1.114e-01 ic=1.151e+00 bc=2.203e-02
+  [stage physics] 6000 steps in 146.9s
+  final diag: captured=0.8505 eff_rank=4.36 angle_mean=54.0deg
+[done] burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s3 | test relL2=0.7359 captured=0.8505 (147s)
+
+=== burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s4 ===
+  init diag: captured=0.6086 eff_rank=1.29 angle_mean=72.4deg
+  step   1500 | loss 2.385e+00 | val relL2 0.9321 | pde=2.719e-02 ic=2.308e+00 bc=4.927e-02
+  step   3000 | loss 1.566e+00 | val relL2 0.7827 | pde=8.147e-02 ic=1.466e+00 bc=1.877e-02
+  step   4500 | loss 1.407e+00 | val relL2 0.7727 | pde=1.095e-01 ic=1.271e+00 bc=2.664e-02
+  step   6000 | loss 1.332e+00 | val relL2 0.7708 | pde=8.205e-02 ic=1.204e+00 bc=4.599e-02
+  [stage physics] 6000 steps in 147.1s
+  final diag: captured=0.8337 eff_rank=3.52 angle_mean=55.1deg
+[done] burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s4 | test relL2=0.7678 captured=0.8337 (147s)
+
+=== burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6142 eff_rank=1.60 angle_mean=71.9deg
+  step   1500 | loss 1.645e+00 | val relL2 0.7541 | pde=1.101e-01 ic=1.452e+00 bc=1.936e-02 align=6.438e-02
+  step   3000 | loss 1.376e+00 | val relL2 0.7360 | pde=1.345e-01 ic=1.173e+00 bc=2.577e-02 align=4.328e-02
+  step   4500 | loss 1.409e+00 | val relL2 0.7371 | pde=1.799e-01 ic=1.132e+00 bc=5.544e-02 align=4.150e-02
+  step   6000 | loss 1.350e+00 | val relL2 0.7155 | pde=1.276e-01 ic=1.141e+00 bc=4.545e-02 align=3.659e-02
+  [stage physics] 6000 steps in 157.6s
+  final diag: captured=0.8615 eff_rank=6.88 angle_mean=51.5deg
+[done] burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s0 | test relL2=0.6977 captured=0.8615 (158s)
+
+=== burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s1 ===
+  init diag: captured=0.6129 eff_rank=1.55 angle_mean=72.3deg
+  step   1500 | loss 2.015e+00 | val relL2 0.7667 | pde=1.078e-01 ic=1.816e+00 bc=3.038e-02 align=6.130e-02
+  step   3000 | loss 1.592e+00 | val relL2 0.7334 | pde=1.436e-01 ic=1.357e+00 bc=4.450e-02 align=4.711e-02
+  step   4500 | loss 1.416e+00 | val relL2 0.6917 | pde=1.288e-01 ic=1.218e+00 bc=2.727e-02 align=4.138e-02
+  step   6000 | loss 1.381e+00 | val relL2 0.6896 | pde=1.893e-01 ic=1.077e+00 bc=7.272e-02 align=4.207e-02
+  [stage physics] 6000 steps in 158.0s
+  final diag: captured=0.8671 eff_rank=6.07 angle_mean=51.6deg
+[done] burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s1 | test relL2=0.6785 captured=0.8671 (158s)
+
+=== burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s2 ===
+  init diag: captured=0.6034 eff_rank=1.20 angle_mean=72.6deg
+  step   1500 | loss 1.266e+00 | val relL2 0.7605 | pde=1.186e-01 ic=1.057e+00 bc=3.945e-02 align=5.020e-02
+  step   3000 | loss 1.551e+00 | val relL2 0.7275 | pde=1.190e-01 ic=1.353e+00 bc=3.691e-02 align=4.213e-02
+  step   4500 | loss 1.352e+00 | val relL2 0.6943 | pde=1.380e-01 ic=1.129e+00 bc=4.571e-02 align=3.913e-02
+  step   6000 | loss 1.544e+00 | val relL2 0.6965 | pde=1.159e-01 ic=1.359e+00 bc=3.153e-02 align=3.793e-02
+  [stage physics] 6000 steps in 157.2s
+  final diag: captured=0.8634 eff_rank=6.65 angle_mean=51.3deg
+[done] burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s2 | test relL2=0.6897 captured=0.8634 (157s)
+
+=== burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s3 ===
+  init diag: captured=0.6179 eff_rank=1.75 angle_mean=71.9deg
+  step   1500 | loss 1.163e+00 | val relL2 0.7843 | pde=9.243e-02 ic=9.552e-01 bc=3.970e-02 align=7.584e-02
+  step   3000 | loss 1.584e+00 | val relL2 0.7203 | pde=1.572e-01 ic=1.346e+00 bc=3.598e-02 align=4.492e-02
+  step   4500 | loss 1.526e+00 | val relL2 0.7021 | pde=1.799e-01 ic=1.268e+00 bc=4.029e-02 align=3.842e-02
+  step   6000 | loss 1.241e+00 | val relL2 0.7114 | pde=1.181e-01 ic=1.040e+00 bc=4.376e-02 align=3.920e-02
+  [stage physics] 6000 steps in 157.2s
+  final diag: captured=0.8602 eff_rank=6.72 angle_mean=51.7deg
+[done] burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s3 | test relL2=0.6912 captured=0.8602 (157s)
+
+=== burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s4 ===
+  init diag: captured=0.6086 eff_rank=1.29 angle_mean=72.4deg
+  step   1500 | loss 2.048e+00 | val relL2 0.7587 | pde=1.706e-01 ic=1.763e+00 bc=4.528e-02 align=6.952e-02
+  step   3000 | loss 1.439e+00 | val relL2 0.7665 | pde=1.338e-01 ic=1.221e+00 bc=4.043e-02 align=4.363e-02
+  step   4500 | loss 1.296e+00 | val relL2 0.7066 | pde=1.321e-01 ic=1.104e+00 bc=1.798e-02 align=4.249e-02
+  step   6000 | loss 1.261e+00 | val relL2 0.6869 | pde=1.165e-01 ic=1.071e+00 bc=3.243e-02 align=4.131e-02
+  [stage physics] 6000 steps in 158.7s
+  final diag: captured=0.8604 eff_rank=6.96 angle_mean=52.1deg
+[done] burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s4 | test relL2=0.6799 captured=0.8604 (159s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expV\summary.csv
+  tag=burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=0.7428 | captured_final=0.8472 | eff_rank_final=4.3082
+  tag=burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s1 | test_rel_l2=0.7405 | captured_final=0.8485 | eff_rank_final=4.4150
+  tag=burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s2 | test_rel_l2=0.7632 | captured_final=0.8374 | eff_rank_final=4.5977
+  tag=burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s3 | test_rel_l2=0.7359 | captured_final=0.8505 | eff_rank_final=4.3634
+  tag=burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s4 | test_rel_l2=0.7678 | captured_final=0.8337 | eff_rank_final=3.5224
+  tag=burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s0 | test_rel_l2=0.6977 | captured_final=0.8615 | eff_rank_final=6.8803
+  tag=burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s1 | test_rel_l2=0.6785 | captured_final=0.8671 | eff_rank_final=6.0671
+  tag=burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s2 | test_rel_l2=0.6897 | captured_final=0.8634 | eff_rank_final=6.6459
+  tag=burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s3 | test_rel_l2=0.6912 | captured_final=0.8602 | eff_rank_final=6.7165
+  tag=burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s4 | test_rel_l2=0.6799 | captured_final=0.8604 | eff_rank_final=6.9623
+[10/10] 2D burgers2d w32  seeds 0,1,2,3,4
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+  step   1500 | loss 5.815e-01 | val relL2 1.0052 | pde=2.248e-05 ic=5.812e-01 bc=2.636e-04
+  step   3000 | loss 6.383e-01 | val relL2 1.0020 | pde=7.904e-05 ic=6.381e-01 bc=1.658e-04
+  step   4500 | loss 6.433e-01 | val relL2 1.0022 | pde=7.012e-06 ic=6.432e-01 bc=5.481e-05
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 191.7s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (193s)
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s1 ===
+  init diag: captured=0.3175 eff_rank=1.95 angle_mean=78.3deg
+  step   1500 | loss 7.473e-01 | val relL2 1.0095 | pde=4.388e-05 ic=7.466e-01 bc=5.864e-04
+  step   3000 | loss 6.582e-01 | val relL2 1.0007 | pde=1.060e-04 ic=6.578e-01 bc=3.071e-04
+  step   4500 | loss 5.456e-01 | val relL2 1.0062 | pde=8.879e-05 ic=5.454e-01 bc=6.791e-05
+  step   6000 | loss 7.432e-01 | val relL2 1.0025 | pde=7.257e-06 ic=7.432e-01 bc=5.829e-05
+  [stage physics] 6000 steps in 190.9s
+  final diag: captured=0.2483 eff_rank=1.34 angle_mean=78.8deg
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s1 | test relL2=1.0027 captured=0.2483 (191s)
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s2 ===
+  init diag: captured=0.3107 eff_rank=1.98 angle_mean=78.4deg
+  step   1500 | loss 5.633e-01 | val relL2 1.0085 | pde=2.968e-05 ic=5.631e-01 bc=1.528e-04
+  step   3000 | loss 6.224e-01 | val relL2 1.0053 | pde=8.777e-05 ic=6.221e-01 bc=1.592e-04
+  step   4500 | loss 6.883e-01 | val relL2 1.0070 | pde=1.047e-05 ic=6.882e-01 bc=8.458e-05
+  step   6000 | loss 5.436e-01 | val relL2 1.0051 | pde=7.042e-06 ic=5.434e-01 bc=1.341e-04
+  [stage physics] 6000 steps in 191.5s
+  final diag: captured=0.2744 eff_rank=1.38 angle_mean=78.4deg
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s2 | test relL2=1.0039 captured=0.2744 (192s)
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s3 ===
+  init diag: captured=0.3435 eff_rank=1.78 angle_mean=77.7deg
+  step   1500 | loss 7.221e-01 | val relL2 1.0041 | pde=4.823e-06 ic=7.216e-01 bc=4.220e-04
+  step   3000 | loss 6.992e-01 | val relL2 1.0034 | pde=9.761e-06 ic=6.990e-01 bc=1.698e-04
+  step   4500 | loss 6.515e-01 | val relL2 1.0018 | pde=2.541e-05 ic=6.513e-01 bc=1.098e-04
+  step   6000 | loss 4.881e-01 | val relL2 1.0044 | pde=2.761e-06 ic=4.880e-01 bc=1.052e-04
+  [stage physics] 6000 steps in 191.1s
+  final diag: captured=0.2890 eff_rank=1.51 angle_mean=78.4deg
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s3 | test relL2=1.0079 captured=0.2890 (191s)
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s4 ===
+  init diag: captured=0.3618 eff_rank=1.77 angle_mean=77.7deg
+  step   1500 | loss 5.532e-01 | val relL2 1.0030 | pde=1.065e-05 ic=5.528e-01 bc=3.284e-04
+  step   3000 | loss 6.045e-01 | val relL2 1.0044 | pde=4.897e-05 ic=6.043e-01 bc=1.380e-04
+  step   4500 | loss 6.751e-01 | val relL2 1.0011 | pde=4.132e-05 ic=6.749e-01 bc=1.234e-04
+  step   6000 | loss 5.297e-01 | val relL2 1.0020 | pde=2.523e-06 ic=5.295e-01 bc=1.439e-04
+  [stage physics] 6000 steps in 194.1s
+  final diag: captured=0.2736 eff_rank=1.47 angle_mean=78.1deg
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s4 | test relL2=1.0015 captured=0.2736 (194s)
+
+=== burgers2d-w32_pi_align_nd0_aprior1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+  step   1500 | loss 6.093e-01 | val relL2 0.9631 | pde=9.029e-03 ic=5.517e-01 bc=5.579e-03 align=4.294e-02
+  step   3000 | loss 6.433e-01 | val relL2 0.9489 | pde=1.293e-02 ic=5.993e-01 bc=5.026e-03 align=2.612e-02
+  step   4500 | loss 6.069e-01 | val relL2 0.8735 | pde=1.973e-02 ic=5.176e-01 bc=2.584e-02 align=4.373e-02
+  step   6000 | loss 5.420e-01 | val relL2 0.8061 | pde=1.681e-02 ic=4.697e-01 bc=1.475e-02 align=4.068e-02
+  [stage physics] 6000 steps in 205.2s
+  final diag: captured=0.6068 eff_rank=12.25 angle_mean=72.2deg
+[done] burgers2d-w32_pi_align_nd0_aprior1.0_s0 | test relL2=0.8066 captured=0.6068 (205s)
+
+=== burgers2d-w32_pi_align_nd0_aprior1.0_s1 ===
+  init diag: captured=0.3175 eff_rank=1.95 angle_mean=78.3deg
+  step   1500 | loss 7.962e-01 | val relL2 0.9716 | pde=8.551e-03 ic=7.194e-01 bc=8.703e-03 align=5.955e-02
+  step   3000 | loss 7.306e-01 | val relL2 0.9665 | pde=5.422e-03 ic=6.414e-01 bc=6.163e-03 align=7.762e-02
+  step   4500 | loss 5.682e-01 | val relL2 0.9679 | pde=1.182e-02 ic=5.130e-01 bc=7.592e-03 align=3.580e-02
+  step   6000 | loss 6.978e-01 | val relL2 0.8805 | pde=2.304e-02 ic=6.130e-01 bc=1.922e-02 align=4.253e-02
+  [stage physics] 6000 steps in 216.0s
+  final diag: captured=0.4964 eff_rank=8.97 angle_mean=73.3deg
+[done] burgers2d-w32_pi_align_nd0_aprior1.0_s1 | test relL2=0.8789 captured=0.4964 (216s)
+
+=== burgers2d-w32_pi_align_nd0_aprior1.0_s2 ===
+  init diag: captured=0.3107 eff_rank=1.98 angle_mean=78.4deg
+  step   1500 | loss 5.929e-01 | val relL2 0.9605 | pde=8.494e-03 ic=5.392e-01 bc=4.072e-03 align=4.108e-02
+  step   3000 | loss 6.269e-01 | val relL2 0.9392 | pde=1.437e-02 ic=5.793e-01 bc=7.198e-03 align=2.608e-02
+  step   4500 | loss 6.225e-01 | val relL2 0.8514 | pde=2.557e-02 ic=5.231e-01 bc=2.844e-02 align=4.546e-02
+  step   6000 | loss 4.369e-01 | val relL2 0.7792 | pde=1.834e-02 ic=3.591e-01 bc=1.747e-02 align=4.205e-02
+  [stage physics] 6000 steps in 207.4s
+  final diag: captured=0.5976 eff_rank=13.27 angle_mean=72.2deg
+[done] burgers2d-w32_pi_align_nd0_aprior1.0_s2 | test relL2=0.7757 captured=0.5976 (207s)
+
+=== burgers2d-w32_pi_align_nd0_aprior1.0_s3 ===
+  init diag: captured=0.3435 eff_rank=1.78 angle_mean=77.7deg
+  step   1500 | loss 1.672e+00 | val relL2 1.4249 | pde=9.127e-02 ic=8.084e-01 bc=7.053e-01 align=6.675e-02
+  step   3000 | loss 7.102e-01 | val relL2 0.9435 | pde=1.448e-02 ic=6.561e-01 bc=8.085e-03 align=3.158e-02
+  step   4500 | loss 6.281e-01 | val relL2 0.8825 | pde=2.066e-02 ic=5.514e-01 bc=1.456e-02 align=4.151e-02
+  step   6000 | loss 4.642e-01 | val relL2 0.8562 | pde=1.314e-02 ic=3.867e-01 bc=1.915e-02 align=4.514e-02
+  [stage physics] 6000 steps in 205.0s
+  final diag: captured=0.5760 eff_rank=11.32 angle_mean=72.7deg
+[done] burgers2d-w32_pi_align_nd0_aprior1.0_s3 | test relL2=0.8478 captured=0.5760 (205s)
+
+=== burgers2d-w32_pi_align_nd0_aprior1.0_s4 ===
+  init diag: captured=0.3618 eff_rank=1.77 angle_mean=77.7deg
+  step   1500 | loss 5.750e-01 | val relL2 0.9582 | pde=8.633e-03 ic=5.303e-01 bc=3.149e-03 align=3.291e-02
+  step   3000 | loss 6.034e-01 | val relL2 0.9343 | pde=1.816e-02 ic=5.483e-01 bc=6.958e-03 align=3.000e-02
+  step   4500 | loss 6.191e-01 | val relL2 0.8777 | pde=2.451e-02 ic=5.203e-01 bc=3.035e-02 align=4.402e-02
+  step   6000 | loss 4.597e-01 | val relL2 0.8001 | pde=2.220e-02 ic=3.746e-01 bc=2.044e-02 align=4.252e-02
+  [stage physics] 6000 steps in 203.4s
+  final diag: captured=0.5812 eff_rank=11.94 angle_mean=72.5deg
+[done] burgers2d-w32_pi_align_nd0_aprior1.0_s4 | test relL2=0.7933 captured=0.5812 (203s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expV\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s1 | test_rel_l2=1.0027 | captured_final=0.2483 | eff_rank_final=1.3416
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s2 | test_rel_l2=1.0039 | captured_final=0.2744 | eff_rank_final=1.3840
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s3 | test_rel_l2=1.0079 | captured_final=0.2890 | eff_rank_final=1.5082
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s4 | test_rel_l2=1.0015 | captured_final=0.2736 | eff_rank_final=1.4660
+  tag=burgers2d-w32_pi_align_nd0_aprior1.0_s0 | test_rel_l2=0.8066 | captured_final=0.6068 | eff_rank_final=12.2528
+  tag=burgers2d-w32_pi_align_nd0_aprior1.0_s1 | test_rel_l2=0.8789 | captured_final=0.4964 | eff_rank_final=8.9707
+  tag=burgers2d-w32_pi_align_nd0_aprior1.0_s2 | test_rel_l2=0.7757 | captured_final=0.5976 | eff_rank_final=13.2690
+  tag=burgers2d-w32_pi_align_nd0_aprior1.0_s3 | test_rel_l2=0.8478 | captured_final=0.5760 | eff_rank_final=11.3171
+  tag=burgers2d-w32_pi_align_nd0_aprior1.0_s4 | test_rel_l2=0.7933 | captured_final=0.5812 | eff_rank_final=11.9403
+[done] final sweep (part 2) finished

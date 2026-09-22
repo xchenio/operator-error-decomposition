@@ -1,0 +1,26 @@
+[pde] dr: trunk_dim=2, sensors=101, grid=4141, coef=12  kwargs={}
+[device] cuda
+[data] grid=(4141, 2), train=200, val=50, test=50
+
+=== dr_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.9731 eff_rank=1.36 angle_mean=61.4deg
+  step    300 | loss 1.700e-01 | val relL2 1.0032 | pde=1.698e-01 ic=2.297e-05 bc=1.717e-04
+  [stage physics] 300 steps in 9.7s
+  final diag: captured=0.9819 eff_rank=1.19 angle_mean=59.0deg
+[done] dr_pi_baseline_nd0_anone1.0_s0 | test relL2=0.9991 captured=0.9819 (11s)
+
+[saved] F:\Desktop\temp\pinode_align\results\smoke4\summary.csv
+  tag=dr_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=0.9991 | captured_final=0.9819 | eff_rank_final=1.1892
+[pde] dr: trunk_dim=2, sensors=101, grid=4141, coef=12  kwargs={}
+[device] cuda
+[data] grid=(4141, 2), train=200, val=50, test=50
+
+=== dr-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.9676 eff_rank=12.03 angle_mean=49.2deg
+  step    300 | loss 1.866e-01 | val relL2 1.0684 | pde=1.849e-01 ic=1.016e-03 bc=7.170e-04
+  [stage physics] 300 steps in 11.6s
+  final diag: captured=0.9762 eff_rank=8.32 angle_mean=47.9deg
+[done] dr-fourier-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0152 captured=0.9762 (14s)
+
+[saved] F:\Desktop\temp\pinode_align\results\smoke4\summary.csv
+  tag=dr-fourier-w32_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=1.0152 | captured_final=0.9762 | eff_rank_final=8.3176

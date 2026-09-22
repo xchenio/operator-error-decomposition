@@ -1,0 +1,34 @@
+[pde] dr: trunk_dim=2, sensors=101, grid=4141, coef=12  kwargs={}
+[device] cuda
+[data] grid=(4141, 2), train=200, val=50, test=50
+
+=== dr-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.9752 eff_rank=1.36 angle_mean=64.8deg
+  step   1000 | loss 1.496e-02 | val relL2 0.3678 | pde=1.322e-02 ic=4.375e-04 bc=1.300e-03
+  step   2000 | loss 1.304e-02 | val relL2 0.2464 | pde=1.037e-02 ic=6.078e-04 bc=2.067e-03
+  step   3000 | loss 9.519e-03 | val relL2 0.2378 | pde=7.444e-03 ic=5.784e-04 bc=1.497e-03
+  step   4000 | loss 8.278e-03 | val relL2 0.1611 | pde=7.211e-03 ic=4.369e-04 bc=6.296e-04
+  step   5000 | loss 6.911e-03 | val relL2 0.1657 | pde=5.967e-03 ic=3.018e-04 bc=6.425e-04
+  step   6000 | loss 6.161e-03 | val relL2 0.1729 | pde=5.291e-03 ic=4.255e-04 bc=4.441e-04
+  [stage physics] 6000 steps in 190.5s
+  final diag: captured=0.9999 eff_rank=3.58 angle_mean=33.0deg
+[done] dr-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.1737 captured=0.9999 (192s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expK\summary.csv
+  tag=dr-w64_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=0.1737 | captured_final=0.9999 | eff_rank_final=3.5816
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   1000 | loss 1.713e+00 | val relL2 0.9757 | pde=1.559e-02 ic=1.674e+00 bc=2.430e-02
+  step   2000 | loss 1.921e+00 | val relL2 0.9072 | pde=5.456e-02 ic=1.839e+00 bc=2.741e-02
+  step   3000 | loss 1.480e+00 | val relL2 0.8033 | pde=1.035e-01 ic=1.348e+00 bc=2.861e-02
+  step   4000 | loss 1.707e+00 | val relL2 0.7805 | pde=1.257e-01 ic=1.544e+00 bc=3.731e-02
+  [stage physics] 4000 steps in 175.4s
+  final diag: captured=0.9204 eff_rank=3.29 angle_mean=53.1deg
+[done] burgers-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7724 captured=0.9204 (177s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expK\summary.csv
+  tag=burgers-w64_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=0.7724 | captured_final=0.9204 | eff_rank_final=3.2867

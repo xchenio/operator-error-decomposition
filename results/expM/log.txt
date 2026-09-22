@@ -1,0 +1,41 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64-causal1_pi_causal_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2000 | loss 2.059e+00 | val relL2 0.9720 | pde=1.724e-02 ic=2.023e+00 bc=1.871e-02
+  step   4000 | loss 1.771e+00 | val relL2 0.7969 | pde=9.590e-02 ic=1.644e+00 bc=3.059e-02
+  step   6000 | loss 1.637e+00 | val relL2 0.7837 | pde=8.507e-02 ic=1.514e+00 bc=3.710e-02
+  step   8000 | loss 1.617e+00 | val relL2 0.7726 | pde=9.620e-02 ic=1.499e+00 bc=2.134e-02
+  step  10000 | loss 1.750e+00 | val relL2 0.7577 | pde=8.399e-02 ic=1.622e+00 bc=4.416e-02
+  [stage physics] 10000 steps in 459.6s
+  final diag: captured=0.9375 eff_rank=5.25 angle_mean=47.5deg
+[done] burgers-w64-causal1_pi_causal_nd0_aprior1.0_s0 | test relL2=0.7601 captured=0.9375 (462s)
+
+=== burgers-w64-causal10_pi_causal_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2000 | loss 2.073e+00 | val relL2 0.9726 | pde=1.287e-02 ic=2.040e+00 bc=1.978e-02
+  step   4000 | loss 1.817e+00 | val relL2 0.8272 | pde=6.964e-02 ic=1.733e+00 bc=1.467e-02
+  step   6000 | loss 1.662e+00 | val relL2 0.8064 | pde=8.916e-02 ic=1.553e+00 bc=1.989e-02
+  step   8000 | loss 1.736e+00 | val relL2 0.8087 | pde=1.078e-01 ic=1.609e+00 bc=1.824e-02
+  step  10000 | loss 1.871e+00 | val relL2 0.8005 | pde=5.906e-02 ic=1.786e+00 bc=2.614e-02
+  [stage physics] 10000 steps in 458.0s
+  final diag: captured=0.9366 eff_rank=5.43 angle_mean=47.6deg
+[done] burgers-w64-causal10_pi_causal_nd0_aprior1.0_s0 | test relL2=0.8045 captured=0.9366 (458s)
+
+=== burgers-w64-causal100_pi_causal_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   2000 | loss 1.931e+00 | val relL2 0.9271 | pde=5.111e-02 ic=1.858e+00 bc=2.172e-02
+  step   4000 | loss 1.855e+00 | val relL2 0.8450 | pde=8.312e-02 ic=1.751e+00 bc=2.090e-02
+  step   6000 | loss 1.708e+00 | val relL2 0.8430 | pde=4.946e-02 ic=1.647e+00 bc=1.140e-02
+  step   8000 | loss 1.781e+00 | val relL2 0.8282 | pde=1.124e-01 ic=1.635e+00 bc=3.359e-02
+  step  10000 | loss 1.888e+00 | val relL2 0.8408 | pde=5.919e-02 ic=1.808e+00 bc=2.086e-02
+  [stage physics] 10000 steps in 448.5s
+  final diag: captured=0.9317 eff_rank=4.45 angle_mean=49.3deg
+[done] burgers-w64-causal100_pi_causal_nd0_aprior1.0_s0 | test relL2=0.8285 captured=0.9317 (449s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expM\summary.csv
+  tag=burgers-w64-causal1_pi_causal_nd0_aprior1.0_s0 | test_rel_l2=0.7601 | captured_final=0.9375 | eff_rank_final=5.2531
+  tag=burgers-w64-causal10_pi_causal_nd0_aprior1.0_s0 | test_rel_l2=0.8045 | captured_final=0.9366 | eff_rank_final=5.4296
+  tag=burgers-w64-causal100_pi_causal_nd0_aprior1.0_s0 | test_rel_l2=0.8285 | captured_final=0.9317 | eff_rank_final=4.4550

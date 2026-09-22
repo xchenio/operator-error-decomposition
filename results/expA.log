@@ -1,0 +1,45 @@
+[pde] dr: trunk_dim=2, sensors=101, grid=4141, coef=12  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\dr_default_n200_50_50_s0.npz
+[data] grid=(4141, 2), train=200, val=50, test=50
+
+=== dr_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.9748 eff_rank=1.39 angle_mean=64.4deg
+  step   2000 | loss 1.810e-01 | val relL2 0.9773 | pde=1.809e-01 ic=1.826e-05 bc=8.597e-05
+  step   4000 | loss 1.834e-01 | val relL2 0.9920 | pde=1.834e-01 ic=2.079e-05 bc=4.102e-05
+  step   6000 | loss 9.518e-02 | val relL2 0.9850 | pde=9.515e-02 ic=3.565e-06 bc=2.108e-05
+  step   8000 | loss 1.762e-01 | val relL2 0.9984 | pde=1.762e-01 ic=1.319e-05 bc=3.041e-05
+  step  10000 | loss 2.706e-01 | val relL2 1.0015 | pde=2.705e-01 ic=2.112e-05 bc=1.320e-05
+  step  12000 | loss 1.822e-01 | val relL2 0.9995 | pde=1.821e-01 ic=1.003e-05 bc=5.346e-05
+  [stage physics] 12000 steps in 413.5s
+  final diag: captured=0.9755 eff_rank=1.54 angle_mean=67.2deg
+[done] dr_pi_baseline_nd0_anone1.0_s0 | test relL2=0.9996 captured=0.9755 (416s)
+
+=== dr_pi_align_nd0_aprior1.0_s0 ===
+  init diag: captured=0.9748 eff_rank=1.39 angle_mean=64.4deg
+  step   2000 | loss 2.967e-01 | val relL2 0.9915 | pde=1.829e-01 ic=6.808e-05 bc=3.335e-05 align=1.138e-01
+  step   4000 | loss 2.278e-01 | val relL2 0.9817 | pde=1.855e-01 ic=7.303e-05 bc=4.162e-05 align=4.220e-02
+  step   6000 | loss 1.147e-01 | val relL2 0.9892 | pde=9.471e-02 ic=3.871e-05 bc=9.102e-06 align=1.994e-02
+  step   8000 | loss 1.919e-01 | val relL2 0.9896 | pde=1.776e-01 ic=4.340e-05 bc=1.412e-05 align=1.428e-02
+  step  10000 | loss 2.832e-01 | val relL2 0.9921 | pde=2.712e-01 ic=2.848e-05 bc=7.808e-06 align=1.193e-02
+  step  12000 | loss 1.912e-01 | val relL2 0.9989 | pde=1.823e-01 ic=1.718e-05 bc=1.602e-06 align=8.958e-03
+  [stage physics] 12000 steps in 469.4s
+  final diag: captured=0.9999 eff_rank=33.66 angle_mean=17.1deg
+[done] dr_pi_align_nd0_aprior1.0_s0 | test relL2=1.0000 captured=0.9999 (470s)
+
+=== dr_pi_align_nd0_aprior10.0_s0 ===
+  init diag: captured=0.9748 eff_rank=1.39 angle_mean=64.4deg
+  step   2000 | loss 5.020e-01 | val relL2 0.9806 | pde=1.821e-01 ic=4.604e-05 bc=4.165e-05 align=3.198e-02
+  step   4000 | loss 3.333e-01 | val relL2 0.9795 | pde=1.849e-01 ic=1.779e-04 bc=8.756e-05 align=1.482e-02
+  step   6000 | loss 2.110e-01 | val relL2 0.9925 | pde=9.500e-02 ic=6.159e-05 bc=1.159e-04 align=1.158e-02
+  step   8000 | loss 2.551e-01 | val relL2 0.9893 | pde=1.773e-01 ic=4.230e-05 bc=6.836e-05 align=7.767e-03
+  step  10000 | loss 3.373e-01 | val relL2 0.9883 | pde=2.715e-01 ic=2.268e-05 bc=6.392e-06 align=6.575e-03
+  step  12000 | loss 2.453e-01 | val relL2 0.9780 | pde=1.824e-01 ic=6.008e-05 bc=5.892e-05 align=6.281e-03
+  [stage physics] 12000 steps in 458.1s
+  final diag: captured=0.9997 eff_rank=4.90 angle_mean=18.1deg
+[done] dr_pi_align_nd0_aprior10.0_s0 | test relL2=0.9818 captured=0.9997 (458s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expA\summary.csv
+  tag=dr_pi_baseline_nd0_anone1.0_s0 | test_rel_l2=0.9996 | captured_final=0.9755 | eff_rank_final=1.5380
+  tag=dr_pi_align_nd0_aprior1.0_s0 | test_rel_l2=1.0000 | captured_final=0.9999 | eff_rank_final=33.6606
+  tag=dr_pi_align_nd0_aprior10.0_s0 | test_rel_l2=0.9818 | captured_final=0.9997 | eff_rank_final=4.9014

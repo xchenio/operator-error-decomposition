@@ -1,0 +1,17 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_default_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6225 eff_rank=1.46 angle_mean=74.1deg
+  step   1500 | loss 2.101e+00 | val relL2 0.9802 | pde=2.149e-02 ic=2.059e+00 bc=1.969e-02
+  step   3000 | loss 1.460e+00 | val relL2 0.8101 | pde=8.914e-02 ic=1.358e+00 bc=1.312e-02
+  step   4500 | loss 1.496e+00 | val relL2 0.7883 | pde=1.110e-01 ic=1.368e+00 bc=1.711e-02
+  step   6000 | loss 1.578e+00 | val relL2 0.7844 | pde=6.838e-02 ic=1.494e+00 bc=1.600e-02
+  [stage physics] 6000 steps in 1150.1s
+  final diag: captured=0.8564 eff_rank=2.78 angle_mean=56.1deg
+[done] burgers-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7845 captured=0.8564 (1152s)
+
+=== burgers-w32_pi_baseline_nd0_anone1.0_s1 ===
+  init diag: captured=0.6329 eff_rank=1.48 angle_mean=73.7deg

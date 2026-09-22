@@ -1,0 +1,27 @@
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   5000 | loss 1.259e+00 | val relL2 0.7807 | pde=1.028e-01 ic=1.135e+00 bc=2.064e-02
+  step  10000 | loss 1.663e+00 | val relL2 0.7291 | pde=1.262e-01 ic=1.486e+00 bc=5.064e-02
+  step  15000 | loss 1.184e+00 | val relL2 0.7005 | pde=1.414e-01 ic=1.018e+00 bc=2.471e-02
+  step  20000 | loss 1.385e+00 | val relL2 0.6864 | pde=2.004e-01 ic=1.169e+00 bc=1.496e-02
+  step  25000 | loss 1.401e+00 | val relL2 0.6837 | pde=2.122e-01 ic=1.170e+00 bc=1.921e-02
+  step  30000 | loss 1.205e+00 | val relL2 0.6672 | pde=1.968e-01 ic=9.790e-01 bc=2.900e-02
+  step  35000 | loss 1.028e+00 | val relL2 0.6676 | pde=1.544e-01 ic=8.587e-01 bc=1.448e-02
+  step  40000 | loss 9.580e-01 | val relL2 0.6407 | pde=1.635e-01 ic=7.827e-01 bc=1.188e-02
+  step  45000 | loss 1.134e+00 | val relL2 0.6350 | pde=1.910e-01 ic=9.346e-01 bc=8.804e-03
+  step  50000 | loss 9.225e-01 | val relL2 0.6247 | pde=1.478e-01 ic=7.575e-01 bc=1.732e-02
+  [stage physics] 50000 steps in 3087.9s
+  final diag: captured=0.9640 eff_rank=8.78 angle_mean=38.4deg
+  final relL2: train=0.6048 val=0.6247 test=0.6139
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.6139 captured=0.9640 (3092s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expS50k\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6048 | test_rel_l2=0.6139 | captured_final=0.9640 | eff_rank_final=8.7779

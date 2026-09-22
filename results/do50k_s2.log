@@ -1,0 +1,25 @@
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cuda', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_data_only_nd0_anone1.0_s2 ===
+  init diag: captured=0.3107 eff_rank=1.98 angle_mean=78.4deg
+  step   5000 | loss 3.338e-02 | val relL2 0.8633 | data=3.338e-02
+  step  10000 | loss 2.993e-02 | val relL2 0.7810 | data=2.993e-02
+  step  15000 | loss 1.909e-02 | val relL2 0.7852 | data=1.909e-02
+  step  20000 | loss 2.527e-02 | val relL2 0.7090 | data=2.527e-02
+  step  25000 | loss 1.797e-02 | val relL2 0.6546 | data=1.797e-02
+  step  30000 | loss 1.235e-02 | val relL2 0.6672 | data=1.235e-02
+  step  35000 | loss 1.572e-02 | val relL2 0.6631 | data=1.572e-02
+  step  40000 | loss 6.488e-03 | val relL2 0.6589 | data=6.488e-03
+  step  45000 | loss 1.207e-02 | val relL2 0.6513 | data=1.207e-02
+  step  50000 | loss 1.171e-02 | val relL2 0.6514 | data=1.171e-02
+  [stage data] 50000 steps in 490.0s
+  final diag: captured=0.8494 eff_rank=11.61 angle_mean=58.0deg
+  final relL2: train=0.4542 val=0.6514 test=0.6291
+[done] burgers2d-w32_data_only_nd0_anone1.0_s2 | test relL2=0.6291 captured=0.8494 (493s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expDO50k\summary.csv
+  tag=burgers2d-w32_data_only_nd0_anone1.0_s2 | train_rel_l2=0.4542 | test_rel_l2=0.6291 | captured_final=0.8494 | eff_rank_final=11.6060

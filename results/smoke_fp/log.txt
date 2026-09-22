@@ -1,0 +1,15 @@
+[fingerprint] code_hash=1004674a170c7ce1 env={'python': '3.11.16', 'torch': '2.14.0+cu130', 'numpy': '2.4.6', 'device': 'cpu', 'gpu': 'NVIDIA GeForce RTX 5060 Laptop GPU', 'cuda': '13.0'}
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cpu
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w16_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6177 eff_rank=1.31 angle_mean=67.7deg
+  step      5 | loss 2.083e+00 | val relL2 1.1208 | pde=6.995e-02 ic=1.903e+00 bc=1.105e-01
+  [stage physics] 5 steps in 1.4s
+  final diag: captured=0.6823 eff_rank=1.32 angle_mean=63.7deg
+  final relL2: train=1.0993 val=1.1208 test=1.0766
+[done] burgers_Nx256_Nx_store128_nu0.02-w16_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0766 captured=0.6823 (4s)
+
+[saved] F:\Desktop\temp\pinode_align\results\smoke_fp\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w16_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0993 | test_rel_l2=1.0766 | captured_final=0.6823 | eff_rank_final=1.3201

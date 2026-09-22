@@ -1,0 +1,40 @@
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Traceback (most recent call last):
+  File "F:\Desktop\temp\pinode_align\scripts\run.py", line 208, in main
+    r = run_one(cfg, pde, splits, device, out_dir, logger)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Desktop\temp\pinode_align\scripts\run.py", line 52, in run_one
+    res = trainer.fit(stages, bs=skw["bs"], eval_every=cfg.eval_every,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Desktop\temp\pinode_align\src\trainer.py", line 320, in fit
+    self.run_stage(st, bs=bs, eval_every=eval_every, diag_every=diag_every)
+  File "F:\Desktop\temp\pinode_align\src\trainer.py", line 262, in run_stage
+    terms = self.physics_terms(idx, stage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Desktop\temp\pinode_align\src\trainer.py", line 203, in physics_terms
+    terms["pde"] = self._causal_pde(terms["pde_pts"], terms["col_coords"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Desktop\temp\pinode_align\src\trainer.py", line 147, in _causal_pde
+    ssum = torch.zeros(M, device=self.device).index_add(0, fi, r2)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: index_add_(): Number of indices (1024) should be equal to source.size(dim): (16384), for dim: 0
+Traceback (most recent call last):
+  File "F:\Desktop\temp\pinode_align\scripts\run.py", line 208, in main
+    r = run_one(cfg, pde, splits, device, out_dir, logger)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Desktop\temp\pinode_align\scripts\run.py", line 52, in run_one
+    res = trainer.fit(stages, bs=skw["bs"], eval_every=cfg.eval_every,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Desktop\temp\pinode_align\src\trainer.py", line 320, in fit
+    self.run_stage(st, bs=bs, eval_every=eval_every, diag_every=diag_every)
+  File "F:\Desktop\temp\pinode_align\src\trainer.py", line 262, in run_stage
+    terms = self.physics_terms(idx, stage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Desktop\temp\pinode_align\src\trainer.py", line 203, in physics_terms
+    terms["pde"] = self._causal_pde(terms["pde_pts"], terms["col_coords"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Desktop\temp\pinode_align\src\trainer.py", line 147, in _causal_pde
+    ssum = torch.zeros(M, device=self.device).index_add(0, fi, r2)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: index_add_(): Number of indices (1024) should be equal to source.size(dim): (16384), for dim: 0

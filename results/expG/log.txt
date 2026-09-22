@@ -1,0 +1,27 @@
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={}
+[device] cuda
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers-w64-causal10_pi_causal_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   1500 | loss 2.206e+00 | val relL2 0.9982 | pde=1.024e-05 ic=2.206e+00 bc=3.009e-04
+  step   3000 | loss 1.925e+00 | val relL2 0.9986 | pde=9.164e-06 ic=1.925e+00 bc=3.380e-04
+  step   4500 | loss 1.860e+00 | val relL2 1.0003 | pde=3.600e-05 ic=1.860e+00 bc=1.928e-04
+  step   6000 | loss 1.914e+00 | val relL2 0.9986 | pde=2.076e-05 ic=1.913e+00 bc=2.618e-04
+  [stage physics] 6000 steps in 269.2s
+  final diag: captured=0.6913 eff_rank=1.37 angle_mean=74.7deg
+[done] burgers-w64-causal10_pi_causal_nd0_aprior1.0_s0 | test relL2=0.9995 captured=0.6913 (271s)
+
+=== burgers-w64-causal100_pi_causal_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   1500 | loss 2.206e+00 | val relL2 0.9982 | pde=1.010e-05 ic=2.206e+00 bc=2.971e-04
+  step   3000 | loss 1.926e+00 | val relL2 0.9980 | pde=6.681e-06 ic=1.925e+00 bc=3.866e-04
+  step   4500 | loss 1.860e+00 | val relL2 0.9994 | pde=9.799e-06 ic=1.860e+00 bc=1.567e-04
+  step   6000 | loss 1.914e+00 | val relL2 0.9979 | pde=1.450e-05 ic=1.914e+00 bc=2.759e-04
+  [stage physics] 6000 steps in 267.7s
+  final diag: captured=0.6913 eff_rank=1.26 angle_mean=74.7deg
+[done] burgers-w64-causal100_pi_causal_nd0_aprior1.0_s0 | test relL2=0.9990 captured=0.6913 (268s)
+
+=== burgers-w64-causal1000_pi_causal_nd0_aprior1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   1500 | loss 2.206e+00 | val relL2 0.9981 | pde=1.044e-05 ic=2.206e+00 bc=3.125e-04

@@ -1,0 +1,360 @@
+'eed' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+'锛涜繖涓鐓ф病鍋氾紝鍦版澘缁撹涓嶈兘杩涜鏂囥�?' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+'浉瑕嗙洊锛堜笌' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+########## A) data_only 鐩戠潱涓婄晫 ##########
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_data_only_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+  step   1500 | loss 5.015e-02 | val relL2 1.0016 | data=5.015e-02
+  step   3000 | loss 4.987e-02 | val relL2 0.9481 | data=4.987e-02
+  step   4500 | loss 2.822e-02 | val relL2 0.8716 | data=2.822e-02
+  step   6000 | loss 4.308e-02 | val relL2 0.8553 | data=4.308e-02
+  [stage data] 6000 steps in 30.2s
+  final diag: captured=0.4481 eff_rank=8.00 angle_mean=76.4deg
+  final relL2: train=0.8467 val=0.8553 test=0.8627
+[done] burgers2d-w32_data_only_nd0_anone1.0_s0 | test relL2=0.8627 captured=0.4481 (35s)
+
+=== burgers2d-w32_data_only_nd0_anone1.0_s1 ===
+  init diag: captured=0.3175 eff_rank=1.95 angle_mean=78.3deg
+  step   1500 | loss 3.782e-02 | val relL2 1.0030 | data=3.782e-02
+  step   3000 | loss 6.707e-02 | val relL2 0.9558 | data=6.707e-02
+  step   4500 | loss 5.273e-02 | val relL2 0.8778 | data=5.273e-02
+  step   6000 | loss 2.986e-02 | val relL2 0.8620 | data=2.986e-02
+  [stage data] 6000 steps in 28.9s
+  final diag: captured=0.4504 eff_rank=6.86 angle_mean=75.9deg
+  final relL2: train=0.8587 val=0.8620 test=0.8766
+[done] burgers2d-w32_data_only_nd0_anone1.0_s1 | test relL2=0.8766 captured=0.4504 (29s)
+
+=== burgers2d-w32_data_only_nd0_anone1.0_s2 ===
+  init diag: captured=0.3107 eff_rank=1.98 angle_mean=78.4deg
+  step   1500 | loss 5.780e-02 | val relL2 0.9939 | data=5.780e-02
+  step   3000 | loss 2.845e-02 | val relL2 0.8741 | data=2.845e-02
+  step   4500 | loss 4.685e-02 | val relL2 0.8707 | data=4.685e-02
+  step   6000 | loss 4.194e-02 | val relL2 0.8587 | data=4.194e-02
+  [stage data] 6000 steps in 28.4s
+  final diag: captured=0.4448 eff_rank=7.58 angle_mean=75.8deg
+  final relL2: train=0.8473 val=0.8587 test=0.8637
+[done] burgers2d-w32_data_only_nd0_anone1.0_s2 | test relL2=0.8637 captured=0.4448 (28s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expDO\summary.csv
+  tag=burgers2d-w32_data_only_nd0_anone1.0_s0 | train_rel_l2=0.8467 | test_rel_l2=0.8627 | captured_final=0.4481 | eff_rank_final=8.0012
+  tag=burgers2d-w32_data_only_nd0_anone1.0_s1 | train_rel_l2=0.8587 | test_rel_l2=0.8766 | captured_final=0.4504 | eff_rank_final=6.8610
+  tag=burgers2d-w32_data_only_nd0_anone1.0_s2 | train_rel_l2=0.8473 | test_rel_l2=0.8637 | captured_final=0.4448 | eff_rank_final=7.5838
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+  step   1500 | loss 1.560e-01 | val relL2 0.7458 | data=1.560e-01
+  step   3000 | loss 1.007e-01 | val relL2 0.7037 | data=1.007e-01
+  step   4500 | loss 7.495e-02 | val relL2 0.6494 | data=7.495e-02
+  step   6000 | loss 6.675e-02 | val relL2 0.6038 | data=6.675e-02
+  [stage data] 6000 steps in 25.6s
+  final diag: captured=0.9396 eff_rank=7.87 angle_mean=47.1deg
+  final relL2: train=0.5181 val=0.6038 test=0.5716
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s0 | test relL2=0.5716 captured=0.9396 (28s)
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s1 ===
+  init diag: captured=0.6327 eff_rank=1.44 angle_mean=75.3deg
+  step   1500 | loss 1.137e-01 | val relL2 0.7258 | data=1.137e-01
+  step   3000 | loss 1.086e-01 | val relL2 0.6690 | data=1.086e-01
+  step   4500 | loss 1.248e-01 | val relL2 0.6189 | data=1.248e-01
+  step   6000 | loss 6.019e-02 | val relL2 0.6053 | data=6.019e-02
+  [stage data] 6000 steps in 24.3s
+  final diag: captured=0.9385 eff_rank=7.99 angle_mean=47.2deg
+  final relL2: train=0.5281 val=0.6053 test=0.5673
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s1 | test relL2=0.5673 captured=0.9385 (24s)
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s2 ===
+  init diag: captured=0.6208 eff_rank=1.47 angle_mean=75.6deg
+  step   1500 | loss 1.391e-01 | val relL2 0.7406 | data=1.391e-01
+  step   3000 | loss 1.579e-01 | val relL2 0.7263 | data=1.579e-01
+  step   4500 | loss 1.122e-01 | val relL2 0.7035 | data=1.122e-01
+  step   6000 | loss 1.182e-01 | val relL2 0.6544 | data=1.182e-01
+  [stage data] 6000 steps in 25.5s
+  final diag: captured=0.9446 eff_rank=5.59 angle_mean=47.1deg
+  final relL2: train=0.5883 val=0.6544 test=0.6063
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s2 | test relL2=0.6063 captured=0.9446 (26s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expDO\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s0 | train_rel_l2=0.5181 | test_rel_l2=0.5716 | captured_final=0.9396 | eff_rank_final=7.8731
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s1 | train_rel_l2=0.5281 | test_rel_l2=0.5673 | captured_final=0.9385 | eff_rank_final=7.9933
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_data_only_nd0_anone1.0_s2 | train_rel_l2=0.5883 | test_rel_l2=0.6063 | captured_final=0.9446 | eff_rank_final=5.5893
+########## C) 鍚?seed 閲嶈窇 5 娆★細sigma_repeat ##########
+'欏湴鏉夸富瑕佹槸鏁板�煎櫔澹帮紝涓嶆槸瀵归綈鐨勬晥鏋?' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 289.3s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (292s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d1\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 281.9s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (284s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d2\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 285.3s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (288s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d3\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 284.2s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (287s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d4\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 1.495e+00 | val relL2 0.7696 | pde=7.889e-02 ic=1.393e+00 bc=2.311e-02
+  [stage physics] 6000 steps in 268.2s
+  final diag: captured=0.9426 eff_rank=4.09 angle_mean=47.2deg
+  final relL2: train=0.7668 val=0.7696 test=0.7623
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.7623 captured=0.9426 (271s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep1d5\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.7668 | test_rel_l2=0.7623 | captured_final=0.9426 | eff_rank_final=4.0919
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 318.8s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (321s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d1\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 272.6s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (275s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d2\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 310.3s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (312s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d3\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 322.8s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (325s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d4\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.3278 eff_rank=2.19 angle_mean=78.5deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   6000 | loss 5.749e-01 | val relL2 1.0016 | pde=6.185e-06 ic=5.748e-01 bc=7.995e-05
+  [stage physics] 6000 steps in 321.1s
+  final diag: captured=0.2855 eff_rank=1.55 angle_mean=78.6deg
+  final relL2: train=1.0023 val=1.0016 test=1.0033
+[done] burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=1.0033 captured=0.2855 (324s)
+
+[saved] F:\Desktop\temp\pinode_align\results\rep2d5\summary.csv
+  tag=burgers2d-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=1.0023 | test_rel_l2=1.0033 | captured_final=0.2855 | eff_rank_final=1.5511
+########## B) 姝ユ暟鏀舵暃鎵弿 ##########
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.2279 eff_rank=17.47 angle_mean=77.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   5000 | loss 4.708e-01 | val relL2 0.7655 | pde=4.165e-02 ic=4.157e-01 bc=1.344e-02
+  step  10000 | loss 3.589e-01 | val relL2 0.6203 | pde=9.393e-02 ic=2.473e-01 bc=1.774e-02
+  step  15000 | loss 2.863e-01 | val relL2 0.6612 | pde=5.310e-02 ic=2.211e-01 bc=1.213e-02
+  step  20000 | loss 2.722e-01 | val relL2 0.6452 | pde=5.091e-02 ic=2.096e-01 bc=1.170e-02
+  [stage physics] 20000 steps in 1286.4s
+  final diag: captured=0.9309 eff_rank=6.46 angle_mean=44.9deg
+  final relL2: train=0.6131 val=0.6452 test=0.6427
+[done] burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=0.6427 captured=0.9309 (1289s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expS20k\summary.csv
+  tag=burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6131 | test_rel_l2=0.6427 | captured_final=0.9309 | eff_rank_final=6.4560
+[pde] burgers2d: trunk_dim=3, sensors=256, grid=21504, coef=32  kwargs={}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers2d_default_n200_50_50_s0.npz
+[data] grid=(21504, 3), train=200, val=50, test=50
+
+=== burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.2279 eff_rank=17.47 angle_mean=77.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\autograd\graph.py:1072: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\cuda\CublasHandlePool.cpp:410.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   5000 | loss 4.708e-01 | val relL2 0.7655 | pde=4.165e-02 ic=4.157e-01 bc=1.344e-02
+  step  10000 | loss 3.589e-01 | val relL2 0.6203 | pde=9.393e-02 ic=2.473e-01 bc=1.774e-02
+  step  15000 | loss 2.863e-01 | val relL2 0.6612 | pde=5.310e-02 ic=2.211e-01 bc=1.213e-02
+  step  20000 | loss 2.722e-01 | val relL2 0.6452 | pde=5.091e-02 ic=2.096e-01 bc=1.170e-02
+  step  25000 | loss 3.257e-01 | val relL2 0.5986 | pde=9.077e-02 ic=2.279e-01 bc=7.060e-03
+  step  30000 | loss 2.825e-01 | val relL2 0.6050 | pde=6.689e-02 ic=2.085e-01 bc=7.109e-03
+  step  35000 | loss 2.476e-01 | val relL2 0.6378 | pde=6.233e-02 ic=1.796e-01 bc=5.677e-03
+  step  40000 | loss 2.496e-01 | val relL2 0.6503 | pde=4.847e-02 ic=1.966e-01 bc=4.506e-03
+  step  45000 | loss 1.958e-01 | val relL2 0.6164 | pde=4.402e-02 ic=1.449e-01 bc=6.919e-03
+  step  50000 | loss 3.060e-01 | val relL2 0.5931 | pde=5.793e-02 ic=2.407e-01 bc=7.368e-03
+  [stage physics] 50000 steps in 3058.3s
+  final diag: captured=0.9446 eff_rank=6.85 angle_mean=39.9deg
+  final relL2: train=0.5489 val=0.5931 test=0.5983
+[done] burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | test relL2=0.5983 captured=0.9446 (3061s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expS50k\summary.csv
+  tag=burgers2d-fourier-w32_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.5489 | test_rel_l2=0.5983 | captured_final=0.9446 | eff_rank_final=6.8455
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   5000 | loss 1.259e+00 | val relL2 0.7807 | pde=1.028e-01 ic=1.135e+00 bc=2.064e-02
+  step  10000 | loss 1.663e+00 | val relL2 0.7291 | pde=1.262e-01 ic=1.486e+00 bc=5.064e-02
+  step  15000 | loss 1.184e+00 | val relL2 0.7005 | pde=1.414e-01 ic=1.018e+00 bc=2.471e-02
+  step  20000 | loss 1.385e+00 | val relL2 0.6864 | pde=2.004e-01 ic=1.169e+00 bc=1.496e-02
+  [stage physics] 20000 steps in 896.7s
+  final diag: captured=0.9524 eff_rank=6.13 angle_mean=42.6deg
+  final relL2: train=0.6808 val=0.6864 test=0.6736
+[done] burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | test relL2=0.6736 captured=0.9524 (899s)
+
+[saved] F:\Desktop\temp\pinode_align\results\expS20k\summary.csv
+  tag=burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 | train_rel_l2=0.6808 | test_rel_l2=0.6736 | captured_final=0.9524 | eff_rank_final=6.1313
+[pde] burgers: trunk_dim=2, sensors=128, grid=5248, coef=16  kwargs={'nu': 0.02, 'Nx': 256, 'Nx_store': 128}
+[device] cuda
+[data] loaded cache F:\Desktop\temp\pinode_align\data\burgers_Nx256_Nx_store128_nu0.02_n200_50_50_s0.npz
+[data] grid=(5248, 2), train=200, val=50, test=50
+
+=== burgers_Nx256_Nx_store128_nu0.02-w64_pi_baseline_nd0_anone1.0_s0 ===
+  init diag: captured=0.6374 eff_rank=1.45 angle_mean=74.8deg
+D:\miniconda3\envs\pytorch\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+  step   5000 | loss 1.259e+00 | val relL2 0.7807 | pde=1.028e-01 ic=1.135e+00 bc=2.064e-02
+  step  10000 | loss 1.663e+00 | val relL2 0.7291 | pde=1.262e-01 ic=1.486e+00 bc=5.064e-02
+  step  15000 | loss 1.184e+00 | val relL2 0.7005 | pde=1.414e-01 ic=1.018e+00 bc=2.471e-02
+  step  20000 | loss 1.385e+00 | val relL2 0.6864 | pde=2.004e-01 ic=1.169e+00 bc=1.496e-02
+  step  25000 | loss 1.401e+00 | val relL2 0.6837 | pde=2.122e-01 ic=1.170e+00 bc=1.921e-02
+  step  30000 | loss 1.205e+00 | val relL2 0.6672 | pde=1.968e-01 ic=9.790e-01 bc=2.900e-02
