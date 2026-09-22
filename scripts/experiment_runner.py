@@ -62,14 +62,17 @@ def main() -> None:
     for job in plan["jobs"]:
         completion = ROOT / job["completion"]
         if args.resume and completion.exists():
+            if args.dry_run:
+                print("DRY RUN: skip completed", job["id"])
+                continue
             _jsonl(events, {"event": "job_skipped_completed", "job": job["id"],
                             "completion": job["completion"]})
             continue
         command = [sys.executable if token == "{python}" else token for token in job["command"]]
-        _jsonl(events, {"event": "job_started", "job": job["id"], "command": command})
         if args.dry_run:
             print("DRY RUN:", command)
             continue
+        _jsonl(events, {"event": "job_started", "job": job["id"], "command": command})
         rc = subprocess.run(command, cwd=ROOT).returncode
         if rc == 0 and completion.exists():
             _jsonl(events, {"event": "job_completed", "job": job["id"], "returncode": rc,
