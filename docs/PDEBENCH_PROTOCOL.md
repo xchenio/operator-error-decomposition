@@ -35,9 +35,9 @@ and record keeping.
 ```
 
 The runner creates `results/runs/pdebench_burgers_fno_smoke/manifest.json` and `events.jsonl`.
-The FNO script saves a `.pt` checkpoint every 25 steps; after interruption, invoke its command
-again with `--resume`, or update the plan's training command to include `--resume`. Do not treat
-the 200-step smoke result as a paper number.
+The FNO script saves a `.pt` checkpoint every 25 steps; the committed plan already includes
+`--resume`, so rerunning the same command resumes an incomplete training job automatically. Do
+not treat the 200-step smoke result as a paper number.
 
 ## Evidence standard for a paper result
 
