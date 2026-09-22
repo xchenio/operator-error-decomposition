@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT))
 
 from src.fno import FNO1d
 from src.utils import rel_l2, set_seed
+from src.resume import random_state, restore_random, atomic_save
 
 
 def _datasets(h5: h5py.File) -> dict[str, list[int]]:
@@ -119,20 +120,25 @@ def main() -> None:
     test_x, test_y = (test[:, 0] - mean) / std, (test[:, -1] - mean) / std
 
     set_seed(args.seed)
-    device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else args.device)
+    device = torch.device(("cuda" if torch.cuda.is_available() else "cpu") if args.device == "auto" else args.device)
     model = FNO1d(args.width, args.modes, args.layers).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     checkpoint = out.with_suffix(".pt")
+    rng = np.random.default_rng(args.seed + 1)
+    identity = {k: v for k, v in vars(args).items() if k not in ('resume', 'out', 'checkpoint_every')}
+    identity['data_sha256'] = _file_sha256(data_path)
     start = 0
     if args.resume and checkpoint.exists():
         state = torch.load(checkpoint, map_location=device, weights_only=False)
+        if state.get('identity') != identity:
+            raise ValueError('checkpoint configuration/data mismatch or legacy checkpoint without identity')
         model.load_state_dict(state["model"]); opt.load_state_dict(state["optimizer"])
+        restore_random(state['random'], rng)
         start = int(state["step"])
         print(f"[resume] step={start}")
 
     tx = torch.as_tensor(train_x, device=device); ty = torch.as_tensor(train_y, device=device)
     vx = torch.as_tensor(test_x, device=device); vy = torch.as_tensor(test_y, device=device)
-    rng = np.random.default_rng(args.seed + 1)
     t0 = time.time()
     for step in range(start, args.steps):
         idx = rng.choice(len(tx), size=min(args.batch_size, len(tx)), replace=False)
@@ -140,8 +146,9 @@ def main() -> None:
         loss = ((pred - ty[idx]) ** 2).mean()
         opt.zero_grad(set_to_none=True); loss.backward(); opt.step()
         if (step + 1) % args.checkpoint_every == 0 or step + 1 == args.steps:
-            _atomic_torch_save({"step": step + 1, "model": model.state_dict(),
-                                "optimizer": opt.state_dict(), "args": vars(args)}, checkpoint)
+            atomic_save({"step": step + 1, "model": model.state_dict(),
+                         "optimizer": opt.state_dict(), "args": vars(args),
+                         "identity": identity, "random": random_state(rng)}, checkpoint)
             print(f"step={step + 1} loss={float(loss.detach()):.4e}", flush=True)
 
     with torch.no_grad():
