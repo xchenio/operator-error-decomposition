@@ -49,3 +49,21 @@ The public PDEBench 1D Burgers file has not been downloaded automatically becaus
 training file is multi-GB. Once placed at the path in `docs/PDEBENCH_PROTOCOL.md`, execute the
 committed `experiments/pdebench_burgers_fno_smoke.json` plan with `--resume`. The plan writes a
 manifest before launching and the FNO job checkpoints every 25 steps.
+
+## 2026-09-22 — downloaded public data and matched protocol
+
+- Supersedes the queued-run note above: the public file is present. Independently verified
+  SHA-256 `afeeed1c40ce01d2ba5e1702f4f66b6bf95c65943eb0e4847691e9a10d1cb50d`.
+- Inspected the actual HDF5 and official generator: 10000 x 201 x 1024 solutions,
+  with one unused final time-coordinate entry; the generator uses epsilon/pi diffusion.
+- Executed `scripts/prepare_public_benchmark.py`: immutable fixed-t=1 subset and train-only
+  normalization persisted in `external_data/pdebench/fixed_t1_v1`.
+- `tests/test_public_benchmark.py` passed (2 tests). `tests/test_matched_public_resume.py`
+  passed for both DeepONet and FNO: forced CPU interruption restores bitwise-identical
+  final model tensors and metrics, and changed configurations are rejected.
+- Added matched supervised three-architecture/five-seed protocol, actual cell-centered FNO
+  coordinates, source/data/environment identities, atomic checkpoints every 50 steps,
+  progress JSON and append-only events. See PUBLIC_BENCHMARK_V1.md for the locked protocol.
+- Formal CUDA command queued after implementation commit:
+  `D:/miniconda3/envs/pytorch/python.exe -u -B scripts/run_public_benchmark.py`.
+  No public-data model performance claims are made before that run completes.

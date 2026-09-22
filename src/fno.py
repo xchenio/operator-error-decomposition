@@ -32,10 +32,13 @@ class FNO1d(nn.Module):
         self.local = nn.ModuleList([nn.Conv1d(width, width, 1) for _ in range(layers)])
         self.project = nn.Sequential(nn.Conv1d(width, width, 1), nn.GELU(), nn.Conv1d(width, 1, 1))
 
-    def forward(self, u0: torch.Tensor) -> torch.Tensor:
+    def forward(self, u0: torch.Tensor, coordinates=None) -> torch.Tensor:
         if u0.ndim != 2:
             raise ValueError(f"expected (batch, grid), got {tuple(u0.shape)}")
-        x = torch.linspace(0, 1, u0.shape[-1], device=u0.device, dtype=u0.dtype)
+        x = (torch.linspace(0, 1, u0.shape[-1], device=u0.device, dtype=u0.dtype)
+             if coordinates is None else torch.as_tensor(coordinates, device=u0.device, dtype=u0.dtype).flatten())
+        if x.numel() != u0.shape[-1]:
+            raise ValueError('coordinate length differs from field length')
         x = x.expand(u0.shape[0], 1, -1)
         h = self.lift(torch.cat([u0[:, None, :], x], dim=1))
         for spec, local in zip(self.spectral, self.local):
