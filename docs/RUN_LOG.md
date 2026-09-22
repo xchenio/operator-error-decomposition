@@ -1,0 +1,29 @@
+# Run log
+
+This append-only log records work performed after Git adoption. Raw manifests and event streams
+for future long runs live under `results/runs/<family>/`.
+
+## 2026-09-22 — repository stabilization and validation extension
+
+- Created Git repository and committed the pre-existing project baseline as `b31d444`.
+- Verified the requested conda interpreter:
+  `D:\\miniconda3\\envs\\pytorch\\python.exe`, Python 3.11.16, PyTorch 2.14.0+cu130,
+  CUDA available, NumPy 2.4.6, SciPy 1.17.1.
+- Added `h5py 3.16.0` to support official PDEBench HDF5 files; exact environment packages are
+  frozen in `requirements-pytorch.lock`.
+- Ran `tests/test_sampler_contracts.py`: passed for Burgers, diffusion--reaction, and Darcy.
+  The test compares batched paired evaluation to an independent one-sample-at-a-time oracle and
+  rejects the historical `(B, B, N)` broadcast shape.
+- Ran a synthetic-HDF5 end-to-end FNO smoke test: dataset discovery, two optimizer steps,
+  checkpoint serialization, and JSON result serialization all completed. Synthetic artifacts are
+  deliberately local/ignored and are not scientific evidence.
+- Ran the existing `scripts/check_residual.py` in the CUDA environment. The process completed;
+  rerun it before a paper release through a logged experiment family if its numeric residual
+  output is needed as a fresh evidence artifact.
+
+## Next queued run (not started)
+
+The public PDEBench 1D Burgers file has not been downloaded automatically because the official
+training file is multi-GB. Once placed at the path in `docs/PDEBENCH_PROTOCOL.md`, execute the
+committed `experiments/pdebench_burgers_fno_smoke.json` plan with `--resume`. The plan writes a
+manifest before launching and the FNO job checkpoints every 25 steps.
