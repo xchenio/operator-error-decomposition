@@ -67,3 +67,25 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Formal CUDA command queued after implementation commit:
   `D:/miniconda3/envs/pytorch/python.exe -u -B scripts/run_public_benchmark.py`.
   No public-data model performance claims are made before that run completes.
+
+## 2026-09-22 — completed public CUDA pilot
+
+- Executed the formal command above at source commit `4a11b63`; 15 / 15 runs completed.
+  Every model trained 1500 updates; each has identity, atomic status, event log and local
+  resumable checkpoint. Historical results were not overwritten.
+- Added and executed `scripts/summarize_public_benchmark.py`; validates common source,
+  environment, data and matched configurations before aggregating all five seeds.
+- Test mean relative L2 (mean +/- sample standard deviation): MLP 0.39357 +/- 0.01014,
+  Fourier 0.41231 +/- 0.01344, FNO 0.22835 +/- 0.00680. Initial spatial-mean baseline
+  is 0.37577. Report negative DeepONet baseline comparisons explicitly.
+- Fourier offline projection error 0.04770 (0.05937 at rcond 1e-6) contrasts with its
+  actual 0.41231; next hypothesis concerns coefficient learning / conditioning, not an
+  established pure-optimization cause. Full limitations and next controls are in
+  PUBLIC_BENCHMARK_V1.md. Updated CURRENT_CONCLUSIONS.md to prevent stale extrapolation.
+- `python -B -m unittest discover -s tests -p "test*resume.py"`: 3 tests passed.
+- `PUBLIC_TEST_DEVICE=cuda python -B tests/test_matched_public_resume.py`: both model
+  subcases passed bitwise parameter and exact metric equality after forced interruption.
+- Re-executed the formal command: all 15 completed identities checked and skipped.
+  No experiment was retrained. Source files used by training were unchanged during the run.
+- This is a supervised, fixed-time, single-split pilot, not a physics-informed or official
+  full-dataset benchmark claim. Reserve unused trajectory IDs for final confirmatory tests.

@@ -1,5 +1,6 @@
 """Validate the actual matched benchmark runner, including its resume path."""
 import sys
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,6 +13,7 @@ from scripts.run_public_benchmark import train_one
 class MatchedResumeTest(unittest.TestCase):
     def test_both_model_families_resume_and_match_metric(self):
         torch.set_num_threads(1)
+        device=torch.device(os.environ.get('PUBLIC_TEST_DEVICE','cpu'))
         rng=np.random.default_rng(42)
         arrays={'x':((np.arange(32)+.5)/32).astype('float32')}
         for name in ('train','val','test'):
@@ -23,16 +25,16 @@ class MatchedResumeTest(unittest.TestCase):
                 root=Path(d)
                 cfg=dict(architecture=architecture,seed=3,steps=4,lr=1e-3,batch_size=3,
                          checkpoint_every=1,eval_every=2)
-                expected=train_one(cfg,arrays,protocol,root/'continuous',torch.device('cpu'))
-                train_one(cfg,arrays,protocol,root/'resumed',torch.device('cpu'),stop_after=2)
-                actual=train_one(cfg,arrays,protocol,root/'resumed',torch.device('cpu'))
+                expected=train_one(cfg,arrays,protocol,root/'continuous',device)
+                train_one(cfg,arrays,protocol,root/'resumed',device,stop_after=2)
+                actual=train_one(cfg,arrays,protocol,root/'resumed',device)
                 a=torch.load(root/'continuous/checkpoints/latest.pt',weights_only=False)
                 b=torch.load(root/'resumed/checkpoints/latest.pt',weights_only=False)
                 for key in a['model']:
                     self.assertTrue(torch.equal(a['model'][key],b['model'][key]),key)
                 self.assertEqual(expected['metrics'],actual['metrics'])
                 with self.assertRaises(ValueError):
-                    train_one({**cfg,'steps':5},arrays,protocol,root/'resumed',torch.device('cpu'))
+                    train_one({**cfg,'steps':5},arrays,protocol,root/'resumed',device)
 
 
 if __name__=='__main__': unittest.main()

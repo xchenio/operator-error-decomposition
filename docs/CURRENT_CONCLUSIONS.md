@@ -1,11 +1,19 @@
 # Current conclusions
 
+> Public-data update (2026-09-22): read `PUBLIC_BENCHMARK_V1.md` for the completed
+> 15-run matched supervised pilot. Test mean relative L2: MLP DeepONet 0.39357,
+> Fourier DeepONet 0.41231, FNO 0.22835; initial spatial-mean baseline 0.37577.
+> Fourier has a better offline projection fit but not better learned predictions.
+> The older Fourier recommendation below does not generalize to this public-data protocol.
+> Prioritize controlled coefficient-learning / conditioning experiments, not model scaling.
+
 > 2026-09-22 audit update: the legacy LB and optimization-gap claims below are not
 > certified by their original implementation. Read `AUDIT_V2.md` first. Full-grid
 > recomputation supports a large 2D projection component, but not pure causal attribution
 > to architecture capacity. Historical p-values and variance-floor claims require regrouping.
 
-**Authority.** This document and `paper/main.md` supersede older entries in `README.md` and
+**Authority.** The dated audit and public-data updates above override conflicting legacy claims
+below and in the paper. The historical text of this document and `paper/main.md` superseded older entries in `README.md` and
 `paper/short_paper.md`. Historical claims remain recorded in `docs/EXPERIMENT_LEDGER.md`, but
 are not evidence for the current paper.
 
