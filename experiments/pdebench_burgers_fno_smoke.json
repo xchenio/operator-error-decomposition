@@ -1,0 +1,15 @@
+{
+  "name": "pdebench_burgers_fno_smoke",
+  "jobs": [
+    {
+      "id": "inspect_dataset",
+      "command": ["{python}", "scripts/train_fno_pdebench.py", "--data", "external_data/pdebench/1D_Burgers_Sols_Nu0.001.hdf5", "--inspect-only"],
+      "completion": "results/pdebench_burgers_fno_smoke/dataset_schema.json"
+    },
+    {
+      "id": "fno_seed0",
+      "command": ["{python}", "scripts/train_fno_pdebench.py", "--data", "external_data/pdebench/1D_Burgers_Sols_Nu0.001.hdf5", "--out", "results/pdebench_burgers_fno_smoke/fno_seed0.json", "--steps", "200", "--seed", "0"],
+      "completion": "results/pdebench_burgers_fno_smoke/fno_seed0.json"
+    }
+  ]
+}
