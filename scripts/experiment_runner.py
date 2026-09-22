@@ -49,6 +49,11 @@ def main() -> None:
     run_dir.mkdir(parents=True, exist_ok=True)
     manifest = run_dir / "manifest.json"
     events = run_dir / "events.jsonl"
+    plan_hash = hashlib.sha256(plan_text.encode()).hexdigest()
+    if manifest.exists():
+        saved = json.loads(manifest.read_text(encoding='utf-8'))
+        if saved['plan_sha256'] != plan_hash or saved['git_commit'] != _git_head():
+            raise ValueError('run identity changed: use a new run directory for changed plan/code')
     if not manifest.exists() and not args.dry_run:
         manifest.write_text(json.dumps({
             "name": name, "plan": str(plan_path.relative_to(ROOT)),
@@ -73,7 +78,18 @@ def main() -> None:
             print("DRY RUN:", command)
             continue
         _jsonl(events, {"event": "job_started", "job": job["id"], "command": command})
-        rc = subprocess.run(command, cwd=ROOT).returncode
+        with (run_dir / (job['id']+'.log')).open('a',encoding='utf-8') as log:
+            try:
+                proc = subprocess.Popen(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
+                rc = proc.wait()
+            except KeyboardInterrupt:
+                proc.terminate()
+                proc.wait()
+                _jsonl(events, {'event':'job_interrupted','job':job['id']})
+                data=json.loads(manifest.read_text(encoding='utf-8'))
+                data['status']='interrupted'
+                manifest.write_text(json.dumps(data,indent=2),encoding='utf-8')
+                raise
         if rc == 0 and completion.exists():
             _jsonl(events, {"event": "job_completed", "job": job["id"], "returncode": rc,
                             "completion": job["completion"]})

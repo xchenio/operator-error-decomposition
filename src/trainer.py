@@ -4,6 +4,8 @@ from __future__ import annotations
 import math
 import time
 from dataclasses import dataclass, field
+from dataclasses import asdict
+from pathlib import Path
 from typing import Optional
 
 import numpy as np
@@ -13,6 +15,7 @@ from .data import Split
 from .diagnostics import alignment_loss, singular_values, subspace_metrics
 from .pdes import PDEProblem
 from .utils import rel_l2
+from .resume import atomic_save, random_state, restore_random
 
 
 @dataclass
@@ -97,6 +100,20 @@ class Trainer:
         self.diag_history = {"step": [], "captured_energy": [], "eff_rank": [],
                              "angle_mean_deg": [], "cond": []}
         self.global_step = 0
+        self.checkpoint_path = None
+        self.checkpoint_every = 100
+        self._resume_state = None
+
+    def _save_progress(self, opt, iteration):
+        if self.checkpoint_path is None:
+            return
+        atomic_save(dict(identity=self._checkpoint_identity, stage=self._stage_index,
+                         iteration=iteration, model=self.model.state_dict(),
+                         optimizer=opt.state_dict(), random=random_state(self.rng),
+                         global_step=self.global_step, history=self.history,
+                         diag_history=self.diag_history, initial_diag=self._initial_diag,
+                         slab_loss=self.slab_loss, slab_ready=self.slab_ready),
+                    self.checkpoint_path)
 
     # ---------------- 工具 ----------------
     def log(self, msg):
@@ -254,7 +271,13 @@ class Trainer:
         use_data = (stage.kind == "data") or (stage.kind == "physics" and self.n_data > 0
                                               and lam.get("data", 0.0) > 0 and len(self.data_idx) > 0)
         t0 = time.time()
-        for it in range(stage.steps):
+        start = 0
+        if self._resume_state is not None and self._resume_state['stage'] == self._stage_index:
+            opt.load_state_dict(self._resume_state['optimizer'])
+            start = self._resume_state['iteration']
+            restore_random(self._resume_state['random'], self.rng)
+            self._resume_state = None
+        for it in range(start, stage.steps):
             opt.zero_grad(set_to_none=True)
             loss = torch.zeros((), device=self.device)
             terms_seen = {}
@@ -311,6 +334,8 @@ class Trainer:
                 self.diag_history["step"].append(self.global_step)
                 for k in ("captured_energy", "eff_rank", "angle_mean_deg", "cond"):
                     self.diag_history[k].append(float(m[k]))
+            if self.checkpoint_path and ((it + 1) % self.checkpoint_every == 0 or it + 1 == stage.steps):
+                self._save_progress(opt, it + 1)
         self.log(f"  [stage {stage.kind}] {stage.steps} steps in {time.time()-t0:.1f}s")
 
     def run_lbfgs(self, stage: StageCfg, bs: int, eval_every: int, diag_every: int):
@@ -377,14 +402,38 @@ class Trainer:
                     self.diag_history[k].append(float(m[k]))
         self.log(f"  [stage lbfgs] {stage.steps} steps in {time.time()-t0:.1f}s")
 
-    def fit(self, stages, bs: int = 16, eval_every: int = 500, diag_every: int = 500):
+    def fit(self, stages, bs: int = 16, eval_every: int = 500, diag_every: int = 500,
+            checkpoint_path=None, checkpoint_every=100, resume=False, identity=None):
+        if checkpoint_path and any(st.kind == 'lbfgs' for st in stages):
+            raise ValueError('step-level resume currently supports Adam stages only')
+        if checkpoint_every < 1:
+            raise ValueError('checkpoint_every must be positive')
+        self.checkpoint_path = Path(checkpoint_path) if checkpoint_path else None
+        self.checkpoint_every = checkpoint_every
+        self._checkpoint_identity = dict(stages=[asdict(st) for st in stages], bs=bs,
+                                         eval_every=eval_every, diag_every=diag_every, user=identity)
+        if resume and self.checkpoint_path and self.checkpoint_path.exists():
+            state = torch.load(self.checkpoint_path, map_location=self.device, weights_only=False)
+            if state['identity'] != self._checkpoint_identity:
+                raise ValueError('checkpoint identity mismatch')
+            self.model.load_state_dict(state['model'])
+            for key in ('global_step', 'history', 'diag_history', 'slab_loss', 'slab_ready'):
+                setattr(self, key, state[key])
+            self._resume_state = state
         m0 = self.diagnostics()
+        if self._resume_state:
+            m0 = self._resume_state['initial_diag']
+        self._initial_diag = m0
         self.log(f"  init diag: captured={m0['captured_energy']:.4f} "
                  f"eff_rank={m0['eff_rank']:.2f} angle_mean={m0['angle_mean_deg']:.1f}deg")
-        self.diag_history["step"].append(0)
-        for k in ("captured_energy", "eff_rank", "angle_mean_deg", "cond"):
-            self.diag_history[k].append(float(m0[k]))
-        for st in stages:
+        if not self._resume_state:
+            self.diag_history["step"].append(0)
+            for k in ("captured_energy", "eff_rank", "angle_mean_deg", "cond"):
+                self.diag_history[k].append(float(m0[k]))
+        for index, st in enumerate(stages):
+            self._stage_index = index
+            if self._resume_state and index < self._resume_state['stage']:
+                continue
             if st.kind == "lbfgs":
                 self.run_lbfgs(st, bs=bs, eval_every=eval_every, diag_every=diag_every)
             else:
@@ -410,6 +459,8 @@ class Trainer:
         #    但 LB 与 opt_gap_train 的归属是近似的；gen_gap 是三者里唯一
         #    完全同 metric、同点集、同模型的量，也是最可信的一项。
         return {
+            "diagnostic_status": "legacy_truncated_proxy_not_certified_lower_bound; use scripts/audit_checkpoints.py",
+            "gap_interpretation": "legacy cross-split metric difference; not pure optimization error",
             "val_rel_l2": v,
             "train_rel_l2": tr,
             "test_rel_l2": t,

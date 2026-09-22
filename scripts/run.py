@@ -36,7 +36,7 @@ ENV = {}
 
 
 def run_one(cfg: ExpCfg, pde, splits, device, out_dir: Path, logger,
-            save_model: bool = False) -> dict:
+            save_model: bool = False, resume: bool = False, checkpoint_every: int = 100) -> dict:
     pkw, mkw, skw = cfg.resolved()
     set_seed(cfg.seed)
 
@@ -57,7 +57,10 @@ def run_one(cfg: ExpCfg, pde, splits, device, out_dir: Path, logger,
     stages = make_stages(cfg, skw)
     t0 = time.time()
     res = trainer.fit(stages, bs=skw["bs"], eval_every=cfg.eval_every,
-                      diag_every=cfg.diag_every)
+                      diag_every=cfg.diag_every,
+                      checkpoint_path=(out_dir / 'checkpoints' / (cfg.tag()+'.pt')) if resume else None,
+                      checkpoint_every=checkpoint_every, resume=resume,
+                      identity=dict(cfg=vars(cfg), code_hash=CODE_HASH))
     res["meta"] = {
         "cfg": {k: (v if not isinstance(v, dict) else dict(v))
                 for k, v in vars(cfg).items()},
@@ -129,6 +132,8 @@ def main():
     ap.add_argument("--causal-M", type=int, default=20, help="时间方向分块数")
     ap.add_argument("--lbfgs-steps", type=int, default=200, help="L-BFGS 外层步数")
     ap.add_argument("--save-model", action="store_true", help="保存最终 state_dict 供 NTK 分析")
+    ap.add_argument('--resume', action='store_true', help='Adam: save and restore step-level state')
+    ap.add_argument('--checkpoint-every', type=int, default=100)
     ap.add_argument("--skip-existing", action="store_true",
                     help="若该配置的 JSON 已存在则跳过（使重跑幂等，适合长批量中断后续跑）")
     ap.add_argument("--regen", action="store_true")
@@ -274,7 +279,8 @@ def main():
                                     logger.log(f"\n=== {tag_show} ===")
                                     try:
                                         r = run_one(cfg, pde, splits, device, out_dir,
-                                                    logger, save_model=args.save_model)
+                                                    logger, save_model=args.save_model,
+                                                    resume=args.resume, checkpoint_every=args.checkpoint_every)
                                         r["_tag"] = tag_show
                                         all_res.append({
                                             "tag": tag_show, "pde": args.pde,
