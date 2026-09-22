@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import time
@@ -55,12 +56,16 @@ def run_one(cfg: ExpCfg, pde, splits, device, out_dir: Path, logger,
                       grad_clip=cfg.grad_clip, logger=logger)
 
     stages = make_stages(cfg, skw)
+    data_hash = hashlib.sha256()
+    for name in ('train', 'val', 'test'):
+        for key in ('coef', 'u', 's'):
+            data_hash.update(np.ascontiguousarray(getattr(splits[name], key)).tobytes())
     t0 = time.time()
     res = trainer.fit(stages, bs=skw["bs"], eval_every=cfg.eval_every,
                       diag_every=cfg.diag_every,
                       checkpoint_path=(out_dir / 'checkpoints' / (cfg.tag()+'.pt')) if resume else None,
                       checkpoint_every=checkpoint_every, resume=resume,
-                      identity=dict(cfg=vars(cfg), code_hash=CODE_HASH))
+                      identity=dict(cfg=vars(cfg), code_hash=CODE_HASH, data_sha256=data_hash.hexdigest()))
     res["meta"] = {
         "cfg": {k: (v if not isinstance(v, dict) else dict(v))
                 for k, v in vars(cfg).items()},

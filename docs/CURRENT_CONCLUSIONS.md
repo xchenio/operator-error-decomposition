@@ -1,5 +1,10 @@
 # Current conclusions
 
+> 2026-09-22 audit update: the legacy LB and optimization-gap claims below are not
+> certified by their original implementation. Read `AUDIT_V2.md` first. Full-grid
+> recomputation supports a large 2D projection component, but not pure causal attribution
+> to architecture capacity. Historical p-values and variance-floor claims require regrouping.
+
 **Authority.** This document and `paper/main.md` supersede older entries in `README.md` and
 `paper/short_paper.md`. Historical claims remain recorded in `docs/EXPERIMENT_LEDGER.md`, but
 are not evidence for the current paper.

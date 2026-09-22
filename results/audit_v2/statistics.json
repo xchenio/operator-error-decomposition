@@ -1,0 +1,1915 @@
+{
+  "protocol": "resolved full configuration; no averaging conflicting repeats; unknown code is exploratory",
+  "groups": [
+    {
+      "id": "885ef0446428",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 16
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 1024,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.005
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.7971518635749817,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.7971518635749817
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7721964120864868,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.7721964120864868
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7617738246917725,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.7617738246917725
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7790156602859497,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.7790156602859497
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.7886050343513489,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.7886050343513489
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.7967000603675842,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.7967000603675842
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.782146692276001,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.782146692276001
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7942229509353638,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.7942229509353638
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7962654232978821,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.7962654232978821
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.8177635073661804,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w16_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.8177635073661804
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 5,
+        "n_align": 5,
+        "baseline_mean": 0.7974197268486023,
+        "align_mean": 0.7797485589981079,
+        "welch_p": 0.06951466430228144,
+        "holm_p": 0.20854399290684433
+      }
+    },
+    {
+      "id": "ef2c1f194483",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 16
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 256,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.02
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 3,
+            "value": 0.6930533051490784,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w16_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.6930533051490784
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.6907929182052612,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w16_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.6907929182052612
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 3,
+            "value": 0.7347350120544434,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w16_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.7347350120544434
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.761403501033783,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w16_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.761403501033783
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 2,
+        "n_align": 2,
+        "baseline_mean": 0.7480692565441132,
+        "align_mean": 0.6919231116771698,
+        "welch_p": 0.14624916998738946,
+        "holm_p": 0.20854399290684433
+      }
+    },
+    {
+      "id": "35028e9f98d3",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 24
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 256,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.02
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.697737455368042,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.697737455368042
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.6785185933113098,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.6785185933113098
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.6896984577178955,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.6896984577178955
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.6912296414375305,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.6912296414375305
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.6799262166023254,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.6799262166023254
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.74275803565979,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.74275803565979
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7404618263244629,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.7404618263244629
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7631829977035522,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.7631829977035522
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7358751893043518,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.7358751893043518
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.7678086161613464,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w24_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.7678086161613464
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 5,
+        "n_align": 5,
+        "baseline_mean": 0.7500173330307007,
+        "align_mean": 0.6874220728874206,
+        "welch_p": 0.00011625831221682646,
+        "holm_p": 0.0010292815295180828
+      }
+    },
+    {
+      "id": "e323f27a786e",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 32
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 1024,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.005
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.7657052874565125,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.7657052874565125
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7614290118217468,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.7614290118217468
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.773364245891571,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.773364245891571
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7662568092346191,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.7662568092346191
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.7746434211730957,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.7746434211730957
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.8053601980209351,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.8053601980209351
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.8106133341789246,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.8106133341789246
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.9737679958343506,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.9737679958343506
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.8067076206207275,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.8067076206207275
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.8210759162902832,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w32_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.8210759162902832
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 5,
+        "n_align": 5,
+        "baseline_mean": 0.8435050129890442,
+        "align_mean": 0.768279755115509,
+        "welch_p": 0.08263044560340284,
+        "holm_p": 0.20854399290684433
+      }
+    },
+    {
+      "id": "57cc4cc6e2a3",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 32
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 256,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.02
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.6826631426811218,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w32_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.6826631426811218
+              },
+              {
+                "path": "results\\expQ\\burgers-w32_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.6826631426811218
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.6681898236274719,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w32_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.6681898236274719
+              },
+              {
+                "path": "results\\expQ\\burgers-w32_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.6681898236274719
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.6954918503761292,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w32_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.6954918503761292
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.6850040555000305,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w32_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.6850040555000305
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.6761869192123413,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w32_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.6761869192123413
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.7844854593276978,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w32_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.7844854593276978
+              },
+              {
+                "path": "results\\expQ\\burgers-w32_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.7844854593276978
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7814266085624695,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w32_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.7814266085624695
+              },
+              {
+                "path": "results\\expQ\\burgers-w32_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.7814266085624695
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.9423173666000366,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w32_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.9423173666000366
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7586302161216736,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w32_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.7586302161216736
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.7565457224845886,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w32_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.7565457224845886
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 5,
+        "n_align": 5,
+        "baseline_mean": 0.8046810746192932,
+        "align_mean": 0.681507158279419,
+        "welch_p": 0.023534277290124438,
+        "holm_p": 0.14113352536410617
+      }
+    },
+    {
+      "id": "cabe3f5fd844",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 32
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 512,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.01
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.7370017766952515,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.7370017766952515
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7378491163253784,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.7378491163253784
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7342577576637268,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.7342577576637268
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7528581023216248,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.7528581023216248
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.7478132843971252,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.7478132843971252
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.8071017265319824,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.8071017265319824
+              },
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.8071017265319824
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7916797399520874,
+            "sources": [
+              {
+                "path": "results\\expT\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.7916797399520874
+              },
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.7916797399520874
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.964577853679657,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.964577853679657
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7958754897117615,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.7958754897117615
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.817475438117981,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w32_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.817475438117981
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 5,
+        "n_align": 5,
+        "baseline_mean": 0.8353420495986938,
+        "align_mean": 0.7419560074806213,
+        "welch_p": 0.0453267890890634,
+        "holm_p": 0.1813071563562536
+      }
+    },
+    {
+      "id": "45b19770630b",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 32
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers2d",
+        "pde_kwargs": {
+          "K": 4,
+          "Ns": 32,
+          "Nt": 21,
+          "Nx": 64,
+          "Ny": 64,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 2.5,
+          "m": 16,
+          "nu": 0.05
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 24,
+          "n_col": 64,
+          "n_ic": 48,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.8066456317901611,
+            "sources": [
+              {
+                "path": "results\\expU\\burgers2d-w32_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.8066456317901611
+              },
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.8066456317901611
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.8788512349128723,
+            "sources": [
+              {
+                "path": "results\\expU\\burgers2d-w32_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.8788512349128723
+              },
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.8788512349128723
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7757389545440674,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.7757389545440674
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.8478103876113892,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.8478103876113892
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.793323814868927,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.793323814868927
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 1.0032670497894287,
+            "sources": [
+              {
+                "path": "results\\expU\\burgers2d-w32_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 1.0032670497894287
+              },
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 1.0032670497894287
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 1.0027461051940918,
+            "sources": [
+              {
+                "path": "results\\expU\\burgers2d-w32_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 1.0027461051940918
+              },
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 1.0027461051940918
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 1.0039142370224,
+            "sources": [
+              {
+                "path": "results\\expU\\burgers2d-w32_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 1.0039142370224
+              },
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 1.0039142370224
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 1.007921576499939,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 1.007921576499939
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 1.0014851093292236,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers2d-w32_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 1.0014851093292236
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 5,
+        "n_align": 5,
+        "baseline_mean": 1.0038668155670165,
+        "align_mean": 0.8204740047454834,
+        "welch_p": 0.0006051350712535425,
+        "holm_p": 0.004235945498774797
+      }
+    },
+    {
+      "id": "78dd63cd3a53",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 64
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 1024,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.005
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.7844350337982178,
+            "sources": [
+              {
+                "path": "results\\expS\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.7844350337982178
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7656955122947693,
+            "sources": [
+              {
+                "path": "results\\expS\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.7656955122947693
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7694331407546997,
+            "sources": [
+              {
+                "path": "results\\expS\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.7694331407546997
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7645785808563232,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.7645785808563232
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.76116544008255,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.76116544008255
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.8255574703216553,
+            "sources": [
+              {
+                "path": "results\\expS\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.8255574703216553
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.8071406483650208,
+            "sources": [
+              {
+                "path": "results\\expS\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.8071406483650208
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.8038759827613831,
+            "sources": [
+              {
+                "path": "results\\expS\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.8038759827613831
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.8064443469047546,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.8064443469047546
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.815498411655426,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx1024_Nx_store128_nu0.005-w64_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.815498411655426
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 5,
+        "n_align": 5,
+        "baseline_mean": 0.811703372001648,
+        "align_mean": 0.769061541557312,
+        "welch_p": 6.938526387512303e-05,
+        "holm_p": 0.0007632379026263534
+      }
+    },
+    {
+      "id": "c7a1754e0f84",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 64
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 256,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.02
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 1,
+            "value": 0.699950098991394,
+            "sources": [
+              {
+                "path": "results\\expQ\\burgers-w64_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.699950098991394
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.6844770908355713,
+            "sources": [
+              {
+                "path": "results\\expQ\\burgers-w64_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.6844770908355713
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.6800798177719116,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w64_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.6800798177719116
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.6796389222145081,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w64_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.6796389222145081
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.7622756361961365,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w64_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.7622756361961365
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7672233581542969,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w64_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.7672233581542969
+              },
+              {
+                "path": "results\\expQ\\burgers-w64_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.7672233581542969
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7626866698265076,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w64_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.7626866698265076
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.7706127166748047,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx256_nu0.02-w64_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.7706127166748047
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [
+        {
+          "method": "pi_baseline",
+          "seed": 1,
+          "records": [
+            {
+              "path": "results\\expN\\burgers-w64_pi_baseline_nd0_anone1.0_s1.json",
+              "value": 0.7775641083717346
+            },
+            {
+              "path": "results\\expQ\\burgers-w64_pi_baseline_nd0_anone1.0_s1.json",
+              "value": 0.7651718258857727
+            }
+          ]
+        }
+      ],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 4,
+        "n_align": 4,
+        "baseline_mean": 0.7656995952129364,
+        "align_mean": 0.6860364824533463,
+        "welch_p": 0.0001010601989531501,
+        "holm_p": 0.0010106019895315009
+      }
+    },
+    {
+      "id": "47d5524ff666",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lbfgs_steps": 200,
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 64
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 512,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.01
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.7585318088531494,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.7585318088531494
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7333087921142578,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.7333087921142578
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7417085766792297,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.7417085766792297
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7542057633399963,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s3.json",
+                "value": 0.7542057633399963
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.7448782920837402,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_align_nd0_aprior1.0_s4.json",
+                "value": 0.7448782920837402
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.798134446144104,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.798134446144104
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.8009329438209534,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.8009329438209534
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.8050113916397095,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.8050113916397095
+              }
+            ]
+          },
+          {
+            "seed": 3,
+            "value": 0.7991348505020142,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s3.json",
+                "value": 0.7991348505020142
+              }
+            ]
+          },
+          {
+            "seed": 4,
+            "value": 0.7963249683380127,
+            "sources": [
+              {
+                "path": "results\\expV\\burgers_Nx512_Nx_store128_nu0.01-w64_pi_baseline_nd0_anone1.0_s4.json",
+                "value": 0.7963249683380127
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 5,
+        "n_align": 5,
+        "baseline_mean": 0.7999077200889587,
+        "align_mean": 0.7465266466140748,
+        "welch_p": 0.00011436461439089808,
+        "holm_p": 0.0010292815295180828
+      }
+    },
+    {
+      "id": "14106d7a9989",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "fourier",
+          "width": 64
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 256,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.02
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 10000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.6679900288581848,
+            "sources": [
+              {
+                "path": "results\\expL\\burgers-fourier-w64_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.6679900288581848
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.6650715470314026,
+            "sources": [
+              {
+                "path": "results\\expL\\burgers-fourier-w64_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.6650715470314026
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code"
+    },
+    {
+      "id": "66f62157d791",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 16
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 256,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.02
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 6000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.7004170417785645,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w16_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.7004170417785645
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.715670108795166,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w16_pi_align_nd0_aprior1.0_s1.json",
+                "value": 0.715670108795166
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7102353572845459,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w16_pi_align_nd0_aprior1.0_s2.json",
+                "value": 0.7102353572845459
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.7276771068572998,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w16_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.7276771068572998
+              }
+            ]
+          },
+          {
+            "seed": 1,
+            "value": 0.7364808917045593,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w16_pi_baseline_nd0_anone1.0_s1.json",
+                "value": 0.7364808917045593
+              }
+            ]
+          },
+          {
+            "seed": 2,
+            "value": 0.7247216105461121,
+            "sources": [
+              {
+                "path": "results\\expN\\burgers-w16_pi_baseline_nd0_anone1.0_s2.json",
+                "value": 0.7247216105461121
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code",
+      "comparison": {
+        "n_baseline": 3,
+        "n_align": 3,
+        "baseline_mean": 0.7296265363693237,
+        "align_mean": 0.7087741692860922,
+        "welch_p": 0.02352225422735103,
+        "holm_p": 0.14113352536410617
+      }
+    },
+    {
+      "id": "9cf6e53d148d",
+      "config": {
+        "align_weight": 1.0,
+        "causal": 0.0,
+        "causal_M": 20,
+        "code_hash": "UNKNOWN",
+        "data_split": "train",
+        "grad_clip": null,
+        "lambdas_override": {},
+        "lr": 0.001,
+        "model_kwargs": {
+          "branch_hidden": 128,
+          "branch_layers": 3,
+          "init_gain": 1.0,
+          "trunk_hidden": 128,
+          "trunk_layers": 3,
+          "trunk_type": "mlp",
+          "width": 64
+        },
+        "n_data": 0,
+        "n_test": 50,
+        "n_train": 200,
+        "n_val": 50,
+        "ortho_weight": 0.0,
+        "pde": "burgers",
+        "pde_kwargs": {
+          "K": 8,
+          "Nt": 41,
+          "Nx": 256,
+          "Nx_store": 128,
+          "T": 1.0,
+          "dt": 0.0005,
+          "ell": 3.0,
+          "m": 128,
+          "nu": 0.02
+        },
+        "pretrain_frac": 0.25,
+        "sampling_kwargs": {
+          "bs": 16,
+          "n_bc": 32,
+          "n_col": 64,
+          "n_ic": 64,
+          "n_pts": 256
+        },
+        "steps": 10000
+      },
+      "methods": {
+        "pi_align": [
+          {
+            "seed": 0,
+            "value": 0.667185366153717,
+            "sources": [
+              {
+                "path": "results\\expL\\burgers-w64_pi_align_nd0_aprior1.0_s0.json",
+                "value": 0.667185366153717
+              }
+            ]
+          }
+        ],
+        "pi_baseline": [
+          {
+            "seed": 0,
+            "value": 0.7212851047515869,
+            "sources": [
+              {
+                "path": "results\\expL\\burgers-w64_pi_baseline_nd0_anone1.0_s0.json",
+                "value": 0.7212851047515869
+              }
+            ]
+          }
+        ]
+      },
+      "conflicts": [],
+      "status": "exploratory_unknown_code"
+    }
+  ]
+}

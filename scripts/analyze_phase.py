@@ -125,6 +125,7 @@ def welch_p(x, y):
 
 
 def main():
+    raise SystemExit('Legacy aggregation retired: use python scripts/audit_statistics.py. Historical outputs are preserved; do not mix training budgets or conflicting repeats.')
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default="results")
     ap.add_argument("--out", default="results/phase_analysis.json")

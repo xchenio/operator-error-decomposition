@@ -1,5 +1,18 @@
 # Run log
 
+## 2026-09-22 — second audit and actual recovery implementation
+
+- Ran `python tests/test_projection_audit.py`: three tests passed (known omitted-mode
+  counterexample, bias/Pythagoras, rank deficiency).
+- Ran `python scripts/audit_checkpoints.py`: 35 checkpoints completed, each independently
+  persisted with data/source provenance. All three data splits evaluated on full grids.
+- Ran `python scripts/audit_statistics.py`: 13 configuration groups, 11 exploratory
+  comparisons, one conflicting repeat quarantined. Unknown source hashes remain unknown.
+- Ran `python tests/test_resume.py`: forced CPU Adam interruption/resume matched uninterrupted
+  parameters and histories bit for bit. See AUDIT_V2.md for limits and measured results.
+- Corrected legacy claims: original LB proxies are not certified bounds; supervised value
+  fit does not guarantee small derivative residual. The old phase aggregation CLI is retired.
+
 This append-only log records work performed after Git adoption. Raw manifests and event streams
 for future long runs live under `results/runs/<family>/`.
 
