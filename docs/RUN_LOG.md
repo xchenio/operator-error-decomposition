@@ -89,3 +89,14 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   No experiment was retrained. Source files used by training were unchanged during the run.
 - This is a supervised, fixed-time, single-split pilot, not a physics-informed or official
   full-dataset benchmark claim. Reserve unused trajectory IDs for final confirmatory tests.
+
+## 2026-09-22 — fixed-trunk factorial protocol locked
+
+- Added PUBLIC_COEFFICIENTS_V1.md and a separate resumable runner; 2 trunk families x
+  5 seeds x conditioning/mean-lift factorial = 40 runs, predeclared 1500/3000 budgets.
+- Both conditioning arms retain exactly the same SVD subspace at rcond 1e-6, 65 branch
+  outputs, unit element RMS, common branch initialization and minibatch sequence.
+- New runner checkpoints parent/source/data/environment identity, model/optimizer/RNG,
+  basis, history, cumulative timing and milestone results every 50 steps.
+- Tests added for equal span/scale and forced interruption plus identity rejection.
+  Actual test/run outcomes will be appended after execution.
