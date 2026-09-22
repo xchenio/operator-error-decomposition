@@ -142,7 +142,7 @@ def main() -> None:
         if (step + 1) % args.checkpoint_every == 0 or step + 1 == args.steps:
             _atomic_torch_save({"step": step + 1, "model": model.state_dict(),
                                 "optimizer": opt.state_dict(), "args": vars(args)}, checkpoint)
-            print(f"step={step + 1} loss={float(loss):.4e}", flush=True)
+            print(f"step={step + 1} loss={float(loss.detach()):.4e}", flush=True)
 
     with torch.no_grad():
         test_rel = rel_l2(model(vx) * std + mean, vy * std + mean)
