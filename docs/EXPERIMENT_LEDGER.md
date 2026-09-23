@@ -1,5 +1,15 @@
 # Experiment ledger
 
+> 2026-09-22 authority update: older rankings and statistical claims below are historical.
+> AUDIT_V2.md supersedes their error-decomposition and provenance interpretation.
+> New public-data evidence is indexed below and must not be pooled with legacy runs.
+
+| New family | Protocol / evidence | Limits |
+|---|---|---|
+| `audit_v2` | Full-grid checkpoint projection recomputation and regrouped historical statistics | Unknown historical source hashes remain unknown. |
+| `public_fixed_t1_v1` | 15 completed matched supervised runs; 3 architectures, 5 seeds | One PDE/subset/time, equal updates not equal compute; DeepONet below initial-mean baseline. |
+| `public_coefficients_v1` | All 40 runs completed; small average whitening gains, all arms below initial-mean baseline; PUBLIC_COEFFICIENTS_V1.md | Extra branch training and relaxed constant term; same exploratory test split, no final-holdout claim. |
+
 This is the permanent index of experiment families. Raw per-run JSON, logs, checkpoints, and
 figures remain versioned under `results/`. A run is evidence only when its source fingerprint,
 configuration, and status are recorded.

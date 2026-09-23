@@ -1,5 +1,11 @@
 # Current conclusions
 
+> 2026-09-23 fixed-trunk update: all 40 predeclared conditioning / mean-lift runs
+> completed. Whitening gives small average paired validation gains, not a successful
+> performance repair: every arm remains worse than the initial-mean baseline. See
+> PUBLIC_COEFFICIENTS_V1.md. Prioritize small-sample branch fit and zero-residual
+> initialization checks; conditioning alone is not supported as the primary solution.
+
 > Public-data update (2026-09-22): read `PUBLIC_BENCHMARK_V1.md` for the completed
 > 15-run matched supervised pilot. Test mean relative L2: MLP DeepONet 0.39357,
 > Fourier DeepONet 0.41231, FNO 0.22835; initial spatial-mean baseline 0.37577.

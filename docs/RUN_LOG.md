@@ -100,3 +100,26 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   basis, history, cumulative timing and milestone results every 50 steps.
 - Tests added for equal span/scale and forced interruption plus identity rejection.
   Actual test/run outcomes will be appended after execution.
+
+- Fixed-trunk CPU and CUDA tests both passed (2 tests per device, including two resume
+  subcases). Full unittest discovery passed 10 tests. No claim of physical power-loss testing.
+- Formal 40-run CUDA command started from commit `f3d7685`; checkpoints and results are
+  written incrementally. Training source is frozen while running.
+
+## 2026-09-23 — fixed-trunk factorial completed and audited
+
+- On continuation, inspected all progress files and active Python processes: all 40 runs
+  had completed 3000 steps; no training process remained. No restart was necessary.
+- Executed `python -B scripts/summarize_public_coefficients.py`: all common identities,
+  matched parent hashes and configurations validated; recorded eight groups, both budget
+  milestones and paired effects. Generated and visually inspected validation_curves.png.
+- Executed `python -u -B scripts/run_public_coefficients.py` again: all 40 were skipped
+  after identity checks, with no repeated updates.
+- Whitening alone reduced mean validation error by 0.00626 (MLP) and 0.01831 (Fourier),
+  with 4/5 seeds improved in each. Mean-lift effects were mixed. All eight group test
+  means remain above the 0.37577 no-training baseline; no practical improvement claim.
+- Every group mean validation error improved between 1500 and 3000 updates. This supports
+  budget sensitivity, not eventual attainment of the offline projection oracle.
+- Preserved all negative results and historical families. Updated current conclusions and
+  ledger; next pre-experiment checks should target small-sample branch fitting and residual
+  initialization before adding architecture or physics complexity.
