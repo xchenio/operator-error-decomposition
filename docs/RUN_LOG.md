@@ -123,3 +123,14 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Preserved all negative results and historical families. Updated current conclusions and
   ledger; next pre-experiment checks should target small-sample branch fitting and residual
   initialization before adding architecture or physics complexity.
+
+## 2026-09-23 — small-subset / initialization protocol
+
+- Locked PUBLIC_SMALLFIT_V1.md: two trunks, five seeds, nested n=32/128/1000 subsets,
+  random versus zero residual initialization; 60 runs, 3000 updates, validation only.
+- Reuse whitened bases and input-mean offsets; compare actual subset fit with its own
+  affine projection oracle. Predeclare excess relative Frobenius <= 0.01 fit criterion.
+- Explicitly not a few-shot benchmark: pretrained trunks and normalization already saw
+  original 1000 training samples. No new final holdout is consumed.
+- Added dedicated runner and tests for subset selection, exact zero-init baseline,
+  forced resume equality and configuration rejection. Verification outcomes follow.
