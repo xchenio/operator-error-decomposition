@@ -1,5 +1,12 @@
 # Current conclusions
 
+> 2026-09-24 smallfit update: 60/60 runs complete; see PUBLIC_SMALLFIT_V1.md.
+> Zero-residual initialization improves final validation in 29/30 matched pairs and all
+> six group means. At n=32 all ten zero-initialized models reach their own projection-fit
+> threshold; n=128 and n=1000 do not reliably do so. All group validation means still
+> trail the initial-mean baseline. Keep zero initialization, then test optimization
+> stability; these are pretrained-trunk diagnostics, not few-shot generalization claims.
+
 > 2026-09-23 fixed-trunk update: all 40 predeclared conditioning / mean-lift runs
 > completed. Whitening gives small average paired validation gains, not a successful
 > performance repair: every arm remains worse than the initial-mean baseline. See

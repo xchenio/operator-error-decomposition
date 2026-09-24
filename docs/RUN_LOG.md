@@ -134,3 +134,30 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   original 1000 training samples. No new final holdout is consumed.
 - Added dedicated runner and tests for subset selection, exact zero-init baseline,
   forced resume equality and configuration rejection. Verification outcomes follow.
+
+## 2026-09-24 — resume the interrupted smallfit study
+
+- Inspected process command lines and all saved progress: 37 completed runs, one stopped
+  at step 1350, no active smallfit training process. Other Python services were untouched.
+- Restarted the identical `python -u -B scripts/run_public_smallfit.py` command, preserving
+  source commit `05f5879`, identities, subset rows and hyperparameters; completed runs skip.
+- Before the original launch, CPU and CUDA smallfit tests passed, including exact initial
+  mean-baseline predictions, forced resume equality, subset identity and config rejection.
+- Full regression suite and final evidence aggregation are being verified on continuation.
+
+## 2026-09-24 — smallfit results finalized
+
+- Actual events confirm resume at step 1350 for deeponet_fourier_s1_n32_z1. All 60 runs
+  reached 3000 steps without modifying training sources or hyperparameters.
+- `python -B -m unittest discover -s tests`: 11 tests passed.
+- `python -B scripts/summarize_public_smallfit.py`: validated all identities, parent hashes,
+  nested row indices and configurations. Saved paired summaries and inspected fit_curves.png.
+- At n=32 zero initialization reaches excess relative Frobenius <=0.01 in 10/10 runs.
+  At n=128 only 1/10, n=1000 0/10. Fourier random n=32 previously reached but did not retain
+  the threshold in every seed; do not confuse final instability with inability to fit.
+- Zero initialization lowers final validation mean-relative-L2 in 29/30 matched pairs;
+  all six group averages and seed standard deviations are lower. No significance claim.
+- Every group mean remains worse than validation initial-mean baseline 0.374509; the
+  best group mean is MLP n=1000 zero init 0.389815. No test data evaluated this round.
+- Updated conclusions and ledger. Next proposed, not executed: fixed small-subset learning-
+  rate/batch stability controls, with MSE and relative-error metrics reported together.
