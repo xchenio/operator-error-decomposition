@@ -192,3 +192,22 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Generated and inspected stability_curves.png. Re-executed original command: all 40
   identities checked and skipped, no repeated training. Results and next steps documented
   in PUBLIC_STABILITY_V1.md; historical families preserved.
+
+## 2026-09-24 — manuscript synchronized with audited evidence
+
+- User requested updating the paper plus publication-readiness and next-direction advice;
+  no new experiments or external submission were authorized or performed this turn.
+- Archived four pre-audit drafts under paper/archive/pre_audit_20260924. Rewrote main.md
+  around the supervised public-data intervention evidence, and synchronized short Markdown
+  and legacy-named LaTeX versions. Original data, checkpoints and figures were preserved.
+- Removed active claims of pure optimization attribution, universal variance floor,
+  confirmed causal mechanism and low-value-error guaranteeing low PDE residual. Removed
+  unverified submission/template assertions; new public evidence is not physics-informed.
+- Checked primary sources for Lee/Shin two-step training, Williams et al. basis diagnostics,
+  Lu et al. POD comparisons, PDEBench, ReZero, SGDR and large-batch generalization work.
+  References and novelty boundaries are documented in the manuscript and
+  PUBLICATION_ASSESSMENT.md; this is targeted screening, not an exhaustive novelty review.
+- Added evidence tests for numeric tables, run/control counts, citation keys, local links
+  and basic TeX balance. No TeX compiler was detected; no PDF or page-count certification.
+- `tests/test_paper_evidence.py`: 2 tests passed. Full unittest discovery: 18 tests passed.
+  No training source or experiment result was changed by this manuscript revision.

@@ -1,422 +1,155 @@
-%% ML4PS 2026 submission -- 4 pages excluding references.
-%% MUST use the NeurIPS 2026 LaTeX template with NO modifications
-%% except the footer text below.
-\documentclass{article}
-\usepackage[final]{neurips_2026}
-\usepackage[utf8]{inputenc}
+% Current evidence-aligned short draft, 2026-09-24.
+% Legacy filename only; not submitted and not certified four-page/venue compliant.
+% No venue style is assumed installed. Compile from paper/ after installing a TeX engine.
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
-\usepackage{hyperref}
-\usepackage{url}
-\usepackage{booktabs}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{microtype}
-
-% ---- REQUIRED footer override (the ONLY permitted modification) ----
-\newcommand{\mlfpsfooter}{%
-  \begin{center}\small
-  Submitted to the 9th Workshop on Machine Learning and the Physical Sciences (ML4PS 2026). Do not distribute.
-  \end{center}}
-
-\title{What Really Limits Physics-Informed Operator Learning?\\[2mm]
-\large A silent broadcasting pitfall, a training-free error-attribution diagnostic,\\
-and evidence that subspace alignment regularizes rather than expands}
-
-% Double-blind: no author information.
-\author{}
-
+\usepackage{amsmath,amssymb,booktabs,graphicx}
+\usepackage[hidelinks]{hyperref}
+\title{Better Projection and Stable Fitting Do Not Guarantee Generalization in DeepONet}
+\author{Author information to be supplied}
+\date{Research draft, September 24, 2026}
 \begin{document}
 \maketitle
-\mlfpsfooter
-
 \begin{abstract}
-Physics-informed operator learning is increasingly analysed through subspace diagnostics, with a
-recurring claim that training fails because the trunk network's learned basis functions cannot span
-the target solution space. We report three findings that redirect this line of inquiry.
-\textbf{First}, a silent numerical pitfall: the routine that evaluates the input function at query
-points is naturally written under a shared-grid convention returning shape \texttt{(n\_coef, *x.shape)};
-when a batched loop hands it per-sample \texttt{(B, N)} coordinates, NumPy broadcasting silently
-produces \texttt{(B, B, N)}, so each sample is trained against another sample's source term or
-initial condition. It survives every conventional check---the dataset stays correct (ground-truth
-finite-difference residual $6\!\times\!10^{-6}$), shapes are legal, supervised training succeeds.
-Fixing it changes PI-DeepONet test error from \textbf{0.986} to \textbf{0.174} (diffusion--reaction)
-and from \textbf{0.999} to \textbf{0.721} (Burgers). Critically, the buggy pipeline produced a clean,
-monotone, publishable-looking narrative (Spearman $\rho=-1$ between subspace alignment and accuracy;
-a dramatic ``trunk collapse'')---all artefactual.
-\textbf{Second}, a training-free attribution diagnostic: with trunk features $\Phi$ and true
-solutions $S$, the best relative error of \emph{any} branch network is exactly
-$\sqrt{1-\text{captured\_energy}}$, so $\text{test\_relL2}=\mathrm{LB}+\mathrm{opt\_gap}$ separates
-representation from optimization limits without training to convergence. After the fix
-$\mathrm{LB}\approx0.19$--$0.25$ while $\mathrm{opt\_gap}\approx0.45$--$0.49$: representation is not
-binding. \textbf{Third}, a mechanism: alignment of the trunk to an analytic spectral prior halves
-loss sharpness and doubles output-NTK effective rank while captured energy moves only
-$0.947\!\to\!0.951$; over \textbf{ten settings $\times$ five seeds} the gain is positive in $10/10$
-and significant in $8/10$; and in 2D, where the baseline collapses deterministically onto $u\equiv0$
-($\mathrm{relL2}=1.004$, NTK rank $1.1$) and is \textbf{representation-bound} ($85\%$ of its error is
-the lower bound of Section~\ref{sec:attrib}), a random Fourier-feature trunk---no target subspace, no
-tuning---repairs it better than alignment does ($1.004\!\to\!0.693$, \textbf{30.9\%}, versus $0.821$
-for alignment, $p=1.1\times10^{-3}$), while a target-free decorrelation regularizer and a $10\times$
-initial-condition weight both fail entirely. We also \textbf{retract} an earlier claim of ours
-that the gain is linearly predicted by baseline instability: it collapses from $r=0.985$ to
-$r=0.318$ (95\% CI $[-0.199,0.671]$) with better data.
+We examine whether offline basis quality and training convergence predict better
+operator generalization in a supervised PDEBench Burgers case study. Zero-residual
+initialization improves final validation in 29 of 30 paired comparisons.
+For 128 training functions, cosine decay produces stable projection-level fitting
+in all 20 decay runs; constant learning rates do so in zero of ten small-batch and
+one of ten full-batch runs. Nonetheless, small-batch decay worsens validation error
+in every seed of both trunk families, also under RMSE. The evidence separates
+representation, sampled convergence and generalization within this protocol;
+it does not establish a new optimizer, universal mechanism or state-of-the-art method.
 \end{abstract}
 
-\section{Introduction}
-\label{sec:intro}
+\section{Scope and related work}
+Two-step training and orthonormalization precede our study \cite{lee2023}.
+Learned physics-informed DeepONet bases have also been analyzed \cite{williams2024}.
+POD-DeepONet is a necessary future reference \cite{lu2022}.
+Zero residual mechanisms \cite{rezero} and scheduling techniques \cite{sgdr} are not
+new contributions. Generalization issues associated with larger batches are also
+established \cite{keskar}; no sharpness mechanism is demonstrated here.
+Our public-data experiments use supervised values, not a physics loss.
 
-PI-DeepONet \cite{wang2021learning} and PINO \cite{li2021pino} train operator networks from governing
-equations rather than paired simulation data. Because they are expensive and hard to debug, a
-substantial literature explains their failures: spectral bias, gradient pathologies
-\cite{wang2021understanding}, causality violations \cite{wang2022respecting}, landscape stiffness
-\cite{krishnapriyan2021characterizing}, and---most relevant here---the proposal that the trunk basis
-cannot span the target solution space \cite{jcp2026deeponets}.
+\section{Projection diagnostic}
+Let $S,Y\in\mathbb{R}^{N\times m}$ be target and prediction matrices on the same
+points and functions, $L$ a known affine offset, and $P=QQ^\top$ the orthogonal
+projector onto a retained numerical feature space. The oracle is $L+P(S-L)$.
+If $Y-L$ is in that space, then
+\[
+ \|S-Y\|_F^2=\|(I-P)(S-L)\|_F^2+
+             \|P(S-L)-(Y-L)\|_F^2.
+\]
+All terms can be normalized by $\|S\|_F^2$. This standard squared-error identity
+does not imply that subtracting mean relative $L^2$ values isolates optimization.
+The in-space term can involve capacity, fitting and generalization. The oracle
+uses target labels with independent sample coefficients and is not a predictive model.
+Numerical rank, bias relaxation and outside-span residuals must be stated.
 
-We began from that last hypothesis, built the full pipeline (a subspace diagnostic, a differentiable
-alignment loss toward an analytic spectral prior, and controlled comparisons), and obtained excellent
-results: trunk effective rank $1.5\!\to\!33.7$, captured energy $0.976\!\to\!0.9999$, mean principal
-angle $67^\circ\!\to\!17^\circ$, with five methods ranked exactly as theory predicted. All of it was
-an artefact of a one-line shape bug in our own PDE interface.
+\section{Protocol}
+We use a fixed PDEBench Burgers subset \cite{pdebench}, mapping $t=0$ to $t=1$
+on 256 subsampled points, with 1000/200/200 training/validation/test functions.
+Five seeds share the data partition. Initial MLP/Fourier DeepONet and FNO comparisons
+use 1500 updates. Later frozen-trunk interventions use 3000 branch updates.
+Trunks and normalization already saw the original 1000 training functions;
+small-subset fitting is not few-shot learning.
 
-We therefore write the paper in two halves. Section~\ref{sec:pitfall} documents the pitfall
-precisely, shows why standard sanity checks are blind to it, and demonstrates that it can
-manufacture a coherent publishable story. Sections~\ref{sec:attrib}--\ref{sec:2d} report what
-survives after the fix: an attribution diagnostic, and a mechanistic account of subspace alignment
-as regularization. We regard the first half as the more immediately useful contribution to the
-community.
+Four sequential families contain 15, 40, 60 and 40 run records.
+Ten stability controls exactly reproduce earlier controls, not independent replicates.
+For the stability factorial, all models use zero residual initialization, 128 training
+functions, Adam, and either constant $10^{-3}$ or cosine decay to $10^{-5}$, with batch
+32 or 128. We evaluate the prescribed final checkpoint. Stability requires excess
+relative Frobenius error $\leq0.01$ at all four logged steps
+2250/2500/2750/3000. Full batches process four times as many examples per update.
 
-\paragraph{Setup.} Burgers $u_t+uu_x=\nu u_{xx}$ on $x\in[0,1)$ periodic, $t\in[0,1]$, solved by a
-Strang-split spectral method; also 2D Burgers ($u_t+u\cdot\nabla u=\nu\Delta u$, 2D spectral
-splitting) and a 1D diffusion--reaction system. Input functions are truncated spectral expansions,
-so the input field is analytic and available at any query point. Branch/trunk MLPs, 3 hidden layers,
-Adam $\mathrm{lr}=10^{-3}$, 6000 steps (10000 in Sec.~\ref{ssec:artefact}), 64 collocation points
-$\times$ 16 input functions per step, 200/50/50 train/val/test input functions. We report test
-relative $L_2$ and use Welch's $t$-test over seeds.
+\section{Results}
+Initial test mean relative $L^2$ is 0.39357 for MLP DeepONet, 0.41231 for Fourier
+DeepONet and 0.22835 for FNO; the input-mean baseline is 0.37577.
+Fourier has a better projection fit without better predictions. Conditioning alone
+does not beat the baseline. Zero initialization helps validation in 29/30 pairs
+and achieves the final fitting threshold in all ten $n=32$ runs, but not reliably
+at $n=128$ or $n=1000$ under constant learning rates.
 
-\section{A silent pitfall in DeepONet-style training loops}
-\label{sec:pitfall}
-
-\subsection{The code pattern}
-\label{ssec:pattern}
-
-An operator-learning problem must evaluate the input function at arbitrary query points---a source
-term in the residual, an initial-condition target, or a spatially varying coefficient. A natural
-helper is
-
-\begin{quote}
-\begin{verbatim}
-def input_at(self, coef, x):
-    """coef: (n, K) coefficients of the input function.  x: query points."""
-    S = np.sin(np.outer(x.ravel(), self.k))      # shared-grid convention
-    C = np.cos(np.outer(x.ravel(), self.k))
-    out = coef @ S.T + coef @ C.T                # (n, M)
-    return out.reshape(coef.shape[0], *x.shape)
-\end{verbatim}
-\end{quote}
-
-This is correct whenever $\texttt{x}$ describes one shared grid---sensor locations $(m,)$, the
-evaluation grid $(N_g,)$, or a sensor mesh $(m,2)$. It is \textbf{wrong} when $\texttt{x}$ is a
-per-sample array $(B,N)$, which is exactly what a batched loop hands over. With
-$\texttt{coef.shape[0]}=\texttt{x.shape[0]}=B$ the output becomes $(B,B,N)$; every downstream
-expression broadcasts, the loss stays a scalar of plausible magnitude, and sample $b$ is trained
-against sample $b'$'s data for $B-1$ of $B$ pairings. There is no exception, no warning, and no NaN.
-We found this in three independent PDEs: the Burgers initial-condition target, the
-diffusion--reaction collocation source, and the Darcy coefficient together with its gradients.
-
-\subsection{Why the usual checks are blind}
-\label{ssec:blind}
-
-All four checks a practitioner would run pass. (i)~\emph{Ground-truth residual}: finite-differencing
-the stored solutions and evaluating the PDE gives $\mathrm{mean}(\mathrm{res}^2)=6.0\times10^{-6}$---
-because the \emph{dataset is correct}; the reference solvers consume coefficients with per-sample
-semantics and never call the buggy helper. (ii)~\emph{Supervised training} succeeds, reaching
-$\mathrm{relL2}=0.26$, because data-driven training never calls the helper on per-sample coordinates.
-(iii)~\emph{Shape assertions} pass: $(B,B,N)$ is a legal shape and broadcasting is silent.
-(iv)~\emph{The loss magnitude} is plausible, since the mean over $B^2$ pairings is statistically
-similar to the correct mean.
-
-The single diagnostic that exposed the bug was the \textbf{autograd PDE residual of a supervised
-model}: after fitting the data to $\mathrm{relL2}=0.26$, the model's own residual was
-$\mathrm{mean}(\mathrm{res}^2)=0.368$, while the trivial solution $s\equiv0$ has residual
-$\mathbb{E}[u^2]=0.185$. A model that reproduces the solution cannot have a residual worse than the
-zero function; that contradiction was the thread that led to the bug.
-
-\paragraph{Detection recipe.} Two lines, both cheap, which we recommend as standard practice:
-\begin{quote}
-\begin{verbatim}
-assert res_autograd(model) < 0.5 * res_trivial   # after supervised training
-assert pts["u0"].shape == (B, n_col)             # never (B, B, n_col)
-\end{verbatim}
-\end{quote}
-
-\subsection{What the bug does to scientific conclusions}
-\label{ssec:artefact}
-
-This is the part we consider most important. Before the fix, our Burgers ablation (width 64, 10\,000
-steps) looked like Table~\ref{tab:artefact}. Accuracy is monotone in captured energy ($\rho=-1$
-across five methods); spectral priors beat a random subspace and a target-free regularizer; a clear
-``trunk basis collapse'' (effective rank $1.16$) appears to explain the baseline's failure; and the
-story ``PI-DeepONet fails because its trunk basis is misaligned'' looks supported.
-\textbf{Every one of these conclusions is false.}
-
-After fixing the one-line broadcasting bug---with architecture, data, optimizer and step count all
-held fixed---test relL2 falls from $0.9857$ to $\mathbf{0.1737}$ on diffusion--reaction and from
-$0.9992$ to $\mathbf{0.7213}$ on Burgers, while trunk captured energy rises from $0.9774$ to
-$0.9999$ and from $0.6653$ to $0.9471$ respectively. The ``collapse'' essentially disappears: the
-plain baseline reaches captured energy $0.947$ with no representation-side intervention at all.
-Subspace-level conclusions about operator learning must not be drawn before the physics residual is
-verified to actually be minimised.
-
-\begin{table}[t]
-\caption{\textbf{Artefactual} results produced by the buggy pipeline (Burgers, width 64, 10\,000
-steps). All qualitative readings of this table are false.}
-\label{tab:artefact}
-\vskip 0.1in
-\begin{center}
-\begin{small}
-\begin{tabular}{lcccccc}
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{lllrrr}
 \toprule
-method & test relL2 & LB & opt\_gap & captured & eff.\ rank & angle \\
+Trunk & LR & Batch & Train excess & Stable & Validation rel.\ $L^2$\\
 \midrule
-mlp baseline         & 0.9992 & 0.5786 & 0.421 & 0.6653 & 1.16  & 74.4$^\circ$ \\
-orthogonalization    & 0.9966 & 0.4826 & 0.514 & 0.7671 & 5.05  & 68.8$^\circ$ \\
-random-subspace      & 0.9826 & 0.3366 & 0.646 & 0.8867 & 13.23 & 56.3$^\circ$ \\
-spectral-prior       & 0.9809 & 0.2960 & 0.685 & 0.9124 & 6.18  & 52.5$^\circ$ \\
-Fourier-feature trunk& 0.9493 & 0.2838 & 0.666 & 0.9195 & 4.81  & 50.8$^\circ$ \\
+MLP & constant & 32 & 0.034534 & 0/5 & 0.44657\\
+MLP & constant & 128 & 0.004113 & 0/5 & 0.50846\\
+MLP & cosine & 32 & 0.001117 & 5/5 & 0.45708\\
+MLP & cosine & 128 & 0.000061 & 5/5 & 0.47377\\
+Fourier & constant & 32 & 0.030453 & 0/5 & 0.55232\\
+Fourier & constant & 128 & 0.008727 & 1/5 & 0.56900\\
+Fourier & cosine & 32 & 0.005602 & 5/5 & 0.58755\\
+Fourier & cosine & 128 & 0.000809 & 5/5 & 0.59345\\
 \bottomrule
 \end{tabular}
-\end{small}
-\end{center}
-\vskip -0.1in
+\caption{Five-seed means, zero initialization, $n=128$. Stable means all four final
+logged points fit to within the projection-excess threshold. Complete seed standard
+deviations and per-seed results are in the full manuscript and result summaries.}
 \end{table}
 
-\section{An error-attribution diagnostic}
-\label{sec:attrib}
+Cosine stabilizes fitting in 20/20 runs. Constant full-batch training reaches the
+threshold and rebounds in every seed. At batch 32, decay worsens validation in
+all five seeds of each trunk; RMSE also increases, from 0.171690 to 0.176732 (MLP)
+and from 0.201126 to 0.216168 (Fourier).
+MLP full-batch decay improves validation over constant full-batch, so deterioration
+is not universal. No group beats the validation input-mean baseline 0.374509.
 
-Let $\Phi=\mathrm{trunk}(Y)\in\mathbb{R}^{N\times p}$ be trunk features on a probe set and
-$S\in\mathbb{R}^{N\times n}$ the matrix of true solutions.
-
-\begin{proposition}
-\label{prop:lb}
-$\displaystyle \min_B \frac{\|\Phi B-S\|_F}{\|S\|_F}
- = \frac{\|(I-P_\Phi)S\|_F}{\|S\|_F}
- = \sqrt{1-\mathrm{captured\_energy}}$,
-where $P_\Phi$ projects onto $\mathrm{span}(\Phi)$ and
-$\mathrm{captured\_energy}=\|P_\Phi S\|_F^2/\|S\|_F^2$.
-\end{proposition}
-\begin{proof}
-The minimiser is $B=\Phi^{+}S$, giving the projection residual; $\|P_\Phi S\|_F^2/\|S\|_F^2$ is
-exactly the captured energy (energy-weighted by $\sigma_i^2$ in the version used throughout).
-\end{proof}
-
-Hence $\mathrm{LB}:=\sqrt{1-\mathrm{captured\_energy}}$ is a \emph{hard} lower bound on the error of
-any branch network on this trunk, computable at any point during training from one SVD, and
-$\mathrm{opt\_gap}:=\mathrm{test\_relL2}-\mathrm{LB}$ isolates the optimization gap. Large
-$\mathrm{LB}$ $\Rightarrow$ representation-limited; large $\mathrm{opt\_gap}$ $\Rightarrow$
-optimization-limited.
-
-After the fix, all representation-side methods land at $\mathrm{captured}\in[0.94,0.96]$, i.e.\
-$\mathrm{LB}\in[0.19,0.25]$, while $\mathrm{opt\_gap}\in[0.45,0.49]$ dominates---correctly
-predicting that representation-side work has little headroom. Consistently, the two standard
-optimization-side remedies both \emph{fail} here. \textbf{Causal weighting}
-\cite{wang2022respecting} degrades monotonically ($0.721\to0.760\to0.805\to0.829$ for
-$\varepsilon=1,10,100$): with a soft initial-condition constraint of equal weight, concentrating
-residual weight at small $t$ starves the later-time fit. \textbf{L-BFGS fine-tuning} after Adam,
-standard in single-instance PINN solvers, also degrades ($0.721\to0.912$; with a smaller fixed
-training set, $\to2.004$): L-BFGS requires a deterministic objective over a fixed training set that
-is far too small to represent an operator family (hundreds of input functions $\times$ thousands of
-coordinates), and the second-order method overfits it.
-
-\section{Mechanism: alignment regularizes rather than expands}
-\label{sec:mechanism}
-
-We measure two quantities that are \textbf{never optimized} and independent of the diagnostic used to
-build the alignment loss: the output neural tangent kernel $K=JJ^\top$ (per-point Jacobian of the
-model output w.r.t.\ all parameters) and loss sharpness $\lambda_{\max}(\nabla^2 L)/2L$ (power
-iteration with Hessian-vector products) \cite{jacot2018ntk,keskar2017large}.
-
-\begin{table}[t]
-\caption{Paired comparison at width 64 (same seed, data, optimizer). Alignment halves sharpness and
-doubles output-NTK effective rank, while captured energy barely moves.}
-\label{tab:ntk}
-\vskip 0.1in
-\begin{center}
-\begin{small}
-\begin{tabular}{lccccc}
-\toprule
-checkpoint & trunk eff.\ rank & out-NTK eff.\ rank & NTK top-eig.\ share & $\lambda_{\max}$ & sharpness \\
-\midrule
-baseline, seed 1       & 4.1  & 1.7 & 0.874 & 1035 & 295 \\
-\textbf{aligned}, seed 1 & \textbf{9.0} & \textbf{3.8} & \textbf{0.542} & \textbf{430} & \textbf{141} \\
-baseline, seed 2       & 4.2  & 2.0 & 0.803 & 2020 & 682 \\
-\textbf{aligned}, seed 2 & \textbf{10.6} & \textbf{4.0} & \textbf{0.432} & \textbf{833} & \textbf{336} \\
-\bottomrule
-\end{tabular}
-\end{small}
-\end{center}
-\vskip -0.1in
-\end{table}
-
-Alignment roughly \textbf{doubles the output-NTK effective rank}, cuts the dominant eigenvalue share
-from $\approx0.85$ to $\approx0.49$, and \textbf{halves sharpness}, with $\lambda_{\max}$ falling from
-959--2020 (all baselines $\ge959$) to 430--833 (both aligned $<959$)---a complete separation between
-conditions. Captured energy moves only $0.947\!\to\!0.951$: this is \textbf{not} a capacity
-expansion.
-
-\subsection{Ten settings, five seeds}
-\label{ssec:phase}
-
-\begin{table}[t]
-\caption{Ten settings, five seeds each (6000 steps). The gain is positive in $10/10$ and significant
-in $8/10$. Note the two-sided variance clamp in the last column's $\sigma$ values.}
-\label{tab:phase}
-\vskip 0.1in
-\begin{center}
-\begin{small}
-\begin{tabular}{llccc}
-\toprule
-setting & baseline (mean $\pm$ \textbf{std}) & aligned (mean $\pm$ std) & gain & Welch $p$ \\
-\midrule
-\textbf{2D, w32}   & 1.0039 $\pm$ 0.0024 & 0.8205 $\pm$ 0.0421 & \textbf{18.27\%} & 0.0006 \\
-$\nu{=}0.02$, w32  & 0.8047 $\pm$ \textbf{0.0780} & 0.6815 $\pm$ 0.0102 & 15.31\% & 0.024 \\
-$\nu{=}0.01$, w32  & 0.8353 $\pm$ \textbf{0.0729} & 0.7420 $\pm$ 0.0080 & 11.18\% & 0.045 \\
-$\nu{=}0.02$, w64  & 0.7627 $\pm$ 0.0122 & 0.6823 $\pm$ 0.0118 & 10.55\% & $<$0.0001 \\
-$\nu{=}0.005$, w32 & 0.8435 $\pm$ \textbf{0.0731} & 0.7683 $\pm$ 0.0056 & 8.92\%  & 0.083 \\
-$\nu{=}0.02$, w24  & 0.7500 $\pm$ 0.0144 & 0.6874 $\pm$ 0.0081 & 8.35\%  & 0.0001 \\
-$\nu{=}0.01$, w64  & 0.7999 $\pm$ 0.0033 & 0.7465 $\pm$ 0.0100 & 6.67\%  & 0.0001 \\
-$\nu{=}0.005$, w64 & 0.8117 $\pm$ 0.0089 & 0.7691 $\pm$ 0.0091 & 5.25\%  & 0.0001 \\
-$\nu{=}0.02$, w16  & 0.7370 $\pm$ 0.0145 & 0.7020 $\pm$ 0.0108 & 4.74\%  & 0.003 \\
-$\nu{=}0.005$, w16 & 0.7974 $\pm$ 0.0128 & 0.7797 $\pm$ 0.0138 & 2.22\%  & 0.070 \\
-\bottomrule
-\end{tabular}
-\end{small}
-\end{center}
-\vskip -0.1in
-\end{table}
-
-Table~\ref{tab:phase} shows the gain is \textbf{positive in $10/10$} settings and \textbf{significant
-in $8/10$} (five at $p<0.001$). Its most robust effect is on variance: across the nine 1D settings the
-baseline $\sigma$ spans \textbf{23.6$\times$} ($0.0033$--$0.0780$) while the aligned $\sigma$ spans
-only \textbf{2.5$\times$} ($0.0056$--$0.0138$). Alignment therefore does not reduce variance by a
-fixed proportion; it \textbf{clamps $\sigma$ into a problem-independent band
-$\approx0.006$--$0.014$, from both sides}---$7.6$--$13.1\times$ reductions where the baseline is far
-above it, $\approx1$ where the baseline already lies inside it, and $0.33\times$ where the baseline
-(at $0.0033$) lies \emph{below} it, though the mean still improves by $6.67\%$ there. This two-sided
-clamp holds in every 1D cell and fits better than any monotone law.
-
-\paragraph{Retraction.} In an earlier iteration of this project we reported that the gain was almost
-perfectly predicted by baseline $\sigma$ ($r=0.985$, four settings, three seeds). That claim does not
-survive better data: with ten settings and five seeds it gives \textbf{$r=0.318$, 95\% seed-level
-bootstrap CI $[-0.199,0.671]$}, stable as $n$ grew $8\to10$. The regressor is itself estimated from
-few seeds, and fitting a noisy regressor inflates $|r|$. \textbf{We retract the linear law.} The
-defensible claims are the sign of the gain, its significance, the variance clamp, and
-Section~\ref{sec:2d}.
-
-\section{2D: representation-bound, but alignment is not the fix}
-\label{sec:2d}
-
-In 2D the baseline does not partially fail---it \textbf{collapses completely and reproducibly}:
-$1.0039\pm0.0024$ over five seeds (captured $\approx0.27$, out-NTK effective rank $1.08$--$1.10$, top
-eigenvalue carrying $98.5$--$98.9\%$ of the spectrum). The model has collapsed onto $u\equiv0$, an
-exact solution of the PDE and the periodic boundary conditions, leaving only the initial condition to
-supply gradient; it is not \emph{unstable}---$\sigma=0.0024$---it is \emph{degenerate}. Splitting the
-error three ways (Section~\ref{sec:attrib}) shows the failure is \textbf{representational}:
-$\mathrm{LB}=0.849$ accounts for $85\%$ of the baseline's error while $\mathrm{opt\_gap\_train}=0.154$
-and $\mathrm{gen\_gap}\approx0$.
-
-We then isolated what repairs it (width 32, 6000 steps, five seeds):
-
-\begin{table}[h]
+\begin{figure}[ht]
 \centering
-\small
-\begin{tabular}{lcccc}
-\toprule
-intervention & test relL2 & gain & $p$ & captured \\
-\midrule
-baseline & $1.0039\pm0.0024$ & --- & --- & 0.28 \\
-orthogonalization reg.\ (target-free) & $1.0016\pm0.0010$ & 0.22\% & 0.112 & 0.30 \\
-$10\times$ initial-condition weight & $1.0029\pm0.0013$ & 0.10\% & 0.464 & 0.28 \\
-alignment, random smooth subspace & $0.7910\pm0.0165$ & 21.21\% & $6.0\!\times\!10^{-6}$ & 0.60 \\
-alignment, analytic spectral prior & $0.8205\pm0.0421$ & 18.27\% & $6.1\!\times\!10^{-4}$ & 0.61 \\
-\textbf{random Fourier-feature trunk} & $\mathbf{0.6933\pm0.0199}$ & \textbf{30.94\%} & $3.1\!\times\!10^{-6}$ & \textbf{0.77} \\
-\bottomrule
-\end{tabular}
-\end{table}
+\includegraphics[width=.98\linewidth]{../results/public_stability_v1/stability_curves.png}
+\caption{Training fit and validation behavior. Shading is seed standard deviation,
+not a confidence interval over independent datasets. Equal updates are not equal compute.}
+\end{figure}
 
-\textbf{(i)} Diversity alone is not enough: the target-free decorrelation regularizer (only
-$\Phi^\top\Phi\propto I$) is ineffective here ($p=0.112$)---what matters is which function subspace
-the trunk spans, not how many dimensions. \textbf{(ii)} The prior does not matter: a random smooth
-subspace matches the analytic spectral prior (0.791 vs 0.821). \textbf{(iii)} The best fix is free:
-Fourier features beat alignment by 15.5\% ($p=1.1\times10^{-3}$). 2D is representation-bound, and what
-rescues it is a \emph{spectrally structured trunk}, which architecture supplies more cheaply than an
-alignment loss.
+\section{Limitations and conclusion}
+This is one public PDE, coefficient, time and split. Later families use validation
+only, and early test results are exploratory. Reused trunks, weak initial baselines,
+rank sensitivity and unequal sample exposure limit generalization of the conclusions.
+The projection identity, zero initialization and cosine scheduling are not new methods.
+The contribution candidate is an auditable diagnostic intervention sequence.
+Training-only POD and faithful two-step references, data scaling, a second PDE and
+fresh-holdout confirmation remain necessary.
 
-\section{Conclusion}
-\label{sec:conclusion}
+Historical claims of pure optimization attribution, universal variance floors and
+confirmed alignment mechanisms are withdrawn. A small supervised value error does
+not guarantee a small PDE residual. Sampler correctness instead requires explicit
+paired-value and shape contracts. Full historical drafts remain archived.
 
-We set out to test whether PI-DeepONet fails because its trunk basis cannot span the solution space,
-obtained a clean and convincing affirmative answer, and discovered that the answer was produced by a
-one-line NumPy broadcasting bug that survives every conventional sanity check---including the
-finite-difference residual of the ground truth, which stays at $6\times10^{-6}$ while training is
-entirely broken. After the fix the representation-side story collapses: $\mathrm{LB}$ is already
-small, the trunk is fine, and the residual error is optimization-bound---and the two standard
-optimization-side remedies both make things worse. What survives is a training-free attribution
-diagnostic that makes the representation/optimization split quantitative, and a mechanism---alignment
-regularizes, and in 2D is necessary. Along the way we also retracted one of our own quantitative
-claims, which is the same failure mode as the bug: a convincing regularity produced by too little
-data and a noisy regressor, caught only because we went back and measured it properly. We hope the
-detection recipe and the attribution diagnostic are useful beyond this paper's own claims.
+\paragraph{Reproducibility and status.}
+Eighteen software tests passed after manuscript revision, including manuscript checks;
+CPU/CUDA resume
+checks. Checkpoints preserve model, optimizer, random state and schedule position.
+This is a local research draft, not a completed anonymized release or submitted paper.
+AI assistance was used for code and writing; the numerical evidence comes from
+executed scripts. The full Markdown manuscript is the authoritative detailed text.
 
-\paragraph{Reproducibility.} Code, cached datasets, per-run JSON and all figures accompany this
-submission as an anonymized release. Every number in every table is produced by the released scripts
-(\texttt{scripts/run.py}, \texttt{scripts/analyze\_phase.py} with seed-level bootstrap,
-\texttt{scripts/ntk\_analysis.py}); the per-run JSON files are included so that all tables and
-figures can be regenerated from raw results without retraining.
-
-\paragraph{Use of generative AI.} AI assistance was used for code drafting and for editing prose.
-All numerical results were produced by executing the released scripts on the hardware described, and
-all reported tables and statistics were recomputed from the accompanying per-run JSON files rather
-than transcribed from generated text. Two specific correctness checks were performed on the AI-assisted
-material: (i) the PDE residual of a supervised model was verified numerically against a trivial
-solution baseline (this is how the pitfall in Section~\ref{sec:pitfall} was found), and (ii) the
-statistical claims were independently recomputed with a corrected implementation after an error was
-detected, leading to the retraction in Section~\ref{ssec:phase}.
-
-\bibliographystyle{unsrt}
-\begin{thebibliography}{16}
-\bibitem{raissi2019pinn} M.~Raissi, P.~Perdikaris, G.~E.~Karniadakis. Physics-informed neural networks.
-  \emph{J. Comput. Phys.}, 378:686--707, 2019.
-\bibitem{lu2021deeponet} L.~Lu, P.~Jin, G.~Pang, Z.~Zhang, G.~E.~Karniadakis. Learning nonlinear
-  operators via DeepONet. \emph{Nature Machine Intelligence}, 3(3):218--229, 2021.
-\bibitem{wang2021learning} S.~Wang, H.~Wang, P.~Perdikaris. Learning the solution operator of
-  parametric PDEs with physics-informed DeepONets. \emph{Science Advances}, 7(40):eabi8605, 2021.
-\bibitem{li2021pino} Z.~Li, N.~Kovachki, K.~Azizzadenesheli, et~al. Physics-informed neural operator
-  for learning PDEs. arXiv:2111.03794; \emph{ACM TOMS}, 2024.
-\bibitem{wang2022respecting} S.~Wang, S.~Sankaran, P.~Perdikaris. Respecting causality when training
-  physics-informed neural networks. arXiv:2203.07404, 2022.
-\bibitem{krishnapriyan2021characterizing} A.~Krishnapriyan, A.~Gholami, S.~Zhe, R.~Kirby,
-  M.~W.~Mahoney. Characterizing possible failure modes in physics-informed neural networks.
-  \emph{NeurIPS}, 2021.
-\bibitem{jcp2026deeponets} What do physics-informed DeepONets learn? Understanding and improving
-  training. \emph{J. Comput. Phys.}, 2026. (S0021999126002019)
-\bibitem{chen2026pino} N.~Chen, C.~Cui, A.~Chen, S.~Wang, R.~Ma. On the training of
-  physics-informed neural operators for parametric PDEs. arXiv:2606.06164, 2026.
-\bibitem{wang2022ntk} S.~Wang, X.~Yu, P.~Perdikaris. When and why PINNs fail to train: A neural
-  tangent kernel perspective. \emph{J. Comput. Phys.}, 449:110768, 2022.
-\bibitem{wang2021understanding} S.~Wang, Y.~Teng, P.~Perdikaris. Understanding and mitigating
-  gradient pathologies in physics-informed neural networks. \emph{SIAM J. Sci. Comput.},
-  43(5):A3055--A3081, 2021.
-\bibitem{jacot2018ntk} A.~Jacot, F.~Gabriel, C.~Hongler. Neural tangent kernel. \emph{NeurIPS}, 2018.
-\bibitem{keskar2017large} N.~S.~Keskar, D.~Mudigere, J.~Nocedal, et~al. On large-batch training:
-  Generalization gap and sharp minima. \emph{ICLR}, 2017.
-\bibitem{tancik2020fourier} M.~Tancik, P.~P.~Srinivasan, B.~Mildenhall, et~al. Fourier features let
-  networks learn high frequency functions. \emph{NeurIPS}, 2020.
-\bibitem{hu2026realpdebench} P.~Hu, H.~Feng, H.~Liu, et~al. RealPDEBench. \emph{ICLR}, 2026 (Oral);
-  arXiv:2601.01829.
-\bibitem{zhang2026pinns} W.~Zhang, W.~Suo, J.~Song, W.~Cao. PINNs as intelligent computing technique
-  for PDEs: Limitation and future prospects. \emph{Sci. China Phys. Mech. Astron.}, 69:214602, 2026.
-\bibitem{lu2021deepxde} L.~Lu, X.~Meng, Z.~Mao, G.~E.~Karniadakis. DeepXDE. \emph{SIAM Review},
-  63(1):208--228, 2021.
+\begin{thebibliography}{7}
+\bibitem{lee2023} S. Lee and Y. Shin.
+On the training and generalization of deep operator networks.
+\url{https://arxiv.org/abs/2309.01020}, 2023.
+\bibitem{williams2024} E. Williams, A. Howard, B. Meuris and P. Stinis.
+What do physics-informed DeepONets learn? Understanding and improving training
+for scientific computing applications. \url{https://arxiv.org/abs/2411.18459}, 2024.
+\bibitem{lu2022} L. Lu et al.
+A comprehensive and fair comparison of two neural operators (with practical extensions)
+based on FAIR data. \url{https://arxiv.org/abs/2111.05512};
+journal DOI \url{https://doi.org/10.1016/j.cma.2022.114778}.
+\bibitem{pdebench} M. Takamoto et al.
+PDEBench: An Extensive Benchmark for Scientific Machine Learning.
+NeurIPS Datasets and Benchmarks, 2022. \url{https://arxiv.org/abs/2210.07182}.
+\bibitem{rezero} T. Bachlechner et al.
+ReZero is all you need: fast convergence at large depth.
+PMLR 161, 2021. \url{https://proceedings.mlr.press/v161/bachlechner21a.html}.
+\bibitem{sgdr} I. Loshchilov and F. Hutter.
+SGDR: Stochastic Gradient Descent with Warm Restarts.
+ICLR 2017. \url{https://arxiv.org/abs/1608.03983}.
+\bibitem{keskar} N. S. Keskar et al.
+On Large-Batch Training for Deep Learning: Generalization Gap and Sharp Minima.
+ICLR 2017. \url{https://arxiv.org/abs/1609.04836}.
 \end{thebibliography}
-
 \end{document}
