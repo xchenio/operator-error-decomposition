@@ -161,3 +161,12 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   best group mean is MLP n=1000 zero init 0.389815. No test data evaluated this round.
 - Updated conclusions and ledger. Next proposed, not executed: fixed small-subset learning-
   rate/batch stability controls, with MSE and relative-error metrics reported together.
+
+## 2026-09-24 — stability factorial protocol locked
+
+- User requested preserving zero residual initialization and testing decay / batch size.
+- Locked 40-run n=128 protocol: 2 trunks x 5 seeds x constant/cosine LR x batch 32/128.
+  Predeclared final and last-four-logged-point stability thresholds; no test evaluation.
+- Explicitly report unequal sample exposure, plus descriptive full-batch 750 versus
+  mini-batch 3000 comparison. Learning-rate position is checkpoint-step derived.
+- Added independent runner and PUBLIC_STABILITY_V1.md; verification/run outcomes follow.
