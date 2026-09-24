@@ -1,5 +1,11 @@
 # Current conclusions
 
+> 2026-09-24 stability update: 40/40 n=128 zero-init runs completed;
+> PUBLIC_STABILITY_V1.md is the latest evidence. Cosine decay achieves stable final-tail
+> projection fitting in 20/20 runs; constant LR achieves 0/10 (batch32), 1/10 (batch128).
+> Validation does not generally improve, including RMSE: convergence is not generalization.
+> Next: matched stable-training controls on 1000 samples before larger architectures.
+
 > 2026-09-24 smallfit update: 60/60 runs complete; see PUBLIC_SMALLFIT_V1.md.
 > Zero-residual initialization improves final validation in 29/30 matched pairs and all
 > six group means. At n=32 all ten zero-initialized models reach their own projection-fit

@@ -170,3 +170,25 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Explicitly report unequal sample exposure, plus descriptive full-batch 750 versus
   mini-batch 3000 comparison. Learning-rate position is checkpoint-step derived.
 - Added independent runner and PUBLIC_STABILITY_V1.md; verification/run outcomes follow.
+
+- CPU and CUDA stability tests passed all four schedule/batch resume subcases; endpoints,
+  exact prior-control metrics and changed-config rejection also verified.
+- Full unittest discovery passed 16 tests, including stability/rebound summary boundaries.
+- Formal run launched from source commit `672c9d9`. Regression checks overlap part of the
+  run, so update timings are operational measurements, not isolated performance benchmarks.
+
+## 2026-09-24 — completed optimization stability controls
+
+- All 40 runs reached 3000 steps. Summary validated identities and exact final metric
+  reproduction for all 10 previous constant-LR batch32 controls.
+- Cosine decay: 20/20 stable fits over steps 2250/2500/2750/3000. Constant LR: 0/10
+  stable with batch32 and 1/10 with batch128. Every constant/full-batch run previously
+  crossed the fit threshold and rebounded; final fit alone hides this instability.
+- With batch32, decay worsened validation relative L2 and RMSE in 5/5 seeds for each
+  trunk despite better training fits. MLP/full-batch decay improves validation relative
+  to constant/full-batch; Fourier/full-batch does not. No overall performance claim.
+- Saved same-sample-exposure descriptive comparisons and all raw paired differences;
+  equal updates do not equal compute. No test data evaluated.
+- Generated and inspected stability_curves.png. Re-executed original command: all 40
+  identities checked and skipped, no repeated training. Results and next steps documented
+  in PUBLIC_STABILITY_V1.md; historical families preserved.
