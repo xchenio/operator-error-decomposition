@@ -211,3 +211,12 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   and basic TeX balance. No TeX compiler was detected; no PDF or page-count certification.
 - `tests/test_paper_evidence.py`: 2 tests passed. Full unittest discovery: 18 tests passed.
   No training source or experiment result was changed by this manuscript revision.
+
+## 2026-09-28 — larger-subset controls and POD ridge protocol
+
+- Locked PUBLIC_SCALE1000_V1.md: 20 n=1000 zero-init/batch32 constant/cosine runs and
+  an 18-case training-only residual-POD ridge grid. Validation selection; no test loading.
+- Separate runners preserve previous source hashes and identities. Neural runs checkpoint
+  every 50 updates; ridge saves each complete candidate and model before continuing.
+- Tests added for closed-form ridge normal equations, basis orthogonality, nonmutating
+  prediction, neural resume equality, config rejection and old constant-control parity.
