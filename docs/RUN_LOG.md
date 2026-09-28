@@ -265,3 +265,23 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Final regression:23 tests passed, including numeric report/paper tables, exact shared
   basis identities and squared-error closure. Re-ran the formal runner:all30 completed
   items skipped after identity checks; no training was repeated. `git diff --check` passed.
+
+## 2026-09-28 — frozen ridge residual and fresh-confirmation protocol
+
+- User requested analysis and implementation. Targeted primary-source check found prior
+  POD/DeepONet residual learning (Demo et al.2302.12682) and ReZero; no new residual-method
+  novelty claim. Proposed future contribution is development-only modal learnability
+  selection, not implemented or verified in this experiment.
+- Locked docs/RIDGE_RESIDUAL_V1.md and results/public_ridge_residual_v1/plan.json:
+  frozen rank16/alpha10 map + zero-output one-layer width16/32 MLP, four correction penalties,
+  five seeds, baseline-inclusive early stopping. Eight-alpha expanded ridge control.
+- Reserved500 IDs outside every historical split plus conservative smoke prefix0–127.
+  Plan stage read only existing protocol/checkpoint metadata, not new trajectory labels.
+  Confirmation command requires the selected model hashes/selection lock committed to Git.
+- Atomic full training state every50 steps, flushed event stream, selected/latest checkpoints;
+  confirmation data cached in50-trajectory atomic chunks for interruption recovery.
+- CPU and CUDA tests passed(3 per device): deterministic continuation including patience and
+  best model, frozen baseline/zero equality, disjoint IDs, paired bootstrap, commit gate
+  preventing label access and completed-confirmation skip. Full regression:26 tests passed.
+- Commands: run_public_ridge_residual.py plan; after source commit, train; after selection
+  commit, confirm. All use D:/miniconda3/envs/pytorch/python.exe. No confirmation results yet.
