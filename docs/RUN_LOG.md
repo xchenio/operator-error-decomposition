@@ -313,3 +313,19 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Final regression:28 tests passed, including numeric paper/report tables and paired
   confirmation statistics. Re-executing train/confirm checked identities and skipped both;
   no retraining and no confirmation labels reloaded. `git diff --check` passed.
+
+## 2026-09-28 — objective alignment and modal learnability follow-up
+
+- Development-only energy diagnostic completed; train-only quintile thresholds, no old
+  test or500-ID confirmation labels loaded. Lowest-energy development group has47 samples,
+  ridge L2=0.698359, selected residual=0.677225; highest group42 samples,0.118216→0.121598.
+  This does NOT support claiming low-energy samples caused the previous confirmation failure.
+- Training target-energy5th percentile=0.0155348191; proposed normalized-loss denominator
+  floor is fitted from training only. Squared relative loss remains a surrogate, not equal
+  to the mean nonsquared relative-L2 evaluation metric.
+- Preparing strict disjoint representation-fit versus branch-CV sets to prevent POD/ridge
+  label leakage into held-out CV folds. Equal-data all-mode and random-mode controls required.
+- Second public PDE chosen: PDEBench Advection beta0.4, a linear transport negative control
+  (not a second nonlinear task). Publisher HF revision33d90a245d98b8a250884eab613c6f9c26a13b68,
+  file8232966952 bytes, SHA256d973ff2bb3c2a5edf42957ff029b78672451532ebd6bf475848ff23cfd3ee3b6.
+  Added separate resumable downloader/status path, preserving the original Burgers file.
