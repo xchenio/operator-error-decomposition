@@ -1,5 +1,11 @@
 # Current conclusions
 
+> 2026-09-28 follow-up: PUBLIC_SCALE1000_V1.md reports 20 completed n=1000 controls
+> and 18 POD ridge candidates. Cosine improves validation relative L2 in 10/10 pairs,
+> unlike n=128; full training fit remains unmet. MLP cosine mean 0.374807 is slightly
+> worse than baseline 0.374509. Selected POD ridge is 0.373656, a tiny validation-tuned
+> difference, not confirmed test superiority. Next: nonlinear readout on identical POD bases.
+
 > 2026-09-24 stability update: 40/40 n=128 zero-init runs completed;
 > PUBLIC_STABILITY_V1.md is the latest evidence. Cosine decay achieves stable final-tail
 > projection fitting in 20/20 runs; constant LR achieves 0/10 (batch32), 1/10 (batch128).

@@ -220,3 +220,15 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   every 50 updates; ridge saves each complete candidate and model before continuing.
 - Tests added for closed-form ridge normal equations, basis orthogonality, nonmutating
   prediction, neural resume equality, config rejection and old constant-control parity.
+
+- CPU and CUDA new tests passed (two tests per device). Full regression discovery passed
+  20 tests. Formal source commit `5cb07f5`; 20 neural runs and 18 ridge cases completed.
+- Summary validates all shared identities and ten exact old-control metric reproductions.
+  Cosine improves validation relative L2 in 10/10 pairs; RMSE in 9/10. No full train fit.
+- MLP cosine validation mean 0.374807 versus initial-mean baseline 0.374509; selected
+  rank16/alpha10 ridge is 0.373656 after 18-candidate validation selection, not test evidence.
+- Re-executed both runners: all completed items skipped after identity checks. Preserved
+  local checkpoints and historical results. No test arrays were loaded.
+- Added dated paper follow-up without replacing the core study's original tables; records
+  now total 175 neural runs including 20 repeated controls, plus 18 deterministic ridge fits.
+  Next not yet executed: nonlinear readout on the identical training-only POD basis.

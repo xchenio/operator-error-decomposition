@@ -11,6 +11,8 @@
 | `public_coefficients_v1` | All 40 runs completed; small average whitening gains, all arms below initial-mean baseline; PUBLIC_COEFFICIENTS_V1.md | Extra branch training and relaxed constant term; same exploratory test split, no final-holdout claim. |
 | `public_smallfit_v1` | 60 completed runs; n=32 zero-init fits oracle in 10/10 seeds; initialization improves validation in 29/30 pairs | Validation only, pretrained trunk/normalization; not few-shot. Larger subsets not sufficiently fit; no baseline superiority. |
 | `public_stability_v1` | 40 completed n=128 zero-init runs; cosine decay stable-tail fit in 20/20, no general validation improvement | Equal updates not equal samples/compute; pretrained trunk, validation only. Smallfit inability to fit n=128 was optimizer/budget dependent. |
+| `public_scale1000_v1` | 20 completed controls; cosine improves validation relative L2 in 10/10 pairs | Includes 10 old-control repeats; training still not fully fit; no new test evaluation. |
+| `public_pod_ridge_v1` | 18 deterministic training-only residual-POD ridge candidates; selected validation error 0.373656 | Validation-tuned grid boundary, tiny baseline gain; not full POD-DeepONet or two-step reference. |
 
 This is the permanent index of experiment families. Raw per-run JSON, logs, checkpoints, and
 figures remain versioned under `results/`. A run is evidence only when its source fingerprint,

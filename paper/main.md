@@ -2,6 +2,11 @@
 
 **Evidence-audited research draft v2 — 2026-09-24. Not a submitted manuscript.**
 
+**2026-09-28 follow-up:** the core results below are preserved; see the
+[larger-sample and POD ridge addendum](FOLLOWUP_20260928.md) for 20 additional neural
+records and 18 deterministic validation-tuned candidates. Schedule effects change
+direction at n=1000; no universal deterioration claim is intended.
+
 This is the current manuscript. Earlier drafts are retained in
 [the historical archive](archive/pre_audit_20260924/main.md) and are superseded.
 The new public-data evidence is supervised operator learning, not a demonstrated
