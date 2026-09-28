@@ -244,3 +244,24 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   validation-target isolation, uninterrupted/resumed bitwise weights and history equality,
   completed-run skip and changed-config rejection. Full regression:22 tests passed.
 - Command: D:/miniconda3/envs/pytorch/python.exe scripts/run_public_pod_readout.py
+
+- Formal source commit `5ad1676`; all30 runs completed on the RTX5060 Laptop GPU.
+  Independent audit reproduces group statistics from per-run files, checks exact shared
+  POD checkpoint hashes/oracles, final-step histories, completion manifests and protocol.
+  Three selected ridge checkpoints reproduce their original train/validation metrics exactly.
+- Audit initially rejected a 1.12e-12 historical-baseline difference: old spatial means
+  were float32, new means float64. Adjusted only the audit tolerance to1e-10; no training
+  code or results changed. Maximum squared projection closure error is1.32e-16.
+- Nonlinear versus matched Adam affine: train L2/RMSE improves15/15, validation L2/RMSE
+  worsens15/15. Final MLP beats ridge0/15, initial-mean baseline0/15; full projection fit0/15.
+  Validation means at ranks16/32/64:0.398761/0.401114/0.402642. Coefficient mismatch explains
+  about93–99% of squared validation error, not a certified pure optimization gap.
+- Added paper/FOLLOWUP_POD_READOUT_20260928.md and linked the active manuscript. Historical
+  core tables remain unchanged. Combined records:205 neural (including20 old repeats),
+  plus18 deterministic ridge fits reused here. No new test arrays were loaded.
+- This runner uses atomic progress plus checkpointed history rather than events.jsonl;
+  ledger now explicitly documents both persisted logging formats. Local checkpoints remain
+  ignored by Git; configuration, metrics, histories and provenance are versioned.
+- Final regression:23 tests passed, including numeric report/paper tables, exact shared
+  basis identities and squared-error closure. Re-ran the formal runner:all30 completed
+  items skipped after identity checks; no training was repeated. `git diff --check` passed.

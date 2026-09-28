@@ -1,5 +1,15 @@
 # Current conclusions
 
+> 2026-09-28 same-POD update (latest): 30/30 readout runs completed; see
+> PUBLIC_POD_READOUT_V1.md. Identical POD bases / input normalization / mean offsets:
+> nonlinear MLP improves train L2 and RMSE in 15/15 pairs versus Adam affine control,
+> but worsens both validation metrics in 15/15. MLP validation means at ranks16/32/64
+> are 0.398761 / 0.401114 / 0.402642, all worse than ridge and mean baseline.
+> Coefficient mismatch contributes roughly 93–99% of MLP validation squared error,
+> but train coefficients are also not fully fit. This localizes error to coefficients,
+> not uniquely to insufficient nonlinearity or optimization. Next: restrained nonlinear
+> correction to a frozen ridge map, regularization/early stopping, fresh confirmation split.
+
 > 2026-09-28 follow-up: PUBLIC_SCALE1000_V1.md reports 20 completed n=1000 controls
 > and 18 POD ridge candidates. Cosine improves validation relative L2 in 10/10 pairs,
 > unlike n=128; full training fit remains unmet. MLP cosine mean 0.374807 is slightly

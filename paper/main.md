@@ -7,6 +7,11 @@
 records and 18 deterministic validation-tuned candidates. Schedule effects change
 direction at n=1000; no universal deterioration claim is intended.
 
+**Same-POD follow-up:** [matched linear/nonlinear readout results](FOLLOWUP_POD_READOUT_20260928.md)
+add 30 neural runs. Nonlinear branches improve training in all 15 paired comparisons,
+but worsen validation in all 15, even with the same POD decoder. Most validation squared
+error is coefficient mismatch; this does not uniquely identify an optimization bottleneck.
+
 This is the current manuscript. Earlier drafts are retained in
 [the historical archive](archive/pre_audit_20260924/main.md) and are superseded.
 The new public-data evidence is supervised operator learning, not a demonstrated
