@@ -1,6 +1,22 @@
 # Current conclusions
 
-> 2026-09-28 frozen-ridge residual update (latest): see RIDGE_RESIDUAL_V1.md.
+> 2026-09-28 objective/modal follow-up: see OBJECTIVE_MODAL_V1.md and the dated paper
+> addendum. Guarded normalized squared loss improves full-data development relative L2
+> from0.366400 to0.358258 on original Burgers and0.407464 to0.398468 on a completely
+> disjoint training/development split (five paired seeds improve on each). This is not
+> the nonsquared primary metric itself, nor a fresh confirmation of the old model.
+> Strict train-internal CV selects leading4 and2 modes respectively, identical to energy
+> truncation. No incremental selection-rule novelty or superiority is established.
+> The earlier500-ID confirmation failure below remains valid. New reserved labels stay
+> unopened until fixed models, comparisons and success criteria are committed.
+> Final status:123/123 records complete,48 ridge grid refits. Advection is a linear
+> negative control: normalized loss worsens0.169283→0.175051; tuned pure ridge0.015378
+> is far better. All16 modes are selected, making mask controls degenerate. The rule
+> detects correctable error relative to a weak anchor, not uniquely nonlinear benefit.
+> Next priority: cross-fit incremental benefit beyond tuned linear correction, with
+> no-correction and shrinkage controls. No cross-PDE universal improvement is supported.
+
+> 2026-09-28 frozen-ridge residual historical update: see RIDGE_RESIDUAL_V1.md.
 > 40 runs +8 ridge refits completed; development selects width32/penalty1 with L2=0.366400
 > versus frozen ridge0.373656. Selection was committed BEFORE opening500 fresh trajectories.
 > Confirmation L2=0.405135 versus frozen ridge0.405354 (only0.054% gain; paired95% interval

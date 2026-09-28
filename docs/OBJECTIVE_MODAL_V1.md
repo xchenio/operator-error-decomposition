@@ -138,5 +138,40 @@ these strata were inspected after fitting and are descriptive, not a new primary
 Expanded pure-ridge on the new split selects alpha1000 at both budgets (grid boundary):
 full1000 relative L2=0.409068; anchor400=0.409678.
 
-At this checkpoint82 neural records are complete. The Advection dataset download and
-third-task evaluation are still pending; no second-PDE result or confirmation claim yet.
+At the preceding checkpoint82 neural records were complete and Advection was pending.
+The final status and third-task evidence follow.
+
+## Completed Advection negative control and final audit
+
+All123 planned neural records completed, plus48 deterministic ridge grid refits.
+Advection download SHA256 and pinned revision verified. Its41 records used89600 updates;
+the overall total is236600 updates. No newly reserved confirmation targets were loaded.
+
+| Advection development arm | Relative L2 |
+|---|---:|
+| Full1000 MSE residual | 0.169283 ± 0.000283 |
+| Full1000 normalized residual | 0.175051 ± 0.000597 |
+| Full1000 tuned ridge, alpha0.0001 | 0.015378 |
+| Anchor400/correction600 MSE all | 0.170576 ± 0.000087 |
+| Anchor400/correction600 normalized all/stable/random/energy | 0.175883 ± 0.000473 |
+| Anchor400-only tuned ridge, alpha0.0001 | 0.019756 |
+
+Normalized loss worsens full-data L2 and RMSE in5/5 pairs and mean L2 in all five
+energy strata. CV selects every mode, so the four normalized arms are identical;
+selection comparisons are degenerate. Across the entire family25 panel records are
+redundant repeats (10 on Burgers,15 on Advection), not independent evidence.
+
+The full-data alpha10 anchor is0.341140; a nonlinear correction improves this weak
+anchor but is much worse than the alpha-retuned pure linear control. Both selected
+Advection alphas lie on the lower grid boundary. This demonstrates why gain relative
+to a fixed weak ridge anchor does not establish a need for nonlinear correction.
+Future work should estimate incremental gain over a tuned linear correction, include
+rejection/no-correction and continuous shrinkage controls, and hold data/tuning budgets
+constant. These extensions have not been trained in this round.
+
+Audit verifies123 records, immutable frozen bases, fold separation, fixed-step CV,
+selected checkpoint hashes, masks and group summaries. Post-training energy-bin
+reaggregation reproduces each overall development score. Evidence is in audit.json,
+summary.json and objective_energy_strata.json under results/public_objective_modal_v1.
+Paper tables and all caveats are synchronized in
+[the dated addendum](../paper/FOLLOWUP_OBJECTIVE_MODAL_20260928.md).

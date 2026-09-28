@@ -44,7 +44,25 @@ class ObjectiveModalEvidenceTest(unittest.TestCase):
                     r=json.loads((folder/f'{arm}_s{seed}/result.json').read_text())
                     values.append(r['metrics']['val']['prediction']['mean_relative_l2'])
                 self.assertEqual(float(np.mean(values)),g['metrics']['val']['mean_relative_l2']['mean'])
-        self.assertGreaterEqual(completed,1)
+        self.assertEqual(completed,3)
+
+    def test_final_audit_and_paper_tables(self):
+        root=ROOT/'results/public_objective_modal_v1'
+        summary=json.loads((root/'summary.json').read_text())
+        self.assertEqual(summary['audit']['completed_neural_runs'],123)
+        self.assertFalse(summary['confirmation_evaluated'])
+        paper=(ROOT/'paper/FOLLOWUP_OBJECTIVE_MODAL_20260928.md').read_text(encoding='utf-8')
+        for task,s in summary['tasks'].items():
+            for arm in ('mse','normalized'):
+                metric=s['full_objective'][arm]['metrics']['val']['mean_relative_l2']['mean']
+                self.assertIn(f'{metric:.6f}',paper)
+            for arm,g in s['modal_panels'].items():
+                self.assertIn(f"{g['metrics']['val']['mean_relative_l2']['mean']:.6f}",paper)
+            for budget in ('full1000','anchor400'):
+                value=s['linear_controls'][budget]['selected']['val']['mean_relative_l2']
+                self.assertIn(f'{value:.6f}',paper)
+            self.assertTrue(s['stable_equals_energy_masks'])
+            self.assertEqual(s['stable_energy_exact_history_repeats'],5)
 
 
 if __name__=='__main__':unittest.main()

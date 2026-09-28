@@ -2,7 +2,12 @@
 
 **Evidence-audited research draft v2 — 2026-09-24. Not a submitted manuscript.**
 
-**Latest 2026-09-28 follow-up:** [regularized ridge residual with fresh confirmation](FOLLOWUP_RIDGE_RESIDUAL_20260928.md).
+**Latest 2026-09-28 follow-up:** [objective alignment and cross-fitted modal correction](FOLLOWUP_OBJECTIVE_MODAL_20260928.md).
+The new development study includes a disjoint Burgers training split and linear Advection.
+Normalized loss is not universally better; the CV rule does not beat energy selection.
+These findings do not overturn the earlier failed confirmation or establish a new method.
+
+**Earlier 2026-09-28 follow-up:** [regularized ridge residual with fresh confirmation](FOLLOWUP_RIDGE_RESIDUAL_20260928.md).
 Forty additional neural runs selected a development improvement, but the500-trajectory
 sealed confirmation did not meet the primary relative-L2 success criterion. Secondary
 RMSE improved; this does not replace the failed primary endpoint or validate a new method.

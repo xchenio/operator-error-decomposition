@@ -6,6 +6,7 @@
 
 | New family | Protocol / evidence | Limits |
 |---|---|---|
+| `public_objective_modal_v1` | 123 completed neural records +48 ridge grid refits; normalized loss helps two Burgers development splits but hurts linear Advection; strict internal-CV mask comparisons | 25 redundant panel records; Burgers masks equal energy selection, Advection selects all16. Tuned Advection ridge beats residuals. Three new confirmation sets unopened. OBJECTIVE_MODAL_V1.md. |
 | `audit_v2` | Full-grid checkpoint projection recomputation and regrouped historical statistics | Unknown historical source hashes remain unknown. |
 | `public_fixed_t1_v1` | 15 completed matched supervised runs; 3 architectures, 5 seeds | One PDE/subset/time, equal updates not equal compute; DeepONet below initial-mean baseline. |
 | `public_coefficients_v1` | All 40 runs completed; small average whitening gains, all arms below initial-mean baseline; PUBLIC_COEFFICIENTS_V1.md | Extra branch training and relaxed constant term; same exploratory test split, no final-holdout claim. |

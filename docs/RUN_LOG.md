@@ -357,3 +357,29 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   with the normalized objective, while the middle bin worsens slightly. This is descriptive.
 - Full regression33 tests passed. Advection remains downloading; its experiment is not
   yet reported as completed. All three newly reserved confirmation sets remain unopened.
+- Final Advection download completed and matched the pinned SHA256. Ran
+  `D:/miniconda3/envs/pytorch/python.exe scripts/run_objective_modal.py advection`:
+  41 additional records completed,89600 updates. All123 records now complete,236600
+  updates total, plus48 deterministic ridge grid refits. Training source remainsf807853;
+  Advection launch Git checkpointcd0eaeb; no source edits during training.
+- Advection full-data normalized loss worsens L2 from0.169283 to0.175051 and RMSE
+  from0.137108 to0.139769 in5/5 pairs. All five energy-bin means worsen. Stable selection
+  keeps16/16 modes, so normalized/all, stable, random and energy are exact repeats.
+  Across three tasks25 panel records are redundant; record counts are not independent N.
+- Expanded Advection ridge selects alpha0.0001 (lower grid boundary): full1000 L2
+  0.015378 and anchor400 L2=0.019756, much better than residuals. Improvement relative
+  to the original alpha10 anchor0.341140 does not imply nonlinear correction is needed.
+- Ran `scripts/summarize_objective_modal.py` and `scripts/diagnose_objective_energy.py`:
+  audit checks all123 records, frozen anchors, strict CV, selected checkpoint hashes,
+  mask identities and aggregates; stratified aggregation reproduces development scores.
+  No reserved confirmation labels loaded. All three500-ID reserved sets stay unopened.
+- Synced current conclusions, experiment ledger, publication assessment and dated paper
+  addendum. Proposed next step is incremental nonlinear benefit beyond tuned linear
+  correction, with rejection/continuous-shrinkage controls, not an implemented success.
+- Final `D:/miniconda3/envs/pytorch/python.exe -m unittest discover -s tests`:34 tests
+  passed, including all-three-task completion and numeric paper-table checks. Resume
+  command `scripts/run_objective_modal.py all` verified identities and skipped all three
+  completed tasks without retraining. `git diff --check` passed (CRLF notices only).
+- Local datasets and full optimizer/RNG/model checkpoints remain ignored by Git;
+  protocol, provenance, selected hashes, progress logs and results are versioned. Local
+  sleep/interruption recovery is supported; a Git clone alone is not a checkpoint backup.
