@@ -1,5 +1,16 @@
 # Current conclusions
 
+> 2026-09-28 frozen-ridge residual update (latest): see RIDGE_RESIDUAL_V1.md.
+> 40 runs +8 ridge refits completed; development selects width32/penalty1 with L2=0.366400
+> versus frozen ridge0.373656. Selection was committed BEFORE opening500 fresh trajectories.
+> Confirmation L2=0.405135 versus frozen ridge0.405354 (only0.054% gain; paired95% interval
+> for difference[-0.007498,0.008923]). Predeclared primary success FAILS. Expanded ridge
+> and initial mean are slightly better in confirmation L2. Secondary RMSE improves5/5
+> seeds, mean0.147701 versus0.150931. Do not replace the failed primary endpoint with RMSE.
+> Next: development-only objective/metric alignment diagnostics, then modal learnability
+> shrinkage with cross-fitting. Both are proposals; reserve a NEW confirmation set before
+> adaptive follow-up. The500 current confirmation IDs are now consumed, not reusable holdout.
+
 > 2026-09-28 same-POD update (latest): 30/30 readout runs completed; see
 > PUBLIC_POD_READOUT_V1.md. Identical POD bases / input normalization / mean offsets:
 > nonlinear MLP improves train L2 and RMSE in 15/15 pairs versus Adam affine control,

@@ -294,3 +294,22 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   Added direct reproduction/training-only test for fixed-basis ridge; CPU4 tests pass.
 - Selection lock and all development evidence are being committed BEFORE the confirmation
   stage. No500-ID confirmation pair has been read, and no confirmation score is known yet.
+
+- Selection sealed in Git8881a9c before running `run_public_ridge_residual.py confirm`.
+  Full8.23GB source SHA256 matched;500 disjoint pairs extracted in10 resumable chunks.
+  Only five selected residual checkpoints and predeclared controls evaluated, with no tuning.
+- Fresh relative L2:residual0.4051353931±0.0018933127, frozen ridge0.4053541806,
+  expanded ridge0.4045177708, mean baseline0.4043734692. Primary difference=-0.0002187875,
+  paired95% CI[-0.0074978679,0.0089227175], relative gain0.0539744%; primary_success=false.
+- Secondary RMSE improves5/5:mean0.1477012653 versus frozen ridge0.1509313323 (~2.14%).
+  Kept the negative primary conclusion; metric disagreement is not proof of a specific
+  low-energy/outlier mechanism. No retraining or retuning followed confirmation.
+- Independent audit reproduced bootstrap intervals from versioned per-trajectory errors.
+  Updated current conclusions, publication assessment and a dated paper addendum while
+  preserving earlier tables and counts. Combined public records:245 neural including20
+  historic repeats,26 deterministic ridge fits including six new repetitions of old settings.
+- Full regression before confirmation:27 tests passed. New follow-up work must reserve
+  another untouched confirmation set; the current500 IDs are now consumed.
+- Final regression:28 tests passed, including numeric paper/report tables and paired
+  confirmation statistics. Re-executing train/confirm checked identities and skipped both;
+  no retraining and no confirmation labels reloaded. `git diff --check` passed.

@@ -2,6 +2,11 @@
 
 **Evidence-audited research draft v2 — 2026-09-24. Not a submitted manuscript.**
 
+**Latest 2026-09-28 follow-up:** [regularized ridge residual with fresh confirmation](FOLLOWUP_RIDGE_RESIDUAL_20260928.md).
+Forty additional neural runs selected a development improvement, but the500-trajectory
+sealed confirmation did not meet the primary relative-L2 success criterion. Secondary
+RMSE improved; this does not replace the failed primary endpoint or validate a new method.
+
 **2026-09-28 follow-up:** the core results below are preserved; see the
 [larger-sample and POD ridge addendum](FOLLOWUP_20260928.md) for 20 additional neural
 records and 18 deterministic validation-tuned candidates. Schedule effects change

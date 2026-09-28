@@ -1,5 +1,9 @@
 # Same POD basis: linear and nonlinear coefficient readouts
 
+The proposed ridge-residual experiment below has now been completed; see the
+[fresh-confirmation addendum](FOLLOWUP_RIDGE_RESIDUAL_20260928.md). Its primary improvement
+was not confirmed; the observations and record counts below describe the earlier stage.
+
 **2026-09-28 exploratory addendum.** Thirty additional neural records (15 affine Adam
 controls and 15 nonlinear branches) extend the prior 175 neural records to 205, including
 the previously reported 20 repeated controls. The 18 deterministic ridge fits are reused,

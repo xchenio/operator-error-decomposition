@@ -14,6 +14,7 @@
 | `public_scale1000_v1` | 20 completed controls; cosine improves validation relative L2 in 10/10 pairs | Includes 10 old-control repeats; training still not fully fit; no new test evaluation. |
 | `public_pod_ridge_v1` | 18 deterministic training-only residual-POD ridge candidates; selected validation error 0.373656 | Validation-tuned grid boundary, tiny baseline gain; not full POD-DeepONet or two-step reference. |
 | `public_pod_readout_v1` | 30 completed same-POD neural runs; nonlinear improves training in 15/15 but worsens validation in 15/15 versus Adam affine control | Exact rank-matched POD/normalization; reused validation only; coefficient error is not uniquely optimization error. |
+| `public_ridge_residual_v1` | 40 neural runs +8 ridge refits; sealed selection evaluated on500 new trajectories; primary gain not confirmed, RMSE improves5/5 | Baseline-inclusive early stopping is not an unseen-data guarantee; confirmation IDs are now consumed; no post-confirmation retuning. |
 
 This is the permanent index of experiment families. Raw per-run JSON, logs, checkpoints, and
 figures remain versioned under `results/`. A run is evidence only when its source fingerprint,

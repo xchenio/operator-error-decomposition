@@ -104,3 +104,69 @@ results are available at protocol-lock time; any outcomes are appended below aft
 - Independent audit replays all early-stopping decisions, reproduces group selection,
   checks checkpoint/result hashes and frozen arrays exactly. Maximum squared-error
   closure discrepancy is1.32e-16. Confirmation data have not yet been extracted.
+
+## Fresh confirmation completed (after selection commit8881a9c)
+
+The source checksum was verified again. Only the500 reserved, disjoint trajectories
+were extracted, and only the five locked residual models plus predeclared controls were
+evaluated. No hyperparameters, checkpoints, seeds or success thresholds were changed.
+
+| Method | Development relative L2 | Fresh confirmation relative L2 | Fresh confirmation RMSE |
+|---|---:|---:|---:|
+| Frozen ridge (alpha10) | 0.373656 | 0.405354 | 0.150931 |
+| Expanded ridge (alpha100) | 0.373600 | 0.404518 | 0.150910 |
+| Ridge + selected residual | 0.366400 | 0.405135 ± 0.001893 | 0.147701 ± 0.000916 |
+| Initial spatial mean | 0.374509 | 0.404373 | 0.151370 |
+
+Neural entries average the metrics of five separate models, not an ensemble prediction.
+± denotes sample SD across optimizer seeds on this one split. Development and confirmation
+scores must be compared within their respective columns, not across different sample sets.
+
+- Primary difference (residual minus frozen ridge):-0.000219;
+  paired5000-bootstrap95% interval [-0.007498, 0.008923].
+  Relative mean improvement is only0.0540%. The predeclared success condition
+  (interval upper<0 and at least1% relative improvement) **fails**.
+- The residual mean L2 is also slightly worse than expanded ridge and initial mean.
+  Their descriptive difference intervals also cross zero. This is not a claim that
+  the methods are equivalent; the interval is compatible with gains or harms.
+- Secondary RMSE improves in5/5 selected seeds versus both ridge controls and mean.
+  Mean RMSE decreases by2.14% versus frozen ridge.
+  This does not rescue the failed primary endpoint or justify retrospectively changing it.
+- Squared-error training and per-trajectory relative L2 weight samples differently.
+  The observed metric disagreement motivates checking objective alignment, but does not
+  itself prove that low-energy samples, outliers or a particular mode caused the failure.
+- Regularized residuals improved the development-selected procedure compared with weakly
+  regularized candidates; no independently confirmed primary improvement was established.
+  Early stopping retains the original baseline on the development set by construction;
+  it is **not** a guarantee against degradation on unseen trajectories.
+
+### Full development grid (including failures)
+
+| Width | Correction penalty | Development relative L2 (mean ± sample SD) |
+|---|---:|---:|
+| 16 | 0 | 0.373656 ± 0.000000 |
+| 16 | 0.1 | 0.372280 ± 0.002123 |
+| 16 | 1 | 0.368276 ± 0.003153 |
+| 16 | 10 | 0.370306 ± 0.000496 |
+| 32 | 0 | 0.373066 ± 0.001319 |
+| 32 | 0.1 | 0.372880 ± 0.001735 |
+| 32 | 1 | 0.366400 ± 0.003278 |
+| 32 | 10 | 0.370150 ± 0.000747 |
+
+### 下一步研究建议（本轮未执行）
+
+1. **先检查损失与目标指标的一致性。** 在开发数据上比较原场 MSE 与带训练集确定
+   下限的逐轨迹归一化系数误差，按目标能量分层报告两个原定指标；不是换指标取胜。
+   加入小能量分母保护并保留原 MSE 对照，防止放大弱信号噪声。独立确认当前已消耗，
+   后续方案必须重新预留新轨迹，不能继续用这500条调参后再称它们是确认数据。
+2. **再检验模态可学习性驱动收缩。** 用训练内部交叉拟合估计每模态残差的可预测
+   增益及稳定性，仅让稳定模态得到非线性修正；同时比较统一惩罚、能量截断和
+   随机模态控制，匹配调参预算。该方向仍是假设，不是已实现创新或已证实机制。
+3. **最后扩大外部证据。** 优先独立训练划分与第二种 PDE，再考虑更大模型。
+   如逐模态规则无法胜过同预算常规正则化，就不应包装为方法创新。
+
+This experiment adds40 neural records (total245 across the current public families,
+including20 historical repeated controls), and8 deterministic ridge refits (26 recorded
+ridge fits total, six of the new fits repeat existing rank16 alpha settings).
+No training or selection changed after confirmation. Raw evidence and audit remain
+in public_ridge_residual_v1; this500-trajectory set is now consumed for future research.
