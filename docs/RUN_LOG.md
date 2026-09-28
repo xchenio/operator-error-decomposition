@@ -232,3 +232,15 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Added dated paper follow-up without replacing the core study's original tables; records
   now total 175 neural runs including 20 repeated controls, plus 18 deterministic ridge fits.
   Next not yet executed: nonlinear readout on the identical training-only POD basis.
+
+## 2026-09-28 — same-POD readout protocol
+
+- Locked PUBLIC_POD_READOUT_V1.md: ranks16/32/64, five seeds each, zero-output MLP
+  and matched Adam affine control, 3000 cosine updates / batch32. Reuse exact stored
+  ridge Q and per-position normalization; reproduce rank-matched ridge metrics first.
+- New runner saves atomic full-state checkpoints every50 updates and evaluations every250;
+  float64 reconstruction checks squared projection/coefficient error closure. No test loading.
+- CPU and CUDA readout tests both passed (2/device): zero prediction, objective identity,
+  validation-target isolation, uninterrupted/resumed bitwise weights and history equality,
+  completed-run skip and changed-config rejection. Full regression:22 tests passed.
+- Command: D:/miniconda3/envs/pytorch/python.exe scripts/run_public_pod_readout.py
