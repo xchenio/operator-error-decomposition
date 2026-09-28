@@ -8,11 +8,22 @@ from unittest.mock import patch
 import numpy as np
 import torch
 from scripts.run_public_pod_ridge import fit_preprocess, fit_ridge, predict
-from scripts.run_public_ridge_residual import train_one, choose_ids, paired_interval, digest, confirmation
+from scripts.run_public_ridge_residual import train_one, choose_ids, paired_interval, digest, confirmation, fit_fixed_basis_ridge
 from src.public_benchmark import atomic_json, file_hash
 
 
 class RidgeResidualTest(unittest.TestCase):
+    def test_fixed_basis_ridge_and_training_only_fit(self):
+        rng = np.random.default_rng(81)
+        x, y = rng.normal(size=(35, 12)), rng.normal(size=(35, 12))
+        anchor = fit_ridge(fit_preprocess(x, y), 4, 10.)
+        arrays = dict(train_x=x, train_y=y, val_x=x[:3], val_y=y[:3])
+        fitted = fit_fixed_basis_ridge(arrays, anchor, 10.)
+        changed = fit_fixed_basis_ridge(dict(arrays, val_y=y[:3]+100), anchor, 10.)
+        for key in anchor:
+            np.testing.assert_array_equal(fitted[key], anchor[key])
+            np.testing.assert_array_equal(fitted[key], changed[key])
+
     def test_disjoint_ids_and_bootstrap(self):
         protocol = dict(sample_ids=dict(train=list(range(100, 300)), val=list(range(300, 340)), test=list(range(340, 380))))
         ids = choose_ids(protocol, total=1000, count=100)

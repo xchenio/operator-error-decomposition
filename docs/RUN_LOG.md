@@ -285,3 +285,12 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   preventing label access and completed-confirmation skip. Full regression:26 tests passed.
 - Commands: run_public_ridge_residual.py plan; after source commit, train; after selection
   commit, confirm. All use D:/miniconda3/envs/pytorch/python.exe. No confirmation results yet.
+
+- Training at source commit4e2e3e2 completed40 residual runs/60200 updates and8 expanded
+  ridge fits. Selected width32/lambda1 by five-seed development mean0.3663995661;
+  frozen ridge0.3736562256, expanded ridge alpha100=0.3735998498.
+- All40 frozen anchors are array-identical to the original; independent audit replays
+  patience/best-step rules and verifies model/result identities.17 runs retained step0.
+  Added direct reproduction/training-only test for fixed-basis ridge; CPU4 tests pass.
+- Selection lock and all development evidence are being committed BEFORE the confirmation
+  stage. No500-ID confirmation pair has been read, and no confirmation score is known yet.

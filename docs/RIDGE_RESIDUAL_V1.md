@@ -88,3 +88,19 @@ D:/miniconda3/envs/pytorch/python.exe scripts/run_public_ridge_residual.py confi
 
 Rerunning a stage resumes full state or skips identity-matched completed work. No formal
 results are available at protocol-lock time; any outcomes are appended below afterward.
+
+## Development completed; confirmation still sealed
+
+- Source commit:4e2e3e2. All40 neural runs and8 deterministic rank16 ridge candidates
+  completed. Total60200 AdamW updates; all runs terminated by declared patience rules.
+- Selected width32/lambda1, development mean relative L2=0.3663995661,
+  sample SD=0.0032784147. Seed0–4 selected steps:2200/1400/2300/2300/1100.
+  No seeds were discarded. The aggregate fallback is not activated.
+- Frozen alpha10 ridge:0.3736562256. Expanded grid selects alpha100:0.3735998498.
+  Development gain versus frozen ridge is approximately1.94%, still tuning evidence.
+- Across the full residual grid,17/40 runs selected step0 (unmodified ridge).
+  Width16/lambda0 selects step0 in5/5 seeds; width32/lambda0 in4/5. These retained
+  failures are part of the result, not missing or rerun experiments.
+- Independent audit replays all early-stopping decisions, reproduces group selection,
+  checks checkpoint/result hashes and frozen arrays exactly. Maximum squared-error
+  closure discrepancy is1.32e-16. Confirmation data have not yet been extracted.
