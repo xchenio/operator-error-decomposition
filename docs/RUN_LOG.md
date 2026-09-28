@@ -329,3 +329,11 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   (not a second nonlinear task). Publisher HF revision33d90a245d98b8a250884eab613c6f9c26a13b68,
   file8232966952 bytes, SHA256d973ff2bb3c2a5edf42957ff029b78672451532ebd6bf475848ff23cfd3ee3b6.
   Added separate resumable downloader/status path, preserving the original Burgers file.
+- Locked OBJECTIVE_MODAL_V1.md and machine-readable plan with disjoint new Burgers training
+  split and three reserved500-ID confirmation lists (not evaluated in this development stage).
+  Per task:10 full-data objective comparisons,6 strict fixed-step CV probes,25 equal-data
+  correction panels;123 neural records planned over three tasks. Extra pure-ridge grids
+  distinguish residual improvements from a weak alpha10 anchor, especially on Advection.
+- CPU/CUDA new tests passed(2 per device): bounded normalized weights, modal criteria,
+  masked continuation equality and held-CV-label perturbations leave final weights unchanged.
+  Full regression30 tests passed. Formal runs follow the source/protocol Git commit.
