@@ -107,3 +107,36 @@ Our cross-fitted correction mask has a different target and training procedure, 
 broad idea of neural/POD mode selection is not new. Combined with the energy-mask equality
 above, no first-mode-selection or validated-new-method claim is justified. This is a
 targeted literature check, not an exhaustive novelty review.
+
+## Independent Burgers development replication (completed41 more runs)
+
+The1000 training and200 development IDs are disjoint from all prior splits and consumed
+confirmation IDs. Both Q and coefficient models are fitted anew, with the same predeclared
+hyperparameters. This is a new training split, not simply a new evaluation set for old weights.
+
+| Protocol / arm | Development relative L2 |
+|---|---:|
+| Full1000, MSE | 0.407464 ± 0.002837 |
+| Full1000, normalized | 0.398468 ± 0.001796 |
+| Anchor400/correction600, MSE all | 0.411704 ± 0.000599 |
+| Anchor400/correction600, normalized all | 0.404991 ± 0.001940 |
+| Anchor400/correction600, normalized stable | 0.403133 ± 0.002563 |
+| Anchor400/correction600, normalized random | 0.412182 ± 0.003265 |
+| Anchor400/correction600, normalized energy | 0.403133 ± 0.002563 |
+
+The normalized full-data objective improves relative L2 in5/5 paired seeds on each split
+(10/10 total); RMSE improves4/5 on the original split and5/5 on the new split.
+The strict masked rule improves L2 over normalized/all in5/5 original and3/5 new seeds,
+and over random masks in5/5 on both. It selects modes0/1 on the new split, again equal
+to the top-energy mask. Across both splits, ten energy/stable pairs have exactly identical
+histories and final metrics. This does not establish incremental value over energy truncation.
+
+Post-training development stratification of full-data models: normalized loss lowers the
+lowest-energy bin from0.677225→0.647515 on the original split and0.778757→0.752588 on the new
+split. The middle bin worsens slightly on both. The benefit is not uniform across samples;
+these strata were inspected after fitting and are descriptive, not a new primary endpoint.
+Expanded pure-ridge on the new split selects alpha1000 at both budgets (grid boundary):
+full1000 relative L2=0.409068; anchor400=0.409678.
+
+At this checkpoint82 neural records are complete. The Advection dataset download and
+third-task evaluation are still pending; no second-PDE result or confirmation claim yet.

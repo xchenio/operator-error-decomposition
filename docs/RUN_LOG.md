@@ -347,3 +347,13 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Targeted primary-source novelty check: Koike et al.2605.27756 uses learned sparse POD
   mode selection for nonlinear decoding. Our procedure differs, but broad mode-selection
   originality is unsupported. Independent split is running; second-PDE download continues.
+- Independent Burgers41 runs completed,67500 updates; aggregate82 records complete.
+  Full-data normalized L2=0.398468 vs MSE0.407464;10/10 paired L2 improvements across
+  the two independent training splits,9/10 RMSE improvements. New strict mask selects0/1,
+  equals top-energy again; masked0.403133 vs all0.404991, random0.412182. Only3/5 paired
+  gains over all modes on this split; do not turn group means into universal superiority.
+- Ten stable/energy pairs across the two tasks have exactly identical histories/metrics.
+  New post-training energy strata use development data only; both low-energy bins improve
+  with the normalized objective, while the middle bin worsens slightly. This is descriptive.
+- Full regression33 tests passed. Advection remains downloading; its experiment is not
+  yet reported as completed. All three newly reserved confirmation sets remain unopened.
