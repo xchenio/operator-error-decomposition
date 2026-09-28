@@ -337,3 +337,13 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - CPU/CUDA new tests passed(2 per device): bounded normalized weights, modal criteria,
   masked continuation equality and held-CV-label perturbations leave final weights unchanged.
   Full regression30 tests passed. Formal runs follow the source/protocol Git commit.
+- Source commitf807853; original Burgers41 runs completed,79500 updates. Full-data guarded
+  loss improves development L2:0.366400→0.358258; RMSE0.145048→0.143010.
+  Strict CV selects modes0–3; stable mask equals top-energy mask, both0.360077 vs all
+  normalized0.362092 and random0.375807. Do not claim superiority over energy selection.
+- Independent audit checks disjoint samples, exact frozen anchors, fixed-step CV selection,
+  masks and group statistics. Added rejection of numerically degenerate modal denominators
+  rather than certifying gains caused by the denominator floor; original case passes.
+- Targeted primary-source novelty check: Koike et al.2605.27756 uses learned sparse POD
+  mode selection for nonlinear decoding. Our procedure differs, but broad mode-selection
+  originality is unsupported. Independent split is running; second-PDE download continues.

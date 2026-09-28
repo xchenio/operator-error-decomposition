@@ -10,6 +10,19 @@ from scripts.diagnose_development_energy import summarize_bins
 
 
 class ObjectiveModalTest(unittest.TestCase):
+    def test_weighted_field_coefficient_identity(self):
+        rng=np.random.default_rng(17)
+        x,y=rng.normal(size=(30,12)),rng.normal(size=(30,12))
+        model=fit_ridge(fit_preprocess(x,y),4,10.)
+        q=model['q'];offset=x.mean(axis=1,keepdims=True)
+        target=(y-offset)@q
+        coef=rng.normal(size=target.shape)
+        w,_=sample_weights(y,'normalized')
+        total=np.mean(w*np.mean((coef@q.T+offset-y)**2,axis=1))
+        projected=target@q.T+offset
+        separate=np.mean(w*(np.sum((coef-target)**2,axis=1)/12+np.mean((projected-y)**2,axis=1)))
+        self.assertAlmostEqual(total,separate,places=12)
+
     def test_weights_masks_and_bins(self):
         y=np.arange(1,121,dtype=float).reshape(20,6)
         w,floor=sample_weights(y,'normalized')

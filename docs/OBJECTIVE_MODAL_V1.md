@@ -75,3 +75,35 @@ This tests a proposed diagnostic rule, not an established novel algorithm. Origi
 development data have been reused; new task development sets also cease being untouched
 once viewed. A later confirmation stage must commit fixed models and predefined claims
 before opening reserved targets. No cross-PDE confirmation claim is licensed by this stage.
+
+## Original Burgers development results (completed41 runs)
+
+Full1000 comparison: MSE relative L2=0.366400±0.003278; normalized=0.358258±0.000460.
+RMSE also improves from0.145048 to0.143010. These are development-selected five-seed
+metrics, not fresh confirmation or an isolated proof of the cause of previous failure.
+
+Within the strict anchor400/correction600 protocol:
+
+| Arm | Development relative L2 |
+|---|---:|
+| MSE, all modes | 0.370971 ± 0.000997 |
+| Normalized, all modes | 0.362092 ± 0.001604 |
+| Normalized, stable modes | 0.360077 ± 0.001411 |
+| Normalized, random k modes | 0.375807 ± 0.001481 |
+| Normalized, top-energy k modes | 0.360077 ± 0.001411 |
+
+CV selects zero-based modes0/1/2/3. Stable and top-energy masks are identical, so their
+five paired runs are duplicates, not independent evidence for a superior modal rule.
+Expanded ridge controls select alpha100/full1000 (0.373600) and alpha1000/anchor400
+(0.375627); the latter lies on the declared alpha-grid boundary. Pure-ridge controls
+and residual early-stopping procedures have different tuning costs.
+
+### Targeted novelty update
+
+[Koike et al., Sparse POD Mode Selection and Manifold Dimensionality Reduction with Neural
+Networks,2026](https://arxiv.org/abs/2605.27756) proposes SparseModesNet, with neural nonlinear
+decoding and sparsity-based informative-mode selection rather than energy truncation alone.
+Our cross-fitted correction mask has a different target and training procedure, but the
+broad idea of neural/POD mode selection is not new. Combined with the energy-mask equality
+above, no first-mode-selection or validated-new-method claim is justified. This is a
+targeted literature check, not an exhaustive novelty review.
