@@ -1,9 +1,30 @@
 import unittest
+import json
+from pathlib import Path
 import numpy as np
 from scripts.uncertainty_shrink import coefficients,matched_global,bootstrap_moment,moments
 
 
 class UncertaintyShrinkTest(unittest.TestCase):
+    def test_fresh_ids_and_preflight_metadata(self):
+        root=Path(__file__).resolve().parents[1]
+        p=json.loads((root/'results/public_uncertainty_modal_v1/plan_v2.json').read_text())
+        old=json.loads((root/'results/public_field_modal_v1/plan.json').read_text())
+        self.assertEqual(p['cv_seeds'],[0,1])
+        used={'burgers':set(range(128)),'advection':set()}
+        hist=json.loads((root/'external_data/pdebench/fixed_t1_v1/protocol.json').read_text())
+        for ids in hist['sample_ids'].values():used['burgers'].update(ids)
+        used['burgers'].update(json.loads((root/'results/public_ridge_residual_v1/plan.json').read_text())['confirmation_ids'])
+        for task,s in old['parent']['tasks'].items():
+            family='burgers' if task.startswith('burgers') else 'advection'
+            used[family].update(s['train']+s['val']+s['reserved_confirmation']+old['tasks'][task]['reserved'])
+        for task,s in p['tasks'].items():
+            ids=set(s['reserved']);self.assertEqual(len(ids),500)
+            if task=='allen_cahn':self.assertFalse(ids&set(range(1700)));self.assertFalse(ids&set(range(100000,100016)))
+            else:
+                family='burgers' if task.startswith('burgers') else 'advection'
+                self.assertFalse(ids&used[family]);used[family].update(ids)
+
     def test_continuity_and_no_new_zero(self):
         n=np.array([.2,2.,-.1,0.]);d=np.ones(4);zero=np.zeros(4)
         old=coefficients(n,d,zero);new=coefficients(n,d,np.ones(4)*.2)

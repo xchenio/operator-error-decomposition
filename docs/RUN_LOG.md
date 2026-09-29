@@ -497,3 +497,12 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   required omitted cv_seeds metadata. Preserved original plan.json, added explicit[0,1]
   and versioned plan_v2.json rather than overwriting the immutable initial record.
   Scientific settings unchanged; no development outcomes or new targets examined.
+- Repaired preflight verified13 model artifacts/task; active source/protocol0e3217f.
+  Development completed with zero new neural fits. All2000 bootstrap replicates/task,
+  coefficient masks, nonzero support and energy matching replay exactly in independent
+  audit. New/old continuous L2: original0.362695/0.362297, independent0.402668/0.402073.
+  Neither development comparison favors new uncertainty versus old continuous.
+  Allen-Cahn remains all1 and predictions coincide; Advection selects none.
+- No coefficient newly becomes zero. Added fresh-ID exclusion/preflight metadata test.
+  Freeze these results and commit selection before new target extraction; no changes
+  to penalty strength or candidate rule follow the unfavorable development comparison.

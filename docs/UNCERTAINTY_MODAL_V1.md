@@ -73,3 +73,24 @@ scripts/run_uncertainty_modal.py confirm
 Old confirmation data stay consumed. The new masks use training-internal predictions,
 not past confirmation errors. Repeated adaptations of the overall research direction
 remain disclosed; independent new confirmation does not establish global novelty.
+
+## Development results before confirmation
+
+Active source/protocol commit0e3217f. All four frozen-model analyses completed; zero
+new neural fits. Each conditional bootstrap2000 replicates is independently replayed.
+
+| Task | All modes | Old continuous | Hierarchical uncertainty | Trajectory only | Matched global |
+|---|---:|---:|---:|---:|---:|
+| Original Burgers | 0.363277 | 0.362297 | 0.362695 | 0.362492 | 0.362834 |
+| Independent Burgers | 0.403154 | 0.402073 | 0.402668 | 0.402410 | 0.402678 |
+| Advection | 0.019756122297 | 0.019756122211 | 0.019756123346 | 0.019756122988 | 0.019756123045 |
+| Synthetic Allen-Cahn | 0.359048 | 0.359048 | 0.359048 | 0.359048 | 0.359048 |
+
+Main candidates are uncertainty on both Burgers splits and Allen-Cahn; Advection
+falls back to none. The new rule is worse than old continuous shrinkage on both Burgers
+development sets. Its advantage over matching global attenuation is small. This is
+recorded before confirmation; no penalty strength or candidate rule is adjusted.
+Old/new nonzero mode counts remain11/11,9/9,13/13,16/16: no modes are newly deleted.
+Matched global amplitude factors are0.891607,0.797415,0.404901,1.0. On Allen-Cahn the
+box-constrained coefficients stay all1, so every nonlinear arm is an exact duplicate.
+No uncertainty advantage can be inferred from those identical predictions.
