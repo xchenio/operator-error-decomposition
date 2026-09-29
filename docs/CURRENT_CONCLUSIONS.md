@@ -9,6 +9,16 @@
 > restate an earlier effect. The modal-shrinkage line is CLOSED under its own predeclared
 > rule; 2000 targets consumed, no retuning and no sixth variant. See UNCERTAINTY_MODAL_V1.md.
 >
+> Latest2026-09-29 E0 completed (5k/20k budgets): more updates do NOT buy fluctuation
+> skill. Per-sample R^2 for MLP DeepONet goes -0.0042 -> -0.0640 -> -0.2470 and for Fourier
+> -0.0934 -> -0.1272 -> -0.8037 across 1500/5000/20000 updates, while FNO is flat at
+> +0.650/+0.683/+0.666. Total relL2 is flat across the same ladder (MLP 0.394/0.397/0.393;
+> FNO 0.228/0.216/0.222), so the ranking is not a budget artifact. IMPORTANT: the
+> energy-weighted R^2 shows +0.2126 for MLP at 20k, a false positive — the manuscript
+> metric is per-sample, so the per-sample measure decides. Two measures are now reported
+> everywhere, plus an exact orthogonal squared-error split (mean share + fluctuation share
+> = mean of squared relative L2, closure asserted 0).
+>
 > Latest2026-09-29 E1 completed: 175 stored runs across five public families were
 > recomputed into results/fluctuation_v1 by scripts/diagnose_fluctuation.py; every
 > recomputed mean_relative_l2 reproduces its stored value exactly (max difference

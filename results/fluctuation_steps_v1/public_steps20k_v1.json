@@ -1,0 +1,706 @@
+{
+  "family": "public_steps20k_v1",
+  "splits": [
+    "test",
+    "val"
+  ],
+  "source_sha256": "dc84cff082ab748a1177f2fcc2cc49d990d73e9a6d3a59065957f0afc00f4e87",
+  "git_commit": "373932fd2203f4f71d105dfb3673e2daeac0c6ba",
+  "protocol_cache_sha256": "b7251f08c1b3bb379ffec0f19eee37e44a48dd7c48d9a89953b2d527afb5e777",
+  "tolerance": 2e-05,
+  "runs": [
+    {
+      "run": "deeponet_fourier_s0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 0,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.4985627847832235,
+          "relative_l2_rms": 0.7029264701962609,
+          "relative_fro": 0.2858792955075175,
+          "rmse": 0.18225824372937557,
+          "fluctuation_r2": -0.19395116804371781,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.17911555406699986,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.12370426542252337,
+          "squared_error_fluctuation_share": 0.37040135708005145,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": -0.6834702848242102,
+          "stored_mean_relative_l2": 0.4985627847832235,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.48234529971351237,
+          "relative_l2_rms": 0.6112399802926916,
+          "relative_fro": 0.27245889032396287,
+          "rmse": 0.18213786416615305,
+          "fluctuation_r2": -0.2165178521569897,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.1739256892917341,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.06532355300322688,
+          "squared_error_fluctuation_share": 0.3082907605049831,
+          "squared_error_closure": 5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -0.373244743063222,
+          "stored_mean_relative_l2": 0.48234529971351237,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 1,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.47156413652285084,
+          "relative_l2_rms": 0.6998759175567889,
+          "relative_fro": 0.26761555672756016,
+          "rmse": 0.17061445907523443,
+          "fluctuation_r2": -0.1811475674576315,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.0953956895285572,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.026616173549457684,
+          "squared_error_fluctuation_share": 0.46321012642649945,
+          "squared_error_closure": -5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -1.1052851685425824,
+          "stored_mean_relative_l2": 0.47156413652285084,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.460995532973331,
+          "relative_l2_rms": 0.6063290756974105,
+          "relative_fro": 0.2631146556575589,
+          "rmse": 0.17589127429572354,
+          "fluctuation_r2": -0.29193015157081703,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.1058715749984502,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.038298579966216606,
+          "squared_error_fluctuation_share": 0.32933636806985944,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": -0.46698991371218423,
+          "stored_mean_relative_l2": 0.460995532973331,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 2,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.4500619672884264,
+          "relative_l2_rms": 0.644541811474922,
+          "relative_fro": 0.2584544862547842,
+          "rmse": 0.16477395001673462,
+          "fluctuation_r2": -0.06620356352072232,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.11078396857067899,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.044885489218575436,
+          "squared_error_fluctuation_share": 0.3705486575207983,
+          "squared_error_closure": -5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -0.6841397637831796,
+          "stored_mean_relative_l2": 0.4500619672884264,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.4514217807047777,
+          "relative_l2_rms": 0.5908870474764428,
+          "relative_fro": 0.2604076669313228,
+          "rmse": 0.17408166131399164,
+          "fluctuation_r2": -0.2389220936367089,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.11462996928115157,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.03876440803596315,
+          "squared_error_fluctuation_share": 0.3103830948394649,
+          "squared_error_closure": 5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -0.3825647989768386,
+          "stored_mean_relative_l2": 0.4514217807047777,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 3,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.49502103607587983,
+          "relative_l2_rms": 0.7538423255410849,
+          "relative_fro": 0.269028045363741,
+          "rmse": 0.17151497094217807,
+          "fluctuation_r2": -0.14493948059124917,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.15479447287015075,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.12720706185607353,
+          "squared_error_fluctuation_share": 0.4410711899211174,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": -1.0046639342192814,
+          "stored_mean_relative_l2": 0.49502103607587983,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.4692167233942895,
+          "relative_l2_rms": 0.5951308335912645,
+          "relative_fro": 0.26986368470869926,
+          "rmse": 0.18040297782321127,
+          "fluctuation_r2": -0.3001668732238325,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.14226169583554057,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.04377729911003115,
+          "squared_error_fluctuation_share": 0.31040340998100224,
+          "squared_error_closure": 5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -0.3826552903729319,
+          "stored_mean_relative_l2": 0.4692167233942895,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 4,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.4692431238908319,
+          "relative_l2_rms": 0.62803804500871,
+          "relative_fro": 0.2819015328935223,
+          "rmse": 0.17972227823837322,
+          "fluctuation_r2": -0.22501269416240754,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.13499068151260946,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.055354385438571546,
+          "squared_error_fluctuation_share": 0.33907740053979085,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": -0.541103230733593,
+          "stored_mean_relative_l2": 0.4692431238908319,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.5133117154957183,
+          "relative_l2_rms": 0.6933385170733307,
+          "relative_fro": 0.2719051791734617,
+          "rmse": 0.1817677100992502,
+          "fluctuation_r2": -0.36317928011204015,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.13182093199564554,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.056683344177167735,
+          "squared_error_fluctuation_share": 0.42403495508027766,
+          "squared_error_closure": 5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -0.8888135732164721,
+          "stored_mean_relative_l2": 0.5133117154957183,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 0,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.37446840667355047,
+          "relative_l2_rms": 0.5551796733448691,
+          "relative_fro": 0.21140442616812571,
+          "rmse": 0.13477785917170712,
+          "fluctuation_r2": 0.24133914756419095,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.07606564142181856,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.02344327875005113,
+          "squared_error_fluctuation_share": 0.28478119094526444,
+          "squared_error_closure": 5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -0.29432752734107637,
+          "stored_mean_relative_l2": 0.37446840667355047,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.3826279891195105,
+          "relative_l2_rms": 0.548572852489786,
+          "relative_fro": 0.21466072881539078,
+          "rmse": 0.14349998497129748,
+          "fluctuation_r2": 0.19237341899762372,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.10029013650916291,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.0993206112589948,
+          "squared_error_fluctuation_share": 0.20161156322978585,
+          "squared_error_closure": 5.551115123125783e-17,
+          "fluctuation_r2_per_sample": 0.10194512838283165,
+          "stored_mean_relative_l2": 0.3826279891195105,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 1,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.38389286227613467,
+          "relative_l2_rms": 0.5917202217220916,
+          "relative_fro": 0.21759223577848802,
+          "rmse": 0.13872280842070486,
+          "fluctuation_r2": 0.22238839175342573,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.08618364822074046,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.054800535410902934,
+          "squared_error_fluctuation_share": 0.2953322853839384,
+          "squared_error_closure": 5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -0.3422821409523942,
+          "stored_mean_relative_l2": 0.38389286227613467,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.36602173523681825,
+          "relative_l2_rms": 0.48499230063334664,
+          "relative_fro": 0.2100533188884535,
+          "rmse": 0.14041994672247224,
+          "fluctuation_r2": 0.1984146688520173,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.07826039680765974,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.02835242338765128,
+          "squared_error_fluctuation_share": 0.2068651082859752,
+          "squared_error_closure": 2.7755575615628914e-17,
+          "fluctuation_r2_per_sample": 0.07854383306330748,
+          "stored_mean_relative_l2": 0.36602173523681825,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 2,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.3674778329938439,
+          "relative_l2_rms": 0.4963037060230988,
+          "relative_fro": 0.21960327581039707,
+          "rmse": 0.14000491814339228,
+          "fluctuation_r2": 0.20812038823335643,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.07156206077873216,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.013855656558575423,
+          "squared_error_fluctuation_share": 0.2324617120536871,
+          "squared_error_closure": 2.7755575615628914e-17,
+          "fluctuation_r2_per_sample": -0.05653604427039638,
+          "stored_mean_relative_l2": 0.3674778329938439,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.37584664269370793,
+          "relative_l2_rms": 0.5006867795647346,
+          "relative_fro": 0.2218973613634692,
+          "rmse": 0.14833764981862563,
+          "fluctuation_r2": 0.11731536762892747,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.08386719018069985,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.018892031106776362,
+          "squared_error_fluctuation_share": 0.23179522012412881,
+          "squared_error_closure": 5.551115123125783e-17,
+          "fluctuation_r2_per_sample": -0.032504402601118976,
+          "stored_mean_relative_l2": 0.37584664269370793,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 3,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.46475535482160807,
+          "relative_l2_rms": 0.7713609669526017,
+          "relative_fro": 0.2695752062694046,
+          "rmse": 0.1718638055282106,
+          "fluctuation_r2": 0.1218520707935481,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.21166101179360763,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.29376868465400496,
+          "squared_error_fluctuation_share": 0.3012290566840477,
+          "squared_error_closure": 1.1102230246251565e-16,
+          "fluctuation_r2_per_sample": -0.3690829046925572,
+          "stored_mean_relative_l2": 0.46475535482160807,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.4363044768687809,
+          "relative_l2_rms": 0.5531137715354226,
+          "relative_fro": 0.2594348864789185,
+          "rmse": 0.17343136080923355,
+          "fluctuation_r2": 0.12333354810964359,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.19225535389764414,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.0899263092450859,
+          "squared_error_fluctuation_share": 0.21600853501705372,
+          "squared_error_closure": -5.551115123125783e-17,
+          "fluctuation_r2_per_sample": 0.037815519728615854,
+          "stored_mean_relative_l2": 0.4363044768687809,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 4,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.3749694803036662,
+          "relative_l2_rms": 0.5760256516567706,
+          "relative_fro": 0.21886717395297997,
+          "rmse": 0.13953562696404817,
+          "fluctuation_r2": 0.26940124412760613,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.10973842957884805,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.07376358883955696,
+          "squared_error_fluctuation_share": 0.2580419625270502,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": -0.17279801450113808,
+          "stored_mean_relative_l2": 0.3749694803036662,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.3621289208953064,
+          "relative_l2_rms": 0.4732792622655898,
+          "relative_fro": 0.20948271239246047,
+          "rmse": 0.1400384981731666,
+          "fluctuation_r2": 0.24631099773249698,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.0930783771022126,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.03468667619489722,
+          "squared_error_fluctuation_share": 0.18930658389576369,
+          "squared_error_closure": -5.551115123125783e-17,
+          "fluctuation_r2_per_sample": 0.15675620399297596,
+          "stored_mean_relative_l2": 0.3621289208953064,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "fno_s0",
+      "configuration": {
+        "architecture": "fno",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 0,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.22308953750128688,
+          "relative_l2_rms": 0.2798943562436531,
+          "relative_fro": 0.1599985514032159,
+          "rmse": 0.10200478116550951,
+          "fluctuation_r2": 0.5492382616930847,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.023528822766020193,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.0011670754497885665,
+          "squared_error_fluctuation_share": 0.07717377520726043,
+          "squared_error_closure": 1.3877787807814457e-17,
+          "fluctuation_r2_per_sample": 0.6492460007346897,
+          "stored_mean_relative_l2": 0.22308953750128688,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.2231796422563056,
+          "relative_l2_rms": 0.2747323311335851,
+          "relative_fro": 0.16209487946006604,
+          "rmse": 0.10835988909013715,
+          "fluctuation_r2": 0.45795809298926204,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.02479536631347006,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.0014513519577347381,
+          "squared_error_fluctuation_share": 0.07402650181235912,
+          "squared_error_closure": 1.3877787807814457e-17,
+          "fluctuation_r2_per_sample": 0.6702576999237085,
+          "stored_mean_relative_l2": 0.2231796422563056,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "fno_s1",
+      "configuration": {
+        "architecture": "fno",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 1,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.2154482632668358,
+          "relative_l2_rms": 0.26349212495983965,
+          "relative_fro": 0.15826596424466474,
+          "rmse": 0.10090019507764675,
+          "fluctuation_r2": 0.5601616035584723,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.023742085820494946,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.001285944208399954,
+          "squared_error_fluctuation_share": 0.0681421557074518,
+          "squared_error_closure": -1.3877787807814457e-17,
+          "fluctuation_r2_per_sample": 0.6902946166782882,
+          "stored_mean_relative_l2": 0.2154482632668358,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.21929688299935188,
+          "relative_l2_rms": 0.26444004020800904,
+          "relative_fro": 0.16132443316946576,
+          "rmse": 0.10784484830120268,
+          "fluctuation_r2": 0.46432843641016985,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.026123952927945088,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.001538904612975861,
+          "squared_error_fluctuation_share": 0.06838963025223758,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": 0.6953664778338217,
+          "stored_mean_relative_l2": 0.21929688299935188,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "fno_s2",
+      "configuration": {
+        "architecture": "fno",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 2,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.22339176230482163,
+          "relative_l2_rms": 0.2774791269790366,
+          "relative_fro": 0.1561840874195457,
+          "rmse": 0.09957292437364748,
+          "fluctuation_r2": 0.5725575079247988,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.02855119162440843,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.0019238368457427898,
+          "squared_error_fluctuation_share": 0.07507082906330552,
+          "squared_error_closure": 1.3877787807814457e-17,
+          "fluctuation_r2_per_sample": 0.6588038689127176,
+          "stored_mean_relative_l2": 0.22339176230482163,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.22917364015858163,
+          "relative_l2_rms": 0.27571678874712136,
+          "relative_fro": 0.1641352438520246,
+          "rmse": 0.10972386591625624,
+          "fluctuation_r2": 0.44649126428196884,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.02819583720933152,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.001443157555127974,
+          "squared_error_fluctuation_share": 0.07457659004189679,
+          "squared_error_closure": 1.3877787807814457e-17,
+          "fluctuation_r2_per_sample": 0.6678073969428595,
+          "stored_mean_relative_l2": 0.22917364015858163,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "fno_s3",
+      "configuration": {
+        "architecture": "fno",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 3,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.22357625502889206,
+          "relative_l2_rms": 0.2688898176079897,
+          "relative_fro": 0.16228461321549023,
+          "rmse": 0.10346222707890534,
+          "fluctuation_r2": 0.5347924072319048,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.02189222002835355,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.001204805980160076,
+          "squared_error_fluctuation_share": 0.07109692803309789,
+          "squared_error_closure": 1.3877787807814457e-17,
+          "fluctuation_r2_per_sample": 0.6768652074345984,
+          "stored_mean_relative_l2": 0.22357625502889206,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.21759763498059354,
+          "relative_l2_rms": 0.25956676575051085,
+          "relative_fro": 0.15703377518558392,
+          "rmse": 0.10497655767533076,
+          "fluctuation_r2": 0.4911338397969336,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.023349318884389358,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.0011553987271242794,
+          "squared_error_fluctuation_share": 0.06621950715505628,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": 0.7050330345938194,
+          "stored_mean_relative_l2": 0.21759763498059354,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "fno_s4",
+      "configuration": {
+        "architecture": "fno",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "seed": 4,
+        "steps": 20000
+      },
+      "splits": {
+        "test": {
+          "mean_relative_l2": 0.2266223394060793,
+          "relative_l2_rms": 0.27830508461297165,
+          "relative_fro": 0.15966659290917865,
+          "rmse": 0.10179314578979308,
+          "fluctuation_r2": 0.5522422799554945,
+          "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+          "normalized_mean_error": 0.024933783770639928,
+          "fluctuation_energy_fraction": 0.23669837911971758,
+          "squared_error_mean_share": 0.001543800786976956,
+          "squared_error_fluctuation_share": 0.07590991933445637,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": 0.6549902124269443,
+          "stored_mean_relative_l2": 0.2266223394060793,
+          "metric_abs_difference": 0.0
+        },
+        "val": {
+          "mean_relative_l2": 0.22780366474996294,
+          "relative_l2_rms": 0.279127139081549,
+          "relative_fro": 0.16001907479873329,
+          "rmse": 0.10697222056153186,
+          "fluctuation_r2": 0.47388334903052354,
+          "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+          "normalized_mean_error": 0.02848431184211385,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "squared_error_mean_share": 0.0021809536597586494,
+          "squared_error_fluctuation_share": 0.07573100611209174,
+          "squared_error_closure": 0.0,
+          "fluctuation_r2_per_sample": 0.662665187046247,
+          "stored_mean_relative_l2": 0.22780366474996294,
+          "metric_abs_difference": 0.0
+        }
+      }
+    }
+  ],
+  "max_abs_metric_difference": 0.0,
+  "faithfulness_failures": [],
+  "splits_note": "recomputed from stored checkpoints; train split omitted for branch families that subsample training rows"
+}

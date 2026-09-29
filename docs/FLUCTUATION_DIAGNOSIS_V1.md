@@ -21,6 +21,27 @@ write the per-sample spatial mean as `bar(y)_j = mean_i Y_ji` and the fluctuatio
 `R^2` is a skill measure relative to a **zero-fluctuation** reference. It is not a causal
 attribution and not a decomposition of `mean_relative_l2`; the two are reported separately.
 
+### Two skill measures, because they weight samples differently
+
+| Measure | Definition | Dominated by |
+|---|---|---|
+| `fluctuation_r2` | `1 - sum_j \|\|p_c-y_c\|\|^2 / sum_j \|\|y_c\|\|^2` (energy-weighted) | high-energy samples |
+| `fluctuation_r2_per_sample` | `1 - (fluctuation squared share) / (per-sample fluctuation energy)` | every sample equally |
+
+The manuscript's headline metric is a **per-sample mean** of relative L2, so
+`fluctuation_r2_per_sample` is the measure that corresponds to it. The two can disagree in
+magnitude and even in sign; both are reported everywhere. By construction the per-sample
+version satisfies the exact identity
+`fluctuation share = (1 - r2_per_sample) * per-sample fluctuation energy`, whereas the
+energy-weighted version does not (a product of means is not a mean of products).
+
+An exact orthogonal split of the squared error is also reported: since the constant vector
+and the zero-mean residual are orthogonal,
+`||p-y||^2 = N (p_bar - y_bar)^2 + ||p_c - y_c||^2`, giving `squared_error_mean_share +
+squared_error_fluctuation_share = mean_j relative_L2_j^2` to machine precision
+(`squared_error_closure` is asserted to be 0 in the tests). This split is an identity, not
+an attribution of cause.
+
 ## Why the mean baseline is not arbitrary
 
 Verified directly on `external_data/pdebench/fixed_t1_v1/pairs.npz` (train split, zero
@@ -138,6 +159,41 @@ and 0.37577 (test).
 5. Whitening and mean lifting do not move R^2 (range -0.034 to -0.109 across all eight
    arms), so this is not a conditioning artifact of the frozen trunk basis.
 
+## E0 results (2026-09-29): more updates do not buy fluctuation skill
+
+`results/public_steps5k_v1` and `results/public_steps20k_v1` (15 runs each, same 3
+architectures and 5 seeds) test whether the near-zero skill is undertraining. All
+recomputations reproduce their stored metrics exactly.
+
+| Budget | Model | relL2 | R^2 (energy) | **R^2 (per sample)** |
+|---|---|---:|---:|---:|
+| 1500 | MLP DeepONet | 0.39357 | -0.0056 +- 0.0084 | **-0.0042 +- 0.0064** |
+| 1500 | Fourier DeepONet | 0.41231 | -0.0124 +- 0.0319 | **-0.0934 +- 0.0792** |
+| 1500 | FNO | 0.22835 | +0.6282 +- 0.0167 | **+0.6503 +- 0.0199** |
+| 5000 | MLP DeepONet | 0.39729 | +0.0165 +- 0.0142 | **-0.0640 +- 0.0450** |
+| 5000 | Fourier DeepONet | 0.40250 | +0.0175 +- 0.0403 | **-0.1272 +- 0.0704** |
+| 5000 | FNO | 0.21619 | +0.5864 +- 0.0148 | **+0.6830 +- 0.0291** |
+| 20000 | MLP DeepONet | 0.39311 | +0.2126 +- 0.0498 | **-0.2470 +- 0.1166** |
+| 20000 | Fourier DeepONet | 0.47689 | -0.1623 +- 0.0545 | **-0.8037 +- 0.2140** |
+| 20000 | FNO | 0.22243 | +0.5538 +- 0.0125 | **+0.6660 +- 0.0152** |
+
+### Reading
+
+1. **Undertraining is not the explanation, and more training is actively worse on the
+   per-sample measure.** MLP DeepONet goes -0.0042 -> -0.0640 -> -0.2470 and Fourier
+   -0.0934 -> -0.1272 -> -0.8037 as the budget grows 13x. FNO is flat at +0.65 to +0.68.
+2. **The energy-weighted measure can look like progress where the per-sample measure does
+   not.** At 20000 updates MLP shows +0.2126 energy-weighted but -0.2470 per sample: the
+   improvement is concentrated on high-energy samples while typical samples get worse.
+   Reporting only the energy-weighted number would have produced a false positive. This is
+   why both are reported and why the manuscript's per-sample metric decides the claim.
+3. **Total relative L2 is flat across the whole ladder** (0.39357 / 0.39729 / 0.39311 for
+   MLP; 0.22835 / 0.21619 / 0.22243 for FNO). The 13x budget therefore changes the ranking
+   not at all: DeepONet stays at ~0.39, FNO at ~0.22.
+4. The normalized mean error grows with budget for MLP DeepONet (0.081 -> 0.076 -> 0.111)
+   while it stays at 0.024-0.034 for FNO, so extra updates trade conserved-mean accuracy
+   for fluctuation fitting without net gain.
+
 ## E2 results (completed 2026-09-29): the failure is horizon-dependent, not absolute
 
 A viscosity ladder needs additional multi-gigabyte downloads, so the difficulty ladder was
@@ -149,11 +205,24 @@ was called with `time_index` 25 and 50 and the same split seed 20260922 and size
 Each horizon uses the same 1500-update budget, 5 seeds and 3 architectures as the original
 family; `run_public_benchmark.py --data-dir` selects the cache.
 
-| Horizon | fluctuation energy | MLP DeepONet R^2 | Fourier DeepONet R^2 | FNO R^2 |
+Energy-weighted R^2:
+
+| Horizon | fluctuation energy | MLP DeepONet | Fourier DeepONet | FNO |
 |---|---:|---:|---:|---:|
 | t = 0.25 | 0.4785 | **+0.2454 +- 0.0190** | **+0.4915 +- 0.0116** | +0.9327 +- 0.0075 |
 | t = 0.50 | 0.3580 | **+0.1387 +- 0.0134** | **+0.3213 +- 0.0238** | +0.8149 +- 0.0114 |
 | t = 1.00 | 0.2367 | **-0.0056 +- 0.0084** | **-0.0124 +- 0.0319** | +0.6282 +- 0.0167 |
+
+Per-sample R^2 (the measure matching the manuscript metric):
+
+| Horizon | MLP DeepONet | Fourier DeepONet | FNO |
+|---|---:|---:|---:|
+| t = 0.25 | +0.1695 +- 0.0138 | +0.4248 +- 0.0150 | +0.9474 +- 0.0052 |
+| t = 0.50 | +0.1238 +- 0.0123 | +0.2510 +- 0.0348 | +0.8369 +- 0.0067 |
+| t = 1.00 | -0.0042 +- 0.0064 | -0.0934 +- 0.0792 | +0.6503 +- 0.0199 |
+
+Both measures agree in direction on this ladder, so the horizon conclusion does not depend
+on the choice of weighting.
 
 All recomputations again reproduce their stored metrics exactly (`max_abs_metric_difference
 = 0.00e+00`).
@@ -207,6 +276,16 @@ cost; that remains an explicit limitation rather than a claim.
 - `smallfit` uses n=32/128 subsets drawn from the same 1000 functions whose trunks were
   already supervised, so those runs are a branch-fit diagnostic, not few-shot learning.
 - E1 is a redescription of completed runs. It does not by itself settle E0.
+
+Per-sample R^2 for the same families (all negative, confirming the energy-weighted reading):
+
+| Family | MLP DeepONet | Fourier DeepONet |
+|---|---:|---:|
+| fixed_t1 | -0.0042 +- 0.0064 | -0.0934 +- 0.0792 |
+| coefficients | -0.1286 +- 0.1054 | -0.3030 +- 0.1558 |
+| stability | -0.6438 +- 0.2273 | -1.4062 +- 0.1736 |
+| scale1000 | -0.0354 +- 0.0556 | -0.3181 +- 0.0895 |
+| smallfit | -2.2911 +- 4.0722 | -5.5548 +- 8.7244 |
 
 ## Predeclared next experiments
 

@@ -30,11 +30,12 @@ Usage
     python scripts/diagnose_fluctuation.py --device cuda          # all built-in families
     python scripts/diagnose_fluctuation.py --limit 2 --device cpu # smoke
 
-    # a family created later, e.g. the forecast-horizon ladder
+    # a family created later, e.g. the forecast-horizon ladder.
+    # families are ';'-separated because ',' separates splits inside a spec.
     python scripts/diagnose_fluctuation.py \
-        --data external_data/pdebench/fixed_t05_v1 \
-        --families public_fixed_t05_v1=endtoend:test,val \
-        --out results/fluctuation_horizon_v1 --device cuda
+        --data external_data/pdebench/fixed_t050_v1 \
+        --families public_horizon_t050_v1=endtoend:test,val \
+        --out results/fluctuation_horizon_v1/t050 --device cuda
 """
 from __future__ import annotations
 
@@ -90,14 +91,35 @@ def decompose(pred, truth) -> dict:
     Yc = Y - Y.mean(axis=1, keepdims=True)
     Pc = P - P.mean(axis=1, keepdims=True)
     fluct = float(np.sum(Yc ** 2))
+    dmean = P.mean(axis=1) - Y.mean(axis=1)
+    # Exact orthogonal split of each sample's squared relative error, because the constant
+    # vector and the zero-mean residual are orthogonal:
+    #     ||p-y||^2 = N*(p_bar-y_bar)^2 + ||p_c-y_c||^2
+    mean_share = float(np.mean(Y.shape[1] * dmean ** 2 / denom ** 2))
+    fluct_share = float(np.mean(np.sum((Pc - Yc) ** 2, axis=1) / denom ** 2))
     return dict(
         mean_relative_l2=float(np.mean(np.linalg.norm(residual, axis=1) / denom)),
+        relative_l2_rms=float(np.sqrt(np.mean((np.linalg.norm(residual, axis=1) / denom) ** 2))),
         relative_fro=float(np.linalg.norm(residual) / max(np.linalg.norm(Y), 1e-12)),
         rmse=float(np.sqrt(np.mean(residual ** 2))),
+        # Two skill measures that weight samples differently.
+        # `fluctuation_r2` is energy-weighted (a global sum ratio), so it is dominated by
+        # high-energy samples. `fluctuation_r2_per_sample` is defined on per-sample
+        # normalized quantities, so every sample counts equally, matching the manuscript's
+        # per-sample mean relative L2. They can disagree in sign and are both reported.
+        # By construction: fluctuation share = (1 - r2_per_sample) * energy_per_sample.
         fluctuation_r2=float(1.0 - np.sum((Pc - Yc) ** 2) / fluct) if fluct > 0 else float("nan"),
-        normalized_mean_error=float(np.mean(
-            np.abs(P.mean(axis=1) - Y.mean(axis=1)) / (denom / np.sqrt(Y.shape[1])))),
+        fluctuation_energy_fraction_per_sample=float(np.mean(
+            np.sum(Yc ** 2, axis=1) / np.maximum(np.sum(Y ** 2, axis=1), 1e-12))),
+        normalized_mean_error=float(np.mean(np.abs(dmean) / (denom / np.sqrt(Y.shape[1])))),
         fluctuation_energy_fraction=float(np.linalg.norm(Yc) / max(np.linalg.norm(Y), 1e-12)),
+        squared_error_mean_share=mean_share,
+        squared_error_fluctuation_share=fluct_share,
+        squared_error_closure=float(mean_share + fluct_share
+                                   - np.mean((np.linalg.norm(residual, axis=1) / denom) ** 2)),
+        fluctuation_r2_per_sample=float(
+            1.0 - fluct_share / max(np.mean(
+                np.sum(Yc ** 2, axis=1) / np.maximum(np.sum(Y ** 2, axis=1), 1e-12)), 1e-12)),
     )
 
 
@@ -230,7 +252,8 @@ def run_family(family: str, kind: str, splits, arrays: dict, protocol: dict, dev
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--families", default=",".join(list(END_TO_END) + list(BRANCH_FAMILIES)))
+    ap.add_argument("--families", default=";".join(list(END_TO_END) + list(BRANCH_FAMILIES)),
+                    help="';'-separated; each item is `name` or `name=<endtoend|branch>:split[,split]`")
     ap.add_argument("--data", default=str(DATA))
     ap.add_argument("--out", default="results/fluctuation_v1")
     ap.add_argument("--device", default="cuda")
@@ -268,8 +291,8 @@ def main() -> None:
               f"R2={oracle[split]['fluctuation_r2']:+.4f}", flush=True)
 
     summaries = {}
-    for family in args.families.split(","):
-        if family in ("reference", ""):
+    for family in args.families.split(";"):
+        if family.strip() in ("reference", ""):
             continue
         name, kind, splits = parse_family(family)
         summaries[name] = run_family(name, kind, splits, arrays, protocol, device, out_dir,

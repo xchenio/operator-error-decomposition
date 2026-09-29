@@ -38,6 +38,34 @@ class DecomposeTest(unittest.TestCase):
         self.assertNotAlmostEqual(decompose(mean_only, Y)["mean_relative_l2"],
                                   decompose(np.zeros_like(Y), Y)["mean_relative_l2"])
 
+    def test_squared_error_split_is_an_exact_identity(self):
+        """The constant vector and the zero-mean residual are orthogonal, so the per-sample
+        squared relative error splits exactly. This is an identity, not an attribution."""
+        rng = np.random.default_rng(3)
+        for trial in range(5):
+            Y = rng.normal(size=(12, 24)) * rng.uniform(0.5, 3.0) + rng.uniform(-2, 2)
+            P = Y * rng.uniform(0.0, 1.5) + rng.normal(size=(12, 24)) * 0.4
+            d = decompose(P, Y)
+            self.assertAlmostEqual(
+                d["squared_error_mean_share"] + d["squared_error_fluctuation_share"],
+                d["relative_l2_rms"] ** 2, places=12)
+            self.assertAlmostEqual(d["squared_error_closure"], 0.0, places=12)
+
+    def test_per_sample_r2_closes_against_the_squared_fluctuation_share(self):
+        """fluctuation share = (1 - per-sample R^2) * per-sample fluctuation energy.
+
+        The global energy-weighted R^2 does NOT satisfy this identity, which is why both
+        are reported: they weight samples differently.
+        """
+        rng = np.random.default_rng(4)
+        Y = rng.normal(size=(24, 16)) * rng.uniform(0.2, 4.0, size=(24, 1)) + rng.uniform(-3, 3)
+        P = Y * rng.uniform(0.0, 1.4, size=(24, 1)) + rng.normal(size=(24, 16)) * 0.5
+        d = decompose(P, Y)
+        self.assertAlmostEqual(
+            d["squared_error_fluctuation_share"],
+            (1.0 - d["fluctuation_r2_per_sample"]) * d["fluctuation_energy_fraction_per_sample"],
+            places=12)
+
     def test_negative_r2_reported_not_clipped(self):
         rng = np.random.default_rng(2)
         Y = rng.normal(size=(16, 32))

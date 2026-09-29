@@ -1,0 +1,64 @@
+{
+  "families": {
+    "public_steps5k_v1": {
+      "n_runs": 15,
+      "max_abs_metric_difference": 0.0,
+      "faithfulness_failures": []
+    },
+    "public_steps20k_v1": {
+      "n_runs": 15,
+      "max_abs_metric_difference": 0.0,
+      "faithfulness_failures": []
+    }
+  },
+  "oracle_input_mean": {
+    "val": {
+      "mean_relative_l2": 0.3745089947206789,
+      "relative_l2_rms": 0.4738122641868828,
+      "relative_fro": 0.21889059829718907,
+      "rmse": 0.1463276386852221,
+      "fluctuation_r2": 0.0,
+      "fluctuation_energy_fraction_per_sample": 0.2244980452772721,
+      "normalized_mean_error": 6.882483996740496e-05,
+      "fluctuation_energy_fraction": 0.21889058497275812,
+      "squared_error_mean_share": 1.6416628392679122e-08,
+      "squared_error_fluctuation_share": 0.22449804527727207,
+      "squared_error_closure": 0.0,
+      "fluctuation_r2_per_sample": 1.1102230246251565e-16
+    },
+    "test": {
+      "mean_relative_l2": 0.3757724983469896,
+      "relative_l2_rms": 0.469065589693943,
+      "relative_fro": 0.23669839384225602,
+      "rmse": 0.15090366540419575,
+      "fluctuation_r2": 0.0,
+      "fluctuation_energy_fraction_per_sample": 0.2200225097045471,
+      "normalized_mean_error": 7.220872725212398e-05,
+      "fluctuation_energy_fraction": 0.23669837911971758,
+      "squared_error_mean_share": 1.7730379388175684e-08,
+      "squared_error_fluctuation_share": 0.2200225097045471,
+      "squared_error_closure": 0.0,
+      "fluctuation_r2_per_sample": 0.0
+    }
+  },
+  "conservation": [
+    {
+      "split": "train",
+      "mean_correlation": 0.9999999960899292,
+      "mean_abs_difference": 3.178774231839216e-05,
+      "mean_abs_target_mean": 0.49589691281147236
+    },
+    {
+      "split": "val",
+      "mean_correlation": 0.9999999970149499,
+      "mean_abs_difference": 2.8162187839288305e-05,
+      "mean_abs_target_mean": 0.5097074260589003
+    },
+    {
+      "split": "test",
+      "mean_correlation": 0.999999996344055,
+      "mean_abs_difference": 2.976988108643501e-05,
+      "mean_abs_target_mean": 0.5011848307382203
+    }
+  ]
+}

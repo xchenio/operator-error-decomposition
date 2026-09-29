@@ -625,3 +625,29 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   Fourier DeepONet has 97% of FNO's parameters yet R^2 -0.0124 versus +0.6282, so the gap
   is not a parameter-count artifact. Compute matching is still an open limitation.
 - All recomputations again reproduce stored metrics exactly (max difference 0.00e+00).
+
+## 2026-09-29 — E0: two skill measures, and the step ladder
+
+- **A measurement correction that changes a conclusion.** The energy-weighted
+  `fluctuation_r2` is dominated by high-energy samples, while the manuscript's headline
+  metric is a per-sample mean. Added `fluctuation_r2_per_sample`, defined so that
+  `fluctuation share = (1 - r2_per_sample) * per-sample fluctuation energy` holds exactly.
+  Also added an exact orthogonal squared-error split
+  (`mean share + fluctuation share = mean_j relL2_j^2`, closure asserted to be 0 by test).
+- At 20000 updates MLP DeepONet shows **+0.2126 energy-weighted but -0.2470 per sample**.
+  Reporting only the energy-weighted number would have produced a false positive, so both
+  are now reported and the per-sample measure decides the claim.
+- Step ladder (15 runs per budget, 5 seeds): per-sample R^2 for MLP -0.0042 / -0.0640 /
+  -0.2470 and Fourier -0.0934 / -0.1272 / -0.8037 at 1500 / 5000 / 20000 updates; FNO
+  +0.6503 / +0.6830 / +0.6660. Total relL2 is flat across the ladder (MLP 0.39357 /
+  0.39729 / 0.39311; FNO 0.22835 / 0.21619 / 0.22243).
+- Conclusion: undertraining is not the explanation, and extra updates make per-sample
+  fluctuation skill worse. Normalized mean error grows with budget for MLP DeepONet
+  (0.081 -> 0.076 -> 0.111) while staying 0.024-0.034 for FNO, so extra updates trade
+  conserved-mean accuracy for fluctuation fitting with no net gain.
+- Per-sample R^2 recomputed for the five existing families; all DeepONet arms remain
+  negative (coefficients -0.129/-0.303, stability -0.644/-1.406, scale1000 -0.035/-0.318,
+  smallfit -2.291/-5.555), confirming the energy-weighted reading of E1.
+- Fixed a separator bug: explicit family specs use `,` inside the split list, so
+  `--families` items are now `;`-separated.
+- Full `python -B -m unittest discover -s tests`: 58 tests passed.
