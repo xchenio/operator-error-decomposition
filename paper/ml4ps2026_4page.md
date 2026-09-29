@@ -1,78 +1,79 @@
 > Compatibility filename retained from an earlier venue-specific draft. This file does not assert submission, anonymity compliance, a verified 2026 call, or four-page length.
 
-# Better Projection and Stable Fitting Do Not Guarantee Generalization in DeepONet
+# DeepONet Learns the Conserved Mean and Loses the Fluctuation
 
-**Short research draft — revised 2026-09-24. Not submitted; no venue acceptance or page-limit compliance implied.**
+**Short research draft — revised 2026-09-29. Not submitted; no venue acceptance or page-limit compliance implied.**
 
 ## Abstract
 
-We study whether offline basis quality and stable training fit predict better operator
-generalization. In a supervised, fixed-time PDEBench Burgers case study, a Fourier
-trunk has a better projection oracle than an MLP trunk without better initial
-prediction accuracy. Zero-residual initialization improves final validation error in
-29/30 matched comparisons. At 128 training functions, cosine decay gives stable
-projection-level fitting in 20/20 runs, while constant learning rates do so in 0/10
-small-batch and 1/10 full-batch runs. Yet at small batch size, decay worsens validation
-error in every seed of both trunk families. This persists under RMSE. These results
-support separating representation diagnostics, training convergence and validation;
-they do not establish a new optimizer or universal mechanism.
+On periodic Burgers the spatial mean is conserved, so a model can look competitive on
+relative L2 while predicting nothing beyond a conserved scalar. We separate prediction
+error into a conserved-mean part and a fluctuation part. On PDEBench 1D Burgers (Nu0.001),
+t=0 to t=1.0, predicting the exact input mean and zero fluctuation already gives 0.37577
+test mean relative L2. Against that zero-fluctuation reference, MLP DeepONet scores
+-0.0042 +- 0.0072 and Fourier DeepONet -0.0934 +- 0.0886 in per-sample fluctuation R^2,
+while FNO scores +0.6503 +- 0.0222 on identical data, split and a 1500-update budget.
+Across 175 reconstructed runs no DeepONet configuration scores above zero. Raising the
+budget to 20000 updates does not help: per-sample R^2 moves -0.0042 -> -0.0640 -> -0.2470
+and total relative L2 is flat (0.39357 / 0.39729 / 0.39311). The deficit is
+horizon-dependent: DeepONet scores +0.1695 at t=0.25 and +0.1238 at t=0.50 before decaying
+to -0.0042 at t=1.00, while FNO falls only from +0.9474 to +0.6503. We claim a diagnostic
+decomposition and a reproducible negative result, not a new architecture or optimizer.
 
 ## 1. Scope and prior work
 
 Two-step DeepONet training and orthonormalization already exist (Lee and Shin,
-https://arxiv.org/abs/2309.01020). Learned PI-DeepONet basis diagnostics are also studied
-by Williams et al. (https://arxiv.org/abs/2411.18459). Our contribution candidate is a
-reproducible intervention-based case study, not the invention of these tools.
-This paper's current public-data experiments are supervised, not physics-informed.
+https://arxiv.org/abs/2309.01020). Learned PI-DeepONet basis diagnostics are studied by
+Williams et al. (https://arxiv.org/abs/2411.18459); our horizon results qualify that line,
+since the Fourier trunk helps at t=0.25 and stops helping at t=1.00. Lu et al. compare
+DeepONet and FNO with POD-DeepONet extensions (https://arxiv.org/abs/2111.05512). This
+study is supervised, not physics-informed.
 
-## 2. Matched diagnostic
+## 2. Decomposition
 
-For target fields S, prediction Y, known offset L and a retained numerical feature
-space with orthogonal projector P, the affine oracle is L+P(S-L). If Y-L is in this
-space, squared Frobenius error splits into projection residual and in-space discrepancy.
-The latter is not uniquely a pure optimization error. Mean relative L2 is reported
-separately; subtracting unmatched norms or different splits is not an error identity.
+Because the constant vector and the zero-mean residual are orthogonal, each sample's
+squared error splits exactly into a mean share and a fluctuation share. Both are reported.
+Fluctuation skill is measured against a zero-fluctuation reference and is invariant to the
+mean, so the exact-mean predictor and the all-zero predictor both score 0. Two weightings
+are reported: an energy-weighted R^2 dominated by high-energy samples, and a per-sample R^2
+matching the manuscript's per-sample metric. They can disagree in sign; the per-sample one
+decides the claims.
 
-Our protocol uses 1000/200/200 train/validation/test trajectories from PDEBench Burgers
-Nu0.001, t=0 to t=1, on a 256-point subsampled grid. Five seeds share fixed data.
-Initial comparisons use 1500 updates; branch interventions use 3000.
-Smaller branch-fit subsets inherit trunks and normalization trained on 1000 functions,
-so this is not few-shot learning.
+Conservation is verified on the data: corr(mean(x), mean(y)) = 1.000000 on all three
+splits, with absolute mean differences of 2.8e-05 to 3.2e-05 against mean magnitudes near
+0.5.
 
 ## 3. Findings
 
-Initial test mean relative L2 is 0.39357 (MLP), 0.41231 (Fourier) and 0.22835 (FNO);
-the input-mean baseline is 0.37577. Fourier's offline projection fit is better but its
-learned predictions are not. Conditioning alone does not repair performance.
+| Method | Test relL2 | R^2 (energy) | R^2 (per sample) |
+|---|---:|---:|---:|
+| oracle input mean | 0.37577 | 0.0000 | 0.0000 |
+| MLP DeepONet | 0.39357 | -0.0056 +- 0.0094 | -0.0042 +- 0.0072 |
+| Fourier DeepONet | 0.41231 | -0.0124 +- 0.0356 | -0.0934 +- 0.0886 |
+| FNO | 0.22835 | +0.6282 +- 0.0187 | +0.6503 +- 0.0222 |
 
-At n=32, all ten zero-initialized runs fit to within the predeclared excess-Frobenius
-threshold of 0.01. Larger subsets do not reliably fit under constant learning rates.
-We then fix n=128 and zero initialization, comparing constant 1e-3 against cosine
-decay to 1e-5 and batches 32/128. Stable fitting requires the final four logged points
-to meet the threshold, not merely the final point.
+Across the original four families plus 5k and 20k budgets, every DeepONet arm scores at or
+below zero; conditioning, whitening, mean lifting, zero initialization, schedule and batch
+size all fail to move it. More updates make the per-sample measure worse while total
+relative L2 stays flat, so the near-zero skill is not undertraining.
 
-| Trunk | Stable, constant b32 | Stable, constant b128 | Stable, cosine b32 | Stable, cosine b128 |
-|---|---:|---:|---:|---:|
-| MLP | 0/5 | 0/5 | 5/5 | 5/5 |
-| Fourier | 0/5 | 1/5 | 5/5 | 5/5 |
-
-For batch 32, validation relative L2 changes from 0.44657 to 0.45708 (MLP) and
-0.55232 to 0.58755 (Fourier), worsening in every paired seed. Validation RMSE also
-worsens. MLP full-batch is an exception: decay improves validation relative to constant
-full-batch. Every group still trails the input-mean baseline.
+At matched 1500 updates, per-sample R^2 by forecast horizon is +0.1695 / +0.1238 / -0.0042
+for MLP DeepONet, +0.4248 / +0.2510 / -0.0934 for Fourier DeepONet and +0.9474 / +0.8369 /
++0.6503 for FNO at t = 0.25 / 0.50 / 1.00. Parameter counts do not explain the gap
+(Fourier DeepONet 131,969 versus FNO 136,481).
 
 ## 4. Limits and conclusion
 
-The four experiment families contain 155 run records, including ten repeated controls,
-not 155 independent confirmations. This is one PDE, time, parameter and split; later
-experiments evaluate validation only. Full batches process four times as many samples
-per update. The early test set is exploratory, and final confirmation needs new data.
+One PDE, one viscosity, one split and one solver; the horizon ladder is a sensitivity check
+on that PDE, not a second PDE. Compute is not matched between FNO and DeepONet, and the
+test split was exposed during exploratory development. Five seeds share one split, so seed
+standard deviations do not measure task variability.
 
-The result is an empirically supported separation of representability, fitting and
-generalization within this protocol. Stronger publication claims require faithful
-two-step and POD baselines, data-scaling controls, a second PDE, and a locked fresh
-holdout. Historical causal and variance-floor claims are withdrawn.
+Within these limits, the dissociation reported in earlier drafts of this project now has a
+measurement: the error of both DeepONet variants is dominated by a component they do not
+predict, namely the deviation from the conserved spatial mean, and the component they do
+predict improves with fitting while the fluctuation does not.
 
 See [the current full manuscript](main.md) for complete methods, references, tables,
-provenance and withdrawals, and [the stability report](../docs/PUBLIC_STABILITY_V1.md)
-for per-seed artifacts.
+provenance and withdrawals, and
+[the fluctuation protocol](../docs/FLUCTUATION_DIAGNOSIS_V1.md) for per-family artifacts.

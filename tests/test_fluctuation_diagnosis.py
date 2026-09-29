@@ -135,5 +135,53 @@ class ReconstructionTest(unittest.TestCase):
                     self.assertIn("fluctuation_r2", score)
 
 
+class ManuscriptTableTest(unittest.TestCase):
+    """The manuscript's fluctuation tables must equal the recomputed JSON, not hand copies."""
+
+    main = ROOT / "paper/main.md"
+
+    def setUp(self):
+        if not self.main.exists():
+            self.skipTest("manuscript not present")
+
+    @staticmethod
+    def _stats(rows, key):
+        v = [r[key] for r in rows]
+        return float(np.mean(v)), (float(np.std(v, ddof=1)) if len(v) > 1 else 0.0)
+
+    def _groups(self, path, split="test"):
+        payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
+        groups = {}
+        for run in payload["runs"]:
+            groups.setdefault(run["configuration"]["architecture"], []).append(run["splits"][split])
+        return groups
+
+    def test_section_5_2_fluctuation_table(self):
+        text = self.main.read_text(encoding="utf-8")
+        label = {"deeponet_mlp": "MLP DeepONet", "deeponet_fourier": "Fourier DeepONet", "fno": "FNO"}
+        for key, rows in self._groups("results/fluctuation_v1/public_fixed_t1_v1.json").items():
+            rel, _ = self._stats(rows, "mean_relative_l2")
+            g, gs = self._stats(rows, "fluctuation_r2")
+            p, ps = self._stats(rows, "fluctuation_r2_per_sample")
+            ms, _ = self._stats(rows, "squared_error_mean_share")
+            fs, _ = self._stats(rows, "squared_error_fluctuation_share")
+            self.assertIn(f"| {label[key]} | {rel:.5f} | {g:+.4f} ± {gs:.4f} | "
+                          f"**{p:+.4f} ± {ps:.4f}** | {ms:.4f} | {fs:.4f} |", text)
+
+    def test_section_5_4_step_ladder_table(self):
+        text = self.main.read_text(encoding="utf-8")
+        label = {"deeponet_mlp": "MLP DeepONet", "deeponet_fourier": "Fourier DeepONet", "fno": "FNO"}
+        paths = {1500: "results/fluctuation_v1/public_fixed_t1_v1.json",
+                 5000: "results/fluctuation_steps_v1/public_steps5k_v1.json",
+                 20000: "results/fluctuation_steps_v1/public_steps20k_v1.json"}
+        for budget, path in paths.items():
+            for key, rows in self._groups(path).items():
+                rel, _ = self._stats(rows, "mean_relative_l2")
+                g, gs = self._stats(rows, "fluctuation_r2")
+                p, ps = self._stats(rows, "fluctuation_r2_per_sample")
+                self.assertIn(f"| {budget} | {label[key]} | {rel:.5f} | {g:+.4f} ± {gs:.4f} | "
+                              f"**{p:+.4f} ± {ps:.4f}** |", text)
+
+
 if __name__ == "__main__":
     unittest.main()
