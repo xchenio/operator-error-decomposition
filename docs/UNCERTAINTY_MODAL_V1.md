@@ -1,5 +1,10 @@
 # Continuous uncertainty-penalized shrinkage — prospective protocol
 
+Active machine protocol: plan_v2.json. Initial plan.json is preserved: its first run
+stopped before bootstrap/evaluation because artifact enumeration required an omitted
+cv_seeds key. Version2 adds the explicit[0,1] key and a new source hash; no scientific
+settings, candidate criteria or results informed this repair. No new targets were opened.
+
 2026-09-29. Preserve old continuous shrinkage AND all-mode nonlinear correction as
 strong controls. Reuse frozen CV/final models for both Burgers splits, linear Advection
 and custom synthetic Allen-Cahn. No new neural fitting and no new hard modal thresholds.

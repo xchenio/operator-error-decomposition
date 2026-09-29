@@ -39,14 +39,14 @@ def plan():
             used[family].update(ids)
         tasks[task]=dict(s,reserved=ids)
     p=dict(field_plan_sha256=digest(old),tasks=tasks,source=digest([old['source'],file_hash(Path(__file__)),file_hash(ROOT/'scripts/uncertainty_shrink.py')]),
-        bootstrap_replicates=2000,bootstrap_seed=2026093001,kappa=1.96,seeds=list(range(5)),
+        bootstrap_replicates=2000,bootstrap_seed=2026093001,kappa=1.96,seeds=list(range(5)),cv_seeds=[0,1],
         formula='a=clip(N/(D+1.96*SD_bootstrap(N)),0,1); N=mean(w*r*delta)/spatial_dim,D=mean(w*delta^2)/spatial_dim',
         interpretation='minimize D*a^2-2*N*a+1.96*SD(N)*a^2; uncertainty penalty, not a calibrated confidence constraint',
         arms=['none','all','old_shrink','uncertainty','trajectory_only','matched_global'],
         selected='uncertainty if development mean improves>=1% over none; otherwise none; no tuning or seed selection',
         inference='16 comparisons=4tasks x linear/old_shrink/all/matched_global; >=1% relative gain AND Bonferroni two-sided interval below0;10000 trajectory bootstraps seed2026093019',
         limits='No new neural fits. Bootstrap conditional on3 fitted CV folds/two probes; overlapping fold training and refit uncertainty not fully represented. Coefficients use a squared surrogate; main metric remains mean nonsquared relative L2.')
-    OUT.mkdir(parents=True,exist_ok=True);locked_json(OUT/'plan.json',p);return p
+    OUT.mkdir(parents=True,exist_ok=True);locked_json(OUT/'plan_v2.json',p);return p
 
 
 def data_and_root(task):
@@ -130,7 +130,7 @@ def compare(a,b):
 
 
 def confirm(p,device):
-    lockpath=OUT/'selection_lock.json';committed(lockpath);committed(OUT/'plan.json');lock=json.loads(lockpath.read_text())
+    lockpath=OUT/'selection_lock.json';committed(lockpath);committed(OUT/'plan_v2.json');lock=json.loads(lockpath.read_text())
     if lock['plan']!=digest(p):raise ValueError('lock changed')
     for task,info in p['tasks'].items():
         folder=OUT/task;entry=lock['tasks'][task];result=folder/'confirmation.json'

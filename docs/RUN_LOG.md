@@ -493,3 +493,7 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   must be committed before extraction;16-comparison Bonferroni confirmation criteria.
 - Three new unit tests pass: continuous/no-new-zero coefficients and stationarity,
   matched correction energy, deterministic resumed bootstrap with seed dependence.
+- Initial launch at07d7ca4 stopped before bootstrap or evaluation: artifact enumeration
+  required omitted cv_seeds metadata. Preserved original plan.json, added explicit[0,1]
+  and versioned plan_v2.json rather than overwriting the immutable initial record.
+  Scientific settings unchanged; no development outcomes or new targets examined.
