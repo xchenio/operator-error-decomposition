@@ -292,7 +292,28 @@ difficulty comes from the transport- and shock-dominated character of the long-h
 problem rather than from the amount of fluctuation. The Fourier trunk helps substantially at
 t=0.25 (+0.4248 against +0.1695) and stops helping at t=1.00.
 
-### 5.6 Fitting interventions stabilize training without improving validation
+### 5.6 Compute and parameter budget
+
+Recorded optimizer time (excluding evaluation and checkpointing) and parameter counts:
+
+| Model | parameters | ms per update | total s at 1500 | total s at 5000 | total s at 20000 |
+|---|---:|---:|---:|---:|---:|
+| MLP DeepONet | 115,713 | 3.97-4.25 | 6 | 20 | 85 |
+| Fourier DeepONet | 131,969 | 3.67-4.13 | 6 | 18 | 83 |
+| FNO | 136,481 | 9.02-9.32 | 14 | 46 | 180 |
+
+FNO costs about 2.2x more wall-clock per update, so an equal-update comparison gives FNO
+more compute, not less. Parameter counts are within 18% (Fourier DeepONet has 97% of FNO's
+parameters). A compute-favoured comparison is therefore available and goes the other way:
+MLP DeepONet trained for 20000 updates (85 s) scores -0.2470 per-sample fluctuation R^2 and
+0.39311 relative L2, while FNO trained for 1500 updates (14 s) scores +0.6503 and 0.22835.
+DeepONet receives roughly 6x the compute and remains worse by about 0.9 in R^2.
+
+This does not establish a FLOP-matched result: the two architectures use different
+operations, and no FLOP-level accounting was performed. It does make clear that the gap is
+not explained by DeepONet having less compute or fewer parameters.
+
+### 5.7 Fitting interventions stabilize training without improving validation
 
 | Trunk | LR | Batch | Final train excess | Stable seeds | Validation relative L2 (mean ± SD) |
 |---|---|---:|---:|---:|---:|
@@ -316,7 +337,7 @@ the conserved mean, while the fluctuation component remains unexplained.
 Full-batch trials process four times as many examples at equal updates. Recorded update
 times exclude evaluation and checkpointing; equal update counts are not equal compute.
 
-### 5.7 Zero initialization helps, but fitting and generalization remain distinct
+### 5.8 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
@@ -342,9 +363,10 @@ Limitations:
 - One PDE, one viscosity, one split and one solver. The horizon ladder is a sensitivity
   check on that PDE, not a second PDE; the cross-PDE gap identified in
   [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is not closed.
-- **Compute is not matched.** FNO has 136,481 parameters, Fourier DeepONet 131,969 and MLP
-  DeepONet 115,713, so parameter count does not explain the gap, but per-update cost
-  differs and no FLOP-matched control was run.
+- **Compute is not FLOP-matched.** Parameter counts are within 18% and FNO costs about
+  2.2x more wall-clock per update, so the gap is not explained by DeepONet having less of
+  either (section 5.6). No FLOP-level accounting or FLOP-matched control was run, and the
+  two architectures perform different operations per update.
 - The test split was exposed during exploratory development and validation guided later
   study choices; these numbers are descriptive and no fresh holdout was used.
 - Five seeds share one data split, so seed standard deviations do not measure task
