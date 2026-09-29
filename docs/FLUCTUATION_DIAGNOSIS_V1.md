@@ -138,6 +138,66 @@ and 0.37577 (test).
 5. Whitening and mean lifting do not move R^2 (range -0.034 to -0.109 across all eight
    arms), so this is not a conditioning artifact of the frozen trunk basis.
 
+## E2 results (completed 2026-09-29): the failure is horizon-dependent, not absolute
+
+A viscosity ladder needs additional multi-gigabyte downloads, so the difficulty ladder was
+run over the **forecast horizon** instead, which the existing 201-layer file already
+supports and which `PUBLICATION_ASSESSMENT.md` explicitly allows as a sensitivity check
+(while warning that another time point is not a second PDE). `src.public_benchmark.prepare`
+was called with `time_index` 25 and 50 and the same split seed 20260922 and sizes
+(1000,200,200), so the trajectories are identical and only the target time changes.
+Each horizon uses the same 1500-update budget, 5 seeds and 3 architectures as the original
+family; `run_public_benchmark.py --data-dir` selects the cache.
+
+| Horizon | fluctuation energy | MLP DeepONet R^2 | Fourier DeepONet R^2 | FNO R^2 |
+|---|---:|---:|---:|---:|
+| t = 0.25 | 0.4785 | **+0.2454 +- 0.0190** | **+0.4915 +- 0.0116** | +0.9327 +- 0.0075 |
+| t = 0.50 | 0.3580 | **+0.1387 +- 0.0134** | **+0.3213 +- 0.0238** | +0.8149 +- 0.0114 |
+| t = 1.00 | 0.2367 | **-0.0056 +- 0.0084** | **-0.0124 +- 0.0319** | +0.6282 +- 0.0167 |
+
+All recomputations again reproduce their stored metrics exactly (`max_abs_metric_difference
+= 0.00e+00`).
+
+### Reading
+
+1. **DeepONet does have fluctuation skill — it decays to zero with horizon.**
+   +0.245 / +0.492 at t=0.25, +0.139 / +0.321 at t=0.50, and about zero at t=1.00.
+   "DeepONet cannot learn the fluctuation" is therefore wrong as an absolute statement;
+   the correct statement is horizon-dependent.
+2. **The decay is much steeper for DeepONet than for FNO.** Over the same horizons FNO
+   goes 0.933 -> 0.815 -> 0.628 (retains 67% of its t=0.25 skill) while MLP DeepONet goes
+   0.245 -> 0.139 -> -0.006 (loses essentially all of it).
+3. **The fluctuation carries less energy at longer horizons** (0.4785 -> 0.3580 -> 0.2367),
+   yet models do worse on it. The difficulty is therefore not the amount of fluctuation but
+   its character: the task becomes transport- and shock-dominated, which is exactly where a
+   spectral-convolutional architecture has an inductive advantage.
+4. **The Fourier trunk helps at short horizons and stops helping at t=1.0**
+   (+0.492 vs +0.245 at t=0.25; -0.012 vs -0.006 at t=1.00). Any claim about trunk features
+   must therefore state the horizon.
+
+### Caveats on this section
+
+- A horizon ladder is a sensitivity check on one PDE, **not a second PDE**. The
+  cross-PDE gap identified in PUBLICATION_ASSESSMENT.md is not closed by this experiment.
+- The same 1000/200/200 trajectories are reused, so the three rows are paired but not
+  independent samples of a PDE distribution.
+- FNO and DeepONet differ in per-update cost even at matched update counts; parameter
+  counts are close (below) but not identical.
+
+## E3 partial result: parameter counts are close, so the gap is not a capacity artifact
+
+| Model | parameters |
+|---|---:|
+| MLP DeepONet | 115,713 |
+| Fourier DeepONet | 131,969 |
+| FNO (width 32, 16 modes, 4 layers) | 136,481 |
+
+The Fourier trunk DeepONet has 97% of FNO's parameter count (131,969 vs 136,481) yet scores
+R^2 = -0.0124 against FNO's +0.6282 at t=1.0 on identical data, budget and evaluation. The
+gap is therefore not explained by parameter count. It is **not** established that the gap
+survives a compute-matched comparison, since FNO and DeepONet have different per-update
+cost; that remains an explicit limitation rather than a claim.
+
 ### Caveats on this section
 
 - R^2 is invariant to the mean by construction; the exact-mean predictor and the

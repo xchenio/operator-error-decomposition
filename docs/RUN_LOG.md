@@ -604,3 +604,24 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   forecast-horizon ladder) do not require editing built-in constants. Added
   `ParseFamilyTest` (3 tests, including rejection of unknown kinds).
   Full discovery: 56 tests passed.
+
+## 2026-09-29 — E2 forecast-horizon ladder and E3 parameter counts
+
+- A viscosity ladder would need more multi-gigabyte downloads, so difficulty was varied
+  over the forecast horizon instead, which the existing 201-layer file supports and which
+  PUBLICATION_ASSESSMENT.md permits as a sensitivity check (not a second PDE). Prepared
+  `external_data/pdebench/fixed_t025_v1` and `fixed_t050_v1` with `time_index` 25 and 50
+  using the same split seed 20260922 and sizes (1000,200,200), so trajectories are
+  identical and only the target time differs. Ran 15 runs per horizon at the same
+  1500-update budget.
+- Result: **DeepONet's fluctuation skill decays to zero with horizon** — MLP +0.2454 /
+  Fourier +0.4915 at t=0.25; +0.1387 / +0.3213 at t=0.50; -0.0056 / -0.0124 at t=1.00 —
+  while FNO goes +0.9327 / +0.8149 / +0.6282, retaining 67% of its short-horizon skill.
+  Fluctuation energy also falls (0.4785 / 0.3580 / 0.2367) even though models do worse,
+  so difficulty comes from the transport/shock character, not the amount of fluctuation.
+- The Fourier trunk helps at t=0.25 (+0.492 vs +0.245) and stops helping at t=1.00, so
+  trunk-feature claims must state the horizon.
+- Parameter counts: MLP DeepONet 115,713; Fourier DeepONet 131,969; FNO 136,481. The
+  Fourier DeepONet has 97% of FNO's parameters yet R^2 -0.0124 versus +0.6282, so the gap
+  is not a parameter-count artifact. Compute matching is still an open limitation.
+- All recomputations again reproduce stored metrics exactly (max difference 0.00e+00).

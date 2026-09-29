@@ -1,0 +1,41 @@
+{
+  "oracle_input_mean": {
+    "val": {
+      "mean_relative_l2": 0.5756552082365997,
+      "relative_fro": 0.4556736119200971,
+      "rmse": 0.33391503544210616,
+      "fluctuation_r2": 0.0,
+      "normalized_mean_error": 0.0005035035225829898,
+      "fluctuation_energy_fraction": 0.4556732303156987
+    },
+    "test": {
+      "mean_relative_l2": 0.571613655134554,
+      "relative_fro": 0.4785274600758791,
+      "rmse": 0.33756815732730044,
+      "fluctuation_r2": 0.0,
+      "normalized_mean_error": 0.0004010420352865453,
+      "fluctuation_energy_fraction": 0.47852713956138837
+    }
+  },
+  "conservation": [
+    {
+      "split": "train",
+      "mean_correlation": 0.9999998059592358,
+      "mean_abs_difference": 0.00024269282786266647,
+      "mean_abs_target_mean": 0.4959003285466306
+    },
+    {
+      "split": "val",
+      "mean_correlation": 0.9999997820737254,
+      "mean_abs_difference": 0.0002679006764130578,
+      "mean_abs_target_mean": 0.5097510236645698
+    },
+    {
+      "split": "test",
+      "mean_correlation": 0.9999997979717918,
+      "mean_abs_difference": 0.00023177373790499238,
+      "mean_abs_target_mean": 0.5011854114055816
+    }
+  ],
+  "note": "oracle predicts the exact input spatial mean and zero fluctuation"
+}
