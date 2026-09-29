@@ -694,3 +694,25 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   at 1500 updates (14 s), and scores -0.0057 (MLP) / -0.0884 (Fourier) against +0.6503.
 - Manuscript section 5.5 rewritten around the skill horizon; abstract and limitations
   updated; horizon table now regression-checked (61 tests pass).
+
+## 2026-09-29 — second PDE (linear advection): the decay tracks nonlinearity
+
+- The Burgers skill horizon could have been a generic cost of forecasting further ahead.
+  PDEBench 1D Advection (beta 0.4) was already present locally, so the same seven
+  horizons, budget, seeds and architectures were run on it at no download cost.
+- Added `scripts/prepare_advection_horizons.py`. It reuses `extract_pair`, `split_indices`,
+  `file_hash` and `atomic_json` unchanged instead of editing `src/public_benchmark.py`,
+  because that module feeds `source_hash()` in every run identity; it records the advection
+  file's own hash rather than the Burgers-pinned digest and writes the identical
+  pairs.npz / protocol.json layout, so training and diagnostics run unmodified.
+- Results: **fluctuation energy is constant at 0.6446 for every horizon** (pure translation),
+  against 0.5939 -> 0.1428 on Burgers, and **no architecture develops a skill horizon**:
+  MLP DeepONet +0.2531 -> +0.2047, Fourier DeepONet +0.9228 -> +0.9354, FNO +0.9994
+  throughout. Conservation holds (corr 1.000000); oracle mean gives 0.68562.
+- Interpretation: the skill horizon tracks nonlinear spectral evolution, not elapsed
+  forecast time. The Fourier trunk is far better than MLP on advection (+0.94 vs +0.21),
+  consistent with translation being a phase shift in a Fourier basis, yet that advantage
+  reverses on Burgers by t=2.00 — a trunk matched to the linear part of the operator is not
+  automatically matched once nonlinear steepening dominates.
+- Manuscript section 5.6 added; sections renumbered; abstract, limitations and the family
+  narrative updated from "one PDE" to two. Advection table regression-checked; 62 tests pass.

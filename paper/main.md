@@ -46,9 +46,14 @@ gap (Fourier DeepONet 131,969 versus FNO 136,481), and a wall-clock-matched cont
 not either (DeepONet at 3500 updates, 14 s, scores -0.0057 against FNO's +0.6503 at
 1500 updates, 14 s).
 
+On linear advection, the same seven horizons show constant fluctuation energy (0.6446) and
+**no** skill decay for any architecture (MLP +0.20 to +0.25, Fourier +0.93 to +0.95, FNO
++0.9994), so the decay tracks nonlinear spectral evolution rather than elapsed forecast
+time.
+
 We claim a diagnostic decomposition and a reproducible negative result, not a new
-architecture or optimizer. One PDE, one split and one viscosity are studied; a
-compute-matched FNO control and a second public PDE remain open.
+architecture or optimizer. Two public PDEs, one split each and one viscosity are studied;
+FLOP-level matching and a third operator class remain open.
 
 ## 1. Research question and contribution
 
@@ -327,7 +332,48 @@ across architectures: at a fixed fluctuation energy the three models differ by u
 R^2. Skill is monotone in the horizon within each architecture, but the curve itself is set
 by the architecture.
 
-### 5.6 Compute and parameter budget
+### 5.6 A second PDE: the decay tracks nonlinearity, not elapsed time
+
+The Burgers result could be a generic consequence of forecasting further into the future
+rather than a consequence of nonlinear evolution. To separate these, the same seven
+horizons, budget, seeds and architectures were run on PDEBench 1D **linear advection**
+(beta = 0.4, periodic), whose solution is a pure translation of the initial field.
+
+| t | fluctuation energy | MLP DeepONet | Fourier DeepONet | FNO |
+|---:|---:|---:|---:|---:|
+| 0.10 | 0.6446 | +0.2531 ± 0.0900 | +0.9228 ± 0.0354 | +0.9994 ± 0.0000 |
+| 0.25 | 0.6446 | +0.2427 ± 0.0318 | +0.9415 ± 0.0171 | +0.9994 ± 0.0001 |
+| 0.50 | 0.6446 | +0.2058 ± 0.0616 | +0.9466 ± 0.0147 | +0.9994 ± 0.0000 |
+| 0.75 | 0.6446 | +0.2295 ± 0.0423 | +0.9278 ± 0.0310 | +0.9994 ± 0.0000 |
+| 1.00 | 0.6446 | +0.1817 ± 0.0092 | +0.9424 ± 0.0180 | +0.9994 ± 0.0000 |
+| 1.50 | 0.6446 | +0.2390 ± 0.0309 | +0.9456 ± 0.0134 | +0.9994 ± 0.0000 |
+| 2.00 | 0.6446 | +0.2047 ± 0.0031 | +0.9354 ± 0.0178 | +0.9994 ± 0.0000 |
+
+Two things change at once, and both matter:
+
+1. **Fluctuation energy is constant across horizons** (0.6446 at every t), as it must be
+   for pure translation, against a monotone decay from 0.5939 to 0.1428 on Burgers.
+2. **No architecture shows a skill horizon.** MLP DeepONet stays near +0.20 to +0.25,
+   Fourier DeepONet near +0.93 to +0.95 and FNO at +0.9994, with no trend in t.
+
+So the decay measured on Burgers is not a generic effect of forecasting further ahead. It
+appears in the problem whose fluctuation spectrum evolves nonlinearly and is absent in the
+problem where the fluctuation is merely transported. This is the control that makes the
+skill horizon interpretable rather than descriptive.
+
+It also sharpens the trunk-feature question. On advection the Fourier trunk is
+dramatically better than the MLP trunk (+0.94 against +0.21), consistent with translation
+being a phase shift in a Fourier basis; on Burgers that advantage is present at t=0.10
+(+0.6390 against +0.2199) and reverses by t=2.00 (-0.3774 against -0.0918). A trunk that is
+well matched to the *linear* part of the operator is not automatically well matched once
+nonlinear steepening dominates.
+
+The advection caches are prepared by `scripts/prepare_advection_horizons.py`, which reuses
+the existing extraction and splitting helpers unchanged and records the advection file's own
+hash, because `prepare()` pins the Burgers digest. The layout is identical, so training and
+diagnostics run unmodified; all recomputations reproduce stored metrics exactly.
+
+### 5.7 Compute and parameter budget
 
 Recorded optimizer time (excluding evaluation and checkpointing) and parameter counts:
 
@@ -355,7 +401,7 @@ This does not establish a FLOP-matched result: the two architectures use differe
 operations, and no FLOP-level accounting was performed. It does make clear that the gap is
 not explained by DeepONet having less compute or fewer parameters.
 
-### 5.7 Fitting interventions stabilize training without improving validation
+### 5.8 Fitting interventions stabilize training without improving validation
 
 | Trunk | LR | Batch | Final train excess | Stable seeds | Validation relative L2 (mean ± SD) |
 |---|---|---:|---:|---:|---:|
@@ -379,7 +425,7 @@ the conserved mean, while the fluctuation component remains unexplained.
 Full-batch trials process four times as many examples at equal updates. Recorded update
 times exclude evaluation and checkpointing; equal update counts are not equal compute.
 
-### 5.8 Zero initialization helps, but fitting and generalization remain distinct
+### 5.9 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
@@ -393,12 +439,17 @@ The supported finding is a **localization**: on this protocol the error of both 
 variants is dominated by a component they do not predict at all, and the component is
 identified as the deviation from the conserved spatial mean. FNO predicts it.
 
-The second finding is that this is a matter of degree, not kind. Every architecture tested
-loses its fluctuation skill as the forecast horizon grows, including FNO, so the primary
-variable is task difficulty and the architecture sets where the boundary lies. The skill
-horizon quantifies that boundary and is the most directly reusable number in this study:
-it converts "DeepONet is worse here" into "at this viscosity and grid, MLP DeepONet stops
-predicting the fluctuation at t about 0.98, FNO at about 1.94".
+The second finding is that this is a matter of degree, not kind. On Burgers every
+architecture loses its fluctuation skill as the forecast horizon grows, including FNO, so
+the primary variable is task difficulty and the architecture sets where the boundary lies.
+The skill horizon quantifies that boundary and is the most directly reusable number in this
+study: it converts "DeepONet is worse here" into "at this viscosity and grid, MLP DeepONet
+stops predicting the fluctuation at t about 0.98, FNO at about 1.94".
+
+The third finding is what the second PDE provides. On linear advection the fluctuation
+energy is horizon-independent and no architecture develops a skill horizon at all, so the
+decay is not a generic cost of forecasting further ahead: it tracks nonlinear spectral
+evolution and disappears when that evolution is absent.
 
 We do **not** claim that DeepONet cannot learn fluctuations in general: at t=0.10 it scores
 +0.22 to +0.64. We do not claim a causal mechanism, and we do not claim FNO is universally
@@ -406,9 +457,11 @@ superior; at t=2.00 FNO is below zero as well.
 
 Limitations:
 
-- One PDE, one viscosity, one split and one solver. The horizon ladder is a sensitivity
-  check on that PDE, not a second PDE; the cross-PDE gap identified in
-  [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is not closed.
+- Two PDEs, one viscosity each, one split each. Advection is a linear transport problem
+  and Burgers a nonlinear one, so the pair isolates nonlinearity but does not sample the
+  space of operator classes; a third class (elliptic, or a system) is still missing, and
+  the cross-PDE gap identified in
+  [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is narrowed, not closed.
 - **Compute is not FLOP-matched.** Parameter counts are within 18% and FNO costs about
   2.2x more wall-clock per update, so the gap is not explained by DeepONet having less of
   either (section 5.6). No FLOP-level accounting or FLOP-matched control was run, and the
