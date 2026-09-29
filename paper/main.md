@@ -2,7 +2,13 @@
 
 **Evidence-audited research draft v2 — 2026-09-24. Not a submitted manuscript.**
 
-**Latest 2026-09-29 follow-up:** [incremental correction beyond nested-tuned linear maps](FOLLOWUP_INCREMENTAL_MODAL_20260929.md).
+**Latest 2026-09-29 follow-up:** [whole-field relevance and synthetic Allen-Cahn](FOLLOWUP_FIELD_MODAL_20260929.md).
+Four newly sealed confirmation sets support gains over tuned linear maps on Burgers
+and a custom synthetic second nonlinear PDE. The new gate does not beat energy or old
+rules under predeclared criteria; Allen-Cahn exhibits slight harm from removing a small
+helpful mode. This is not a downloaded cross-PDE benchmark or a validated new selector.
+
+**Earlier 2026-09-29 follow-up:** [incremental correction beyond nested-tuned linear maps](FOLLOWUP_INCREMENTAL_MODAL_20260929.md).
 Sealed candidates improve relative L2 by3.0779% and2.8752% on two new Burgers confirmation
 sets, passing predeclared effect and adjusted-interval criteria. Superiority over energy
 truncation is not confirmed; linear Advection selects no correction. All new holdouts

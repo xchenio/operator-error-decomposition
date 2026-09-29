@@ -98,3 +98,31 @@ remove original Burgers mode3, Advection's irrelevant modes2/8 and Allen-Cahn mo
 Only original Burgers now differs from the matched-count energy mask. Every new rule
 is slightly worse than the old selected rule in nonlinear development means. This
 is disclosed before confirmation; no threshold or candidate rule is changed to repair it.
+
+## New confirmation, completed after seal8a4020b
+
+Four500-ID sets were extracted/generated ONLY after committing all selection artifacts.
+All2000 targets are now consumed, in addition to the earlier consumed confirmation sets.
+No threshold changes, retraining or model reselection followed opening.
+
+| Task | Linear | Locked candidate | Gain over linear | Primary |
+|---|---:|---:|---:|---|
+| Original Burgers | 0.405879 | 0.393444 | 3.0636% | Pass |
+| Independent Burgers | 0.402369 | 0.389518 | 3.1939% | Pass |
+| Advection | 0.020532878061 | 0.020532878061 | 0% | No gain; rejection |
+| Synthetic Allen-Cahn | 0.467579 | 0.366325 | 21.6550% | Pass |
+
+All comparisons against matched energy and old selected rules FAIL the predeclared
+success criteria. Original Burgers versus energy improves0.1904%, interval crosses0;
+independent Burgers and Allen-Cahn equal energy exactly. Allen-Cahn's old all-mode rule
+has0.366134 versus new0.366325: a0.0521% deterioration, adjusted difference interval
+[0.000153,0.000233]. Small helpful coefficients should not automatically be removed
+merely because their absolute contribution is small. Statistical detectability is
+not evidence of a practically large harmful effect.
+
+Independent audit replays all frozen CV/development/confirmation predictions, field
+risk decompositions, gate decisions and12 paired bootstrap statistics. Full arm tables,
+intervals and limitations are in the [paper addendum](../paper/FOLLOWUP_FIELD_MODAL_20260929.md).
+Next proposals are continuous field-aware shrinkage and explicit uncertainty/cost
+objectives, not post-confirmation threshold tuning. A downloaded second nonlinear
+benchmark and matched strong nonlinear baselines remain future validation, not completed work.

@@ -1,5 +1,18 @@
 # Current conclusions
 
+> Latest2026-09-29 FIELD_MODAL_V1: whole-field relevance (including projection error)
+> keeps original Burgers modes1/2/4, independent1/2, Advection none, synthetic Allen-Cahn
+> 1–15. Sourceb2d554c, selectionseal8a4020b BEFORE four new500-ID confirmation sets.
+> New confirmation gains versus tuned linear:3.0636%,3.1939%,21.6550% for the three
+> nonlinear cases, passing predeclared effect and12-comparison adjusted intervals.
+> Advection rejects correction. Allen-Cahn is custom numerically validated synthetic
+> data, NOT a downloaded public benchmark. Eleven new fits; old public models reused.
+> No new rule superiority over energy or old selector is confirmed. Allen-Cahn is
+> slightly worse than old all-mode correction (0.0521%, difference interval above0).
+> Low contribution does not imply a coefficient should be deleted. Prefer retaining
+> old strong controls; investigate continuous field-aware shrinkage/uncertainty only
+> under a new protocol, not by retuning on these2000 now-consumed confirmation targets.
+
 > Latest2026-09-29: INCREMENTAL_MODAL_V1.md supersedes the next-step proposals below.
 > Nested training-only tuning strengthens linear maps;33 neural fits compare identical
 > residual predictions under none/all/stable/energy/shrinkage. Candidates committed at

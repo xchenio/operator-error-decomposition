@@ -457,3 +457,22 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   by calling the existing coefficient helper; training/selection source unchanged.
   All development predictions and field-risk/gate computations then replayed exactly
   within original tolerances. Full regression42 tests passed before adding fresh-ID test.
+- Added explicit fresh-ID exclusion regression (4 field tests passed). Committed
+  complete development/model hashes/selection lock at8a4020b, THEN ran confirmation.
+  Original Burgers linear0.405879→field0.393444; independent0.402369→0.389518;
+  synthetic Allen-Cahn0.467579→0.366325. Gains3.0636%/3.1939%/21.6550%, all primary
+  criteria pass. Advection none0.020532878061. All four new500-ID sets are now consumed.
+- None of the8 predeclared comparisons versus energy/old controls establishes new-rule
+  superiority (the12-comparison family also includes4 linear comparisons). Allen-Cahn is0.0521%
+  worse than old all-mode correction, interval[0.000153,0.000233]. Preserve this small
+  negative effect; do not adjust gates after confirmation. No new training followed.
+- `scripts/audit_field_modal.py` replays every CV/development/confirmation prediction,
+  full-field risks/gates, source artifacts and bootstrap inference from cached targets.
+  Updated paper addendum, current conclusions, ledger and publication assessment;
+  explicitly distinguish synthetic Allen-Cahn from public benchmark reproduction.
+- Final full regression44 tests passed, including fresh-ID exclusions, exact seal
+  from8a4020b, paper numeric tables,12 comparison outcomes and raw-error aggregation.
+  Re-running develop/confirm skipped all4 completed tasks and all4 confirmations;
+  no retraining, new extraction or regeneration. `git diff --check` passed. Full
+  binary checkpoints and chunk caches remain local/ignored; Git versions hashes,
+  protocol, per-trajectory errors and experiment history, not a binary-data backup.
