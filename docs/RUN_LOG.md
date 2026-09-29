@@ -716,3 +716,43 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   automatically matched once nonlinear steepening dominates.
 - Manuscript section 5.6 added; sections renumbered; abstract, limitations and the family
   narrative updated from "one PDE" to two. Advection table regression-checked; 62 tests pass.
+
+## 2026-09-29 — a-priori predictors, an exact trunk-span bound, and a failed download
+
+### A-priori predictors (scripts/predict_skill_horizon.py)
+- Five statistics computed from the **training split only**, before any model exists, over
+  all 14 settings. Fluctuation energy fraction correlates with measured per-sample skill at
+  Spearman 0.921 / 0.837 / 0.886 (MLP / Fourier / FNO) pooled, and 1.000 / 0.964 / 1.000
+  within Burgers alone (n = 7).
+- Two honest qualifications recorded: the pooled values are inflated by the two-PDE
+  clustering (advection's fluctuation energy is constant, so it carries no information
+  there), and the interpolated thresholds (0.248 / 0.273 / 0.150) reproduce the sign of
+  skill 14/14 but were fitted on those same settings, so that is in-sample, not validation.
+- **Hypothesis falsified:** the input-to-target subspace distance was expected to grow where
+  the fluctuation spectrum evolves; it falls (0.0231 at t=0.10 to 0.0079 at t=2.00) because
+  smoother targets are easier for the leading input modes to capture. Kept as a negative
+  result.
+
+### Exact trunk-span bound (scripts/skill_bound.py)
+- An upper bound on fluctuation skill depending only on `span([Phi, 1])`, granting an oracle
+  branch that chooses coefficients per sample. Evaluated on 50 trained trunks across five
+  settings: **never violated**, which is the empirical check that the statement holds on real
+  checkpoints.
+- Fourier trunk bound is +0.96 to +1.00 on both PDEs at every horizon, including t=2.00 where
+  achieved is -0.3774, so the trunk span is not the constraint. Branch gap: 0.058 on
+  advection versus 1.362 on Burgers t=2.00. The MLP trunk is additionally span-limited
+  (trained basis collapses to 4-7 dimensions) but still fails mainly through the branch.
+- **This is the mechanism behind the skill horizon: the reachable set does not shrink with
+  horizon, the map onto it does.**
+
+### Third operator class: download not possible here
+- `huggingface.co` times out and then resets; `hf-mirror.com` answers 401; `pypi.org` and
+  `api.github.com` work, so egress is fine and the failure is host-specific.
+- DaRUS (`doi:10.18419/darus-2986`) is reachable **only** with the `certifi` CA bundle passed
+  explicitly; the default context raises `CERTIFICATE_VERIFY_FAILED`.
+  `scripts/download_darus.py` handles this and resumes, but measured throughput was about
+  34 KB/s single connection and 96 KB/s with four parallel ranges, i.e. roughly 33 hours for
+  the 4.2 GB file. Stopped; a 16 MB `.part` remains for resuming elsewhere.
+- Full instructions, dataset ids, sizes, MD5s and direct URLs are in
+  [THIRD_PDE_DOWNLOAD_V1.md](THIRD_PDE_DOWNLOAD_V1.md).
+- Full discovery: 67 tests passed.

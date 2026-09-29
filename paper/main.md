@@ -51,6 +51,11 @@ On linear advection, the same seven horizons show constant fluctuation energy (0
 +0.9994), so the decay tracks nonlinear spectral evolution rather than elapsed forecast
 time.
 
+An exact bound depending only on the trunk span (section 3.3) shows the constraint is the
+branch, not the basis: the Fourier trunk's bound is +0.96 to +1.00 on both PDEs at every
+horizon, including t = 2.00 where the achieved value is -0.3774, so the reachable set does
+not shrink with horizon while the map onto it does.
+
 We claim a diagnostic decomposition and a reproducible negative result, not a new
 architecture or optimizer. Two public PDEs, one split each and one viscosity are studied;
 FLOP-level matching and a third operator class remain open.
@@ -147,7 +152,27 @@ of total accuracy. The manuscript's headline metric is a per-sample mean, so the
 measure decides the claims, and the energy-weighted one is reported alongside because the
 two can disagree in sign (section 5.4).
 
-### 3.3 The mean baseline is a conservation-law predictor
+### 3.3 An exact upper bound from the trunk span
+
+A DeepONet with trunk features `Phi in R^{N x p}` can only output fields in `span(Phi)`.
+Grant the branch an oracle that chooses optimal coefficients **separately for each sample**
+(strictly more powerful than any real branch, which must be a function of the input), and
+allow a constant column. Writing `P` for the projector onto `span([Phi, 1])`, the smallest
+fluctuation share any such model can reach is
+
+\[
+  \text{fluctuation share}_{\min} = \mathbb{E}_j \frac{\|(I-P)y_{c,j}\|^2}{\|y_j\|^2},
+  \qquad
+  R^2_{\text{per sample}} \le 1 - \frac{\text{fluctuation share}_{\min}}{\text{per-sample fluctuation energy}} .
+\]
+
+This is an identity about the trunk's span, hence a **hard upper bound**, not an attribution.
+It requires the trunk but no branch training. Comparing it with achieved skill separates two
+failure modes: achieved near the bound means the trunk span is binding; achieved far below it
+means the branch, that is the input-to-coefficient map, is binding. The gap is the amount
+lost by the branch.
+
+### 3.4 The mean baseline is a conservation-law predictor
 
 For periodic Burgers, `d/dt int u dx = -[u^2/2] + nu[u_x] = 0`, so the spatial mean of the
 target equals that of the input. Measured on the stored data:
@@ -373,7 +398,83 @@ the existing extraction and splitting helpers unchanged and records the advectio
 hash, because `prepare()` pins the Burgers digest. The layout is identical, so training and
 diagnostics run unmodified; all recomputations reproduce stored metrics exactly.
 
-### 5.7 Compute and parameter budget
+### 5.7 The binding constraint is the branch, not the trunk
+
+Section 3.3 gives an exact upper bound on fluctuation skill that depends only on the trunk
+span. `scripts/skill_bound.py` evaluates it on the trained trunks of five settings, using
+the same rcond as the projection audit.
+
+| Setting | Trunk | basis rank | **bound** | achieved | **branch gap** |
+|---|---|---:|---:|---:|---:|
+| Advection t = 1.00 | Fourier | 62.8 | +1.0000 ± 0.0000 | +0.9424 | **0.058** |
+| Advection t = 2.00 | Fourier | 62.2 | +0.9999 ± 0.0000 | +0.9354 | **0.065** |
+| Burgers t = 0.25 | Fourier | 42.6 | +0.9590 ± 0.0044 | +0.4248 | 0.534 |
+| Burgers t = 1.00 | Fourier | 39.4 | +0.9737 ± 0.0062 | -0.0934 | 1.067 |
+| Burgers t = 2.00 | Fourier | 39.6 | +0.9845 ± 0.0045 | -0.3774 | 1.362 |
+| Advection t = 1.00 | MLP | 7.4 | +0.5785 ± 0.0458 | +0.1817 | 0.397 |
+| Burgers t = 0.25 | MLP | 6.8 | +0.5855 ± 0.0459 | +0.1695 | 0.416 |
+| Burgers t = 1.00 | MLP | 4.4 | +0.5072 ± 0.0516 | -0.0042 | 0.511 |
+| Burgers t = 2.00 | MLP | 4.2 | +0.5180 ± 0.0462 | -0.0918 | 0.610 |
+
+The bound is never violated in any of the 50 evaluated trunks, which is the empirical check
+that the statement in section 3.3 holds on real checkpoints and not only on paper.
+
+Three consequences:
+
+1. **The Fourier trunk's span is not the constraint anywhere.** Its bound is 0.96 to 1.00 on
+   *both* PDEs and at *every* horizon, including t = 2.00 where the achieved value is
+   -0.3774. The trunk could represent the fluctuation almost perfectly; the model simply
+   does not produce it.
+2. **The branch gap is what tracks the difficulty.** On advection with a Fourier trunk the
+   branch loses only 0.06, i.e. it nearly attains the bound, which is consistent with
+   translation being a phase shift that a linear readout on Fourier modes can express. On
+   Burgers the same trunk loses 0.53 at t = 0.25 and 1.36 at t = 2.00.
+3. **The MLP trunk is additionally span-limited but not primarily so.** Its bound is lower
+   (0.51 to 0.59) because the trained basis collapses to about 4 to 7 effective dimensions,
+   yet the achieved skill is still far below even that reduced bound. So both trunks fail
+   mainly through the branch.
+
+This is the mechanism behind the skill horizon: the reachable set does not shrink with
+horizon, the map onto it does.
+
+### 5.8 Toward a prospective predictor
+
+The skill horizon is measured after training. A diagnostic method should predict it before.
+`scripts/predict_skill_horizon.py` computes five statistics from the **training split only**,
+with no model and no test targets, over all 14 settings (two PDEs x seven horizons), and
+correlates them with the measured skill.
+
+| Statistic | MLP | Fourier | FNO |
+|---|---:|---:|---:|
+| fluctuation energy fraction | **0.921** | 0.837 | 0.886 |
+| POD modes for 99% energy | -0.552 | -0.530 | -0.736 |
+| spectral effective rank | -0.108 | -0.393 | -0.314 |
+| spectral decay exponent | -0.613 | -0.604 | -0.644 |
+| input-to-target subspace distance | -0.459 | -0.556 | -0.714 |
+
+(Spearman correlation with measured per-sample R^2, pooled over both PDEs, n = 14. Within
+Burgers alone the correlation of fluctuation energy with skill is 1.000 for MLP and FNO and
+0.964 for Fourier, n = 7.)
+
+Two honest qualifications matter more than the numbers:
+
+1. **The pooled correlations are inflated by clustering.** Within advection the fluctuation
+   energy is constant, so it carries no information there; the pooled value largely reflects
+   the separation of the two PDE clusters. The trustworthy statement is the within-Burgers
+   monotonicity, not the pooled coefficient.
+2. **A threshold rule fits these data but is not validated by them.** Interpolating the
+   fluctuation energy at which skill crosses zero gives about 0.248 for MLP DeepONet, 0.273
+   for Fourier DeepONet and 0.150 for FNO. Applying those thresholds reproduces the sign of
+   the skill in 14 of 14 settings — but the thresholds were interpolated from those same
+   settings, and the advection points sit far from the threshold and do not test it. The
+   rule is a falsifiable hypothesis for a third operator class, not an established predictor.
+
+One hypothesis was tested and failed: the input-to-target subspace distance was expected to
+grow with horizon where the fluctuation spectrum evolves. It does the opposite on Burgers
+(0.0231 at t = 0.10 falling to 0.0079 at t = 2.00), because smoother targets are *easier*
+for the leading input modes to capture. It is retained as a negative result.
+
+### 5.9 Compute and parameter budget
 
 Recorded optimizer time (excluding evaluation and checkpointing) and parameter counts:
 
@@ -401,7 +502,7 @@ This does not establish a FLOP-matched result: the two architectures use differe
 operations, and no FLOP-level accounting was performed. It does make clear that the gap is
 not explained by DeepONet having less compute or fewer parameters.
 
-### 5.8 Fitting interventions stabilize training without improving validation
+### 5.10 Fitting interventions stabilize training without improving validation
 
 | Trunk | LR | Batch | Final train excess | Stable seeds | Validation relative L2 (mean ± SD) |
 |---|---|---:|---:|---:|---:|
@@ -425,7 +526,7 @@ the conserved mean, while the fluctuation component remains unexplained.
 Full-batch trials process four times as many examples at equal updates. Recorded update
 times exclude evaluation and checkpointing; equal update counts are not equal compute.
 
-### 5.9 Zero initialization helps, but fitting and generalization remain distinct
+### 5.11 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
