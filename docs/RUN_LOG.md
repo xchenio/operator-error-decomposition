@@ -398,3 +398,15 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - New tests: weighted ridge stationarity, exact linear recovery, numerical-zero modal
   exclusion, continuous shrinkage, no-effect inference and linear-tuning resume:3 passed.
   Created machine-readable plan with immutable source fingerprint before formal runs.
+- Formal source/protocol commite352c0b. `scripts/run_incremental_modal.py develop`
+  completed33 neural fits,49500 updates. Nested linear grids run for4 mapping fits per
+  task (3 outer+1 final),3 inner folds each,36 settings per fold. These1296 candidate
+  fits plus12 selected refits reuse SVDs; they are not1296 independent experiments.
+- Development means (none/selected): original0.373252/0.362262 stable; independent
+  0.409382/0.402073 shrink; Advection0.019756125100/itself after no-correction fallback.
+  Final linear alphas100/10000/1e-6; hard Burgers masks remain energy-equivalent.
+  Advection modal probes1/7 pass, but field benefit is negligible; no performance claim.
+- `scripts/audit_incremental_modal.py` independently replays checkpoints and risks,
+  nested split/selection rules, masks and development metrics for all33 fits. Full
+  regression37 tests passed. Next seal and commit immutable selection before any
+  reserved target extraction. Source/training rules will not change after this point.

@@ -54,3 +54,28 @@ scripts/run_incremental_modal.py confirm
 ```
 
 No result or methodological novelty is presumed by this protocol.
+
+## Development results, before confirmation
+
+All33 fits completed (49500 updates). Independent checkpoint replay verifies nested
+folds, frozen linear models, coefficient risks, masks and development predictions.
+
+| Rule | Original Burgers | Independent Burgers | Advection |
+|---|---:|---:|---:|
+| None / tuned linear | 0.373252 | 0.409382 | 0.019756125100 |
+| All nonlinear outputs | 0.363277 | 0.403154 | 0.019756122297 |
+| Stable mask | 0.362262 | 0.402368 | 0.019756125076 |
+| Energy mask | 0.362262 | 0.402368 | 0.019756125159 |
+| Continuous shrinkage | 0.362297 | 0.402073 | 0.019756122211 |
+| Locked candidate | stable | shrink | none |
+
+Final linear selections: MSE/alpha100, MSE/alpha10000, normalized/alpha1e-6.
+Original Burgers outer fold1 selects alpha1e8, the upper boundary: finite-grid tuning
+must not be described as a globally optimized linear oracle. Hard masks select zero-based
+modes0–3,0–1 and1/7 respectively. On Burgers they still equal energy truncation.
+Advection coefficient-level gains are too small to matter for the field metric; the
+whole-field1% fallback correctly declines correction despite two positive modal probes.
+Shrinkage weights are stored in rules.json; none are tuned using confirmation labels.
+
+Before confirmation:37 tests pass; three reserved sets still unopened. Selection hashes
+will be committed before extraction. The table is developmental, not primary success.
