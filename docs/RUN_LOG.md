@@ -476,3 +476,20 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   no retraining, new extraction or regeneration. `git diff --check` passed. Full
   binary checkpoints and chunk caches remain local/ignored; Git versions hashes,
   protocol, per-trajectory errors and experiment history, not a binary-data backup.
+
+## 2026-09-29 — continuous uncertainty penalty, strong nonlinear controls
+
+- New protocol UNCERTAINTY_MODAL_V1.md retains old continuous shrinkage/all outputs,
+  trajectory-only uncertainty ablation and CV-energy-matched global shrinkage. Main
+  coefficient=N/(D+1.96*bootstrap SD(N)), clipped to existing[0,1] bounds. No new hard
+  deletion threshold or tuning grid. This is a quadratic uncertainty penalty, NOT a
+  calibrated95% confidence/safety constraint; multiplier1.96 is fixed regularization.
+- Hierarchical bootstrap samples fitted fold-model/seed blocks and held trajectories;
+  only3 folds/two probes exist, overlapping train sets and unmodeled refitting limit
+  interpretation. Models remain frozen, zero new neural fits. Deterministic bootstrap
+  replicates checkpoint every100, permitting exact continuation after interruption.
+- Reserved another500 IDs/task excluding every prior public split/confirmation;
+  synthetic Allen-Cahn uses1700–2199, not previously generated targets. Candidates
+  must be committed before extraction;16-comparison Bonferroni confirmation criteria.
+- Three new unit tests pass: continuous/no-new-zero coefficients and stationarity,
+  matched correction energy, deterministic resumed bootstrap with seed dependence.
