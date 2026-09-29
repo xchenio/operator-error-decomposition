@@ -1,5 +1,9 @@
 # Objective alignment and modal learnability — locked development protocol
 
+> Historical2026-09-28 development record. On2026-09-29 the reserved sets were opened
+> only after a new candidate seal in INCREMENTAL_MODAL_V1.md. They are now consumed;
+> references to unopened sets below describe the earlier stage, not their current status.
+
 ## Development-only diagnosis
 
 The previous selected residual improves the lowest-energy development quintile from

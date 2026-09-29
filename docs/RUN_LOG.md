@@ -410,3 +410,26 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   nested split/selection rules, masks and development metrics for all33 fits. Full
   regression37 tests passed. Next seal and commit immutable selection before any
   reserved target extraction. Source/training rules will not change after this point.
+- Selection artifacts and checkpoint hashes committed atad94e69 before confirmation.
+  `scripts/run_incremental_modal.py confirm` opened the three reserved500-ID sets.
+  Original candidate stable:0.387273→0.375353,3.0779% gain, adjusted interval
+  [-0.018826,-0.005641]. Independent candidate shrink:0.379517→0.368605,2.8752%,
+  [-0.016384,-0.005921]. Both pass predeclared primary criteria. Advection chooses none
+  and remains0.024182229260; no improvement claim. All1500 new targets are now consumed.
+- Versus energy: original exactly equal; independent shrink gain0.2013%, interval
+  [-0.001847,0.000219]. Neither passes the incremental selection-rule claim. No tuning,
+  retraining, checkpoint changes or post-confirmation candidate selection took place.
+- Extended the separate audit to replay confirmation predictions using already-opened
+  chunk caches and verify every per-trajectory error/RMSE and bootstrap statistic.
+  Source/plan/model/masks remain unchanged. Synchronized current conclusions, ledger,
+  publication assessment and new paper addendum; annotated previous unopened-set claims
+  as historical. Later research requires newly reserved confirmation data.
+- Added regression checks that the seal existed atad94e69, confirmation retained
+  those candidates/IDs, paired statistics reproduce and paper tables match raw JSON.
+  Initial table test used10-decimal formatting against12-decimal Advection values;
+  corrected the test precision (no data or model changes). Final full suite39 passed.
+- Re-running develop and confirm checks immutable identities and skips all completed
+  tasks; no retraining and no new target extraction. Git diff whitespace checks pass.
+  Training-internal modal table added with one-based ordering and explicit caveat:
+  separate POD bases do not identify the same physical mode, and confirmation validates
+  selected model performance rather than each modal hypothesis independently.

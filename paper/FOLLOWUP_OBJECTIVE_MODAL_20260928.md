@@ -1,5 +1,9 @@
 # Objective alignment and cross-fitted modal correction
 
+> Status update2026-09-29: the newly reserved sets mentioned below were subsequently
+> consumed by the sealed [incremental-modal study](FOLLOWUP_INCREMENTAL_MODAL_20260929.md).
+> This addendum preserves what was known before that confirmation, not current holdout availability.
+
 Development-only addendum, 2026-09-28. The earlier failed confirmation remains a failed
 confirmation; none of the newly reserved confirmation targets are evaluated here.
 Protocol and complete evidence: [OBJECTIVE_MODAL_V1](../docs/OBJECTIVE_MODAL_V1.md).

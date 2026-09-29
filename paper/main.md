@@ -2,7 +2,13 @@
 
 **Evidence-audited research draft v2 — 2026-09-24. Not a submitted manuscript.**
 
-**Latest 2026-09-28 follow-up:** [objective alignment and cross-fitted modal correction](FOLLOWUP_OBJECTIVE_MODAL_20260928.md).
+**Latest 2026-09-29 follow-up:** [incremental correction beyond nested-tuned linear maps](FOLLOWUP_INCREMENTAL_MODAL_20260929.md).
+Sealed candidates improve relative L2 by3.0779% and2.8752% on two new Burgers confirmation
+sets, passing predeclared effect and adjusted-interval criteria. Superiority over energy
+truncation is not confirmed; linear Advection selects no correction. All new holdouts
+are now consumed. Earlier failed confirmation results below are preserved.
+
+**2026-09-28 follow-up:** [objective alignment and cross-fitted modal correction](FOLLOWUP_OBJECTIVE_MODAL_20260928.md).
 The new development study includes a disjoint Burgers training split and linear Advection.
 Normalized loss is not universally better; the CV rule does not beat energy selection.
 These findings do not overturn the earlier failed confirmation or establish a new method.

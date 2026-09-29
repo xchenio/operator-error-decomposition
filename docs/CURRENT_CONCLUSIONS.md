@@ -1,5 +1,19 @@
 # Current conclusions
 
+> Latest2026-09-29: INCREMENTAL_MODAL_V1.md supersedes the next-step proposals below.
+> Nested training-only tuning strengthens linear maps;33 neural fits compare identical
+> residual predictions under none/all/stable/energy/shrinkage. Candidates committed at
+> ad94e69 BEFORE three500-ID confirmation sets were opened. Original Burgers stable
+> improves0.387273→0.375353 (3.0779%); independent Burgers shrink improves0.379517→0.368605
+> (2.8752%). Both pass>=1% gain and Bonferroni-adjusted paired bootstrap criteria.
+> This confirms incremental correction over the tested tuned linear comparator, not
+> global linear optimality or superiority over FNO. Hard masks still equal energy order.
+> Rule superiority over energy FAILS: original identical; independent gain0.2013% with
+> interval crossing zero. Advection falls back to none, L2=0.024182229260. All three
+> confirmation sets are now CONSUMED; no adaptive reuse as untouched holdouts.
+> Next research: field-risk relevance/rejection with matched energy/shrinkage controls,
+> and a genuinely second nonlinear PDE. These are proposals, not validated innovations.
+
 > 2026-09-28 objective/modal follow-up: see OBJECTIVE_MODAL_V1.md and the dated paper
 > addendum. Guarded normalized squared loss improves full-data development relative L2
 > from0.366400 to0.358258 on original Burgers and0.407464 to0.398468 on a completely

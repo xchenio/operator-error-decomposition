@@ -90,9 +90,21 @@ def audit():
             for a in ARMS:
                 if np.array(c['errors'][a]).shape!=(5,500):raise ValueError('error dimensions')
                 same(np.mean(c['errors'][a]),c['mean_relative_l2'][a])
+            chunks=[torch.load(ROOT/'external_data/pdebench/incremental_modal_v1'/task/f'confirmation_{i}.pt',
+                               map_location='cpu',weights_only=False) for i in range(0,500,50)]
+            if [v for chunk in chunks for v in chunk['ids']]!=c['ids']:raise ValueError('cached confirmation IDs')
+            if any(chunk['lock']!=c['lock_sha256'] for chunk in chunks):raise ValueError('cached lock')
+            x=np.concatenate([v['x'] for v in chunks]);y=np.concatenate([v['y'] for v in chunks]);base=predict(model,x)
+            for seed in p['seeds']:
+                delta=branch(root/f'final_s{seed}',model,x)
+                for arm in ARMS:
+                    prediction=base+(delta*np.array(masks[arm]))@model['q'].T
+                    same(errors(prediction,y),c['errors'][arm][seed])
+                    same(np.sqrt(np.mean((prediction-y)**2)),c['rmse'][arm][seed])
             if interval(c['errors'][selected],c['errors']['none'])!=c['primary']:raise ValueError('primary inference')
             if interval(c['errors'][selected],c['errors']['energy'])!=c['increment_over_energy']:raise ValueError('energy inference')
             evidence['confirmation_statistics_replayed']=True
+            evidence['confirmation_predictions_replayed']=True
         tasks[task]=evidence
     result=dict(tasks=tasks,neural_records=sum(v['neural_records'] for v in tasks.values()))
     atomic_json(OUT/'audit.json',result);print(json.dumps(result,indent=2));return result

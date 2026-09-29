@@ -77,5 +77,51 @@ Advection coefficient-level gains are too small to matter for the field metric; 
 whole-field1% fallback correctly declines correction despite two positive modal probes.
 Shrinkage weights are stored in rules.json; none are tuned using confirmation labels.
 
+Which modes pass? The table uses one-based POD order and training-internal weighted
+coefficient-risk reduction, not fresh per-mode significance or total-field gain:
+
+| Task | Mode | Minimum fold gain | Mean fold gain |
+|---|---:|---:|---:|
+| Original Burgers | 1 | 21.277% | 23.843% |
+| Original Burgers | 2 | 15.330% | 17.721% |
+| Original Burgers | 3 | 0.085% | 4.454% |
+| Original Burgers | 4 | 5.424% | 9.081% |
+| Independent Burgers | 1 | 11.061% | 12.390% |
+| Independent Burgers | 2 | 9.358% | 15.725% |
+| Advection | 2 | 0.142% | 1.025% |
+| Advection | 8 | 1.399% | 4.040% |
+
+The leading two Burgers mode orders have the clearest repeated-fold signal in both
+splits. Bases are fitted separately, so matching order is not proof of identical
+physical modes. Original mode3 only barely passes the all-fold-positive requirement.
+
 Before confirmation:37 tests pass; three reserved sets still unopened. Selection hashes
 will be committed before extraction. The table is developmental, not primary success.
+
+## Sealed confirmation (completed; sets now consumed)
+
+Selection lock and development evidence were committed at ad94e69. Only afterward,
+`scripts/run_incremental_modal.py confirm` extracted500 reserved targets per task.
+No source/training/selection change followed the seal. All three sets are now consumed;
+future adaptive experiments must not call these fresh confirmation data.
+
+| Task / locked candidate | Linear L2 | Candidate L2 | Relative gain | Adjusted difference interval | Primary |
+|---|---:|---:|---:|---|---|
+| Original Burgers / stable | 0.387273 | 0.375353 | 3.0779% | [-0.018826,-0.005641] | Pass |
+| Independent Burgers / shrink | 0.379517 | 0.368605 | 2.8752% | [-0.016384,-0.005921] | Pass |
+| Advection / none | 0.024182229260 | 0.024182229260 | 0% | [0,0] | No gain; fallback |
+
+These are averages of five per-trajectory seed errors, not an ensemble forecast. The
+Bonferroni-adjusted99.1667% bootstrap intervals cover the six predeclared comparisons.
+Original stable versus energy is identical. Independent shrink versus energy improves
+only0.2013%, interval[-0.001847,0.000219], failing both success criteria. Thus the
+nonlinear correction is confirmed over this linear baseline on two Burgers splits,
+but the selection-rule superiority hypothesis is not confirmed. No cross-PDE universal
+success or individual-mode significance claim follows.
+
+Full arm tables and secondary RMSE are in the
+[paper addendum](../paper/FOLLOWUP_INCREMENTAL_MODAL_20260929.md). The separate auditor
+replays every CV risk and development/confirmation prediction from fixed checkpoints,
+checks nested-fold coverage and reproduces bootstrap statistics from per-trajectory
+records. Next proposals: field-risk relevance thresholds, matched energy/shrinkage
+controls and a second nonlinear PDE; none were tuned on these confirmation sets.
