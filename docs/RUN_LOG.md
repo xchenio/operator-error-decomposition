@@ -433,3 +433,18 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   Training-internal modal table added with one-based ordering and explicit caveat:
   separate POD bases do not identify the same physical mode, and confirmation validates
   selected model performance rather than each modal hypothesis independently.
+
+## 2026-09-29 — whole-field relevance and synthetic Allen-Cahn
+
+- Checked public dataset provenance; PDEBench1D reaction-diffusion has an unresolved
+  equation/data issue94. Chose an explicitly synthetic, reproducible Allen-Cahn second
+  nonlinear PDE, not a claimed public benchmark reproduction. User-facing scope stated.
+- Implemented exact reaction/Fourier-diffusion Strang splitting and independent DOP853
+  QA on separate IDs. Time error2.471e-7, space error5.721e-14, independent3.091e-7;
+  constant/equilibria/pure-diffusion tests pass. Three new unit tests pass.
+- New field-gain protocol fixes per-mode threshold0.1% of total weighted FIELD baseline
+  risk in each fold, including projection error, plus each-fold1% joint relative-L2
+  gate. Old public CV/final networks are reused without retraining;11 new Allen-Cahn
+  fits planned. New500-ID confirmation lists/task exclude every consumed public split.
+- Before training/inspection: plan and source will be committed. No confirmation
+  targets generated or opened at protocol creation. All previous records preserved.
