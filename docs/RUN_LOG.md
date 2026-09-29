@@ -383,3 +383,18 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Local datasets and full optimizer/RNG/model checkpoints remain ignored by Git;
   protocol, provenance, selected hashes, progress logs and results are versioned. Local
   sleep/interruption recovery is supported; a Git clone alone is not a checkpoint backup.
+
+## 2026-09-29 — incremental nonlinear gain beyond tuned linear correction
+
+- Locked a new nested-CV protocol in INCREMENTAL_MODAL_V1.md. Keep representation400
+  disjoint from correction600 and all outer folds. Tune shared-alpha linear maps with
+  3 inner folds, two objectives and18 alpha settings including pseudoinverse; correctly
+  centered weighted intercept. Final masks share the same fitted residual predictions.
+- Planned33 neural fits, fixed1500 steps for CV/final so no mask gets a development-
+  selected stopping advantage. Compare none/all/stable/energy/continuous shrinkage.
+  Three existing500-ID reserved sets remain unopened at protocol creation. Candidate,
+  checkpoints and criteria must be committed before confirmation; six comparisons use
+  Bonferroni paired-trajectory bootstrap intervals and a1% effect threshold.
+- New tests: weighted ridge stationarity, exact linear recovery, numerical-zero modal
+  exclusion, continuous shrinkage, no-effect inference and linear-tuning resume:3 passed.
+  Created machine-readable plan with immutable source fingerprint before formal runs.
