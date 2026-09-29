@@ -1,0 +1,59 @@
+{
+  "families": {
+    "advection_horizon_t200_v1": {
+      "n_runs": 15,
+      "max_abs_metric_difference": 0.0,
+      "faithfulness_failures": []
+    }
+  },
+  "oracle_input_mean": {
+    "val": {
+      "mean_relative_l2": 0.6874677899370795,
+      "relative_l2_rms": 0.7319446112475073,
+      "relative_fro": 0.6254736862119448,
+      "rmse": 0.5228994519356605,
+      "fluctuation_r2": 0.0,
+      "fluctuation_energy_fraction_per_sample": 0.5357429127764196,
+      "normalized_mean_error": 1.8883181911926846e-05,
+      "fluctuation_energy_fraction": 0.6254736856763686,
+      "squared_error_mean_share": 1.1578449919411872e-09,
+      "squared_error_fluctuation_share": 0.5357429127764197,
+      "squared_error_closure": 1.1102230246251565e-16,
+      "fluctuation_r2_per_sample": -2.220446049250313e-16
+    },
+    "test": {
+      "mean_relative_l2": 0.6855938430198653,
+      "relative_l2_rms": 0.732808889138632,
+      "relative_fro": 0.6446064302829635,
+      "rmse": 0.5222684437425773,
+      "fluctuation_r2": 0.0,
+      "fluctuation_energy_fraction_per_sample": 0.5370088673301321,
+      "normalized_mean_error": 1.867885711449264e-05,
+      "fluctuation_energy_fraction": 0.6446064299803114,
+      "squared_error_mean_share": 6.704637488644783e-10,
+      "squared_error_fluctuation_share": 0.5370088673301321,
+      "squared_error_closure": 1.1102230246251565e-16,
+      "fluctuation_r2_per_sample": 0.0
+    }
+  },
+  "conservation": [
+    {
+      "split": "train",
+      "mean_correlation": 0.9999999993902775,
+      "mean_abs_difference": 1.3900922725513606e-05,
+      "mean_abs_target_mean": 0.495897527573767
+    },
+    {
+      "split": "val",
+      "mean_correlation": 0.9999999994566192,
+      "mean_abs_difference": 1.2733839509881782e-05,
+      "mean_abs_target_mean": 0.5097115640150691
+    },
+    {
+      "split": "test",
+      "mean_correlation": 0.999999999666703,
+      "mean_abs_difference": 1.1997517330924137e-05,
+      "mean_abs_target_mean": 0.5011846664111582
+    }
+  ]
+}

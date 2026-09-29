@@ -1,0 +1,53 @@
+{
+  "oracle_input_mean": {
+    "val": {
+      "mean_relative_l2": 0.6875114831580238,
+      "relative_l2_rms": 0.731977818329311,
+      "relative_fro": 0.625500471859335,
+      "rmse": 0.5229363302582888,
+      "fluctuation_r2": 0.0,
+      "fluctuation_energy_fraction_per_sample": 0.53579152490305,
+      "normalized_mean_error": 1.9602723759277272e-05,
+      "fluctuation_energy_fraction": 0.6255004710629413,
+      "squared_error_mean_share": 1.623087791058061e-09,
+      "squared_error_fluctuation_share": 0.53579152490305,
+      "squared_error_closure": 0.0,
+      "fluctuation_r2_per_sample": 0.0
+    },
+    "test": {
+      "mean_relative_l2": 0.6856246984144226,
+      "relative_l2_rms": 0.7328349779680295,
+      "relative_fro": 0.6446370526975989,
+      "rmse": 0.5223114033763017,
+      "fluctuation_r2": 0.0,
+      "fluctuation_energy_fraction_per_sample": 0.5370471043007636,
+      "normalized_mean_error": 1.761906886967279e-05,
+      "fluctuation_energy_fraction": 0.6446370523798508,
+      "squared_error_mean_share": 6.326387223456951e-10,
+      "squared_error_fluctuation_share": 0.5370471043007636,
+      "squared_error_closure": 0.0,
+      "fluctuation_r2_per_sample": 0.0
+    }
+  },
+  "conservation": [
+    {
+      "split": "train",
+      "mean_correlation": 0.9999999992970836,
+      "mean_abs_difference": 1.387279973648929e-05,
+      "mean_abs_target_mean": 0.495896662102107
+    },
+    {
+      "split": "val",
+      "mean_correlation": 0.9999999991913967,
+      "mean_abs_difference": 1.3474080364643918e-05,
+      "mean_abs_target_mean": 0.509712033600869
+    },
+    {
+      "split": "test",
+      "mean_correlation": 0.9999999996489977,
+      "mean_abs_difference": 1.1762289566240938e-05,
+      "mean_abs_target_mean": 0.5011852499498073
+    }
+  ],
+  "note": "oracle predicts the exact input spatial mean and zero fluctuation"
+}
