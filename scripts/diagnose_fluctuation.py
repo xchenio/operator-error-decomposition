@@ -27,8 +27,14 @@ that reproduces the original metric.
 Usage
 -----
     python scripts/diagnose_fluctuation.py --families public_fixed_t1_v1 --device cuda
-    python scripts/diagnose_fluctuation.py --device cuda          # all families
+    python scripts/diagnose_fluctuation.py --device cuda          # all built-in families
     python scripts/diagnose_fluctuation.py --limit 2 --device cpu # smoke
+
+    # a family created later, e.g. the forecast-horizon ladder
+    python scripts/diagnose_fluctuation.py \
+        --data external_data/pdebench/fixed_t05_v1 \
+        --families public_fixed_t05_v1=endtoend:test,val \
+        --out results/fluctuation_horizon_v1 --device cuda
 """
 from __future__ import annotations
 
@@ -53,6 +59,7 @@ DATA = ROOT / "external_data/pdebench/fixed_t1_v1"
 
 # Families whose checkpoints store a whole end-to-end model.
 END_TO_END = {"public_fixed_t1_v1": ("test", "val")}
+DEFAULT_FAMILIES = "public_fixed_t1_v1"
 
 # Families whose checkpoints store a branch MLP plus the frozen whitened basis.
 # `mean_lift` is read from the run configuration for public_coefficients_v1 and is
@@ -142,9 +149,27 @@ def _branch_prediction(ck, arrays, protocol, device, split, mean_lift: bool):
     return out * scale + offsets
 
 
-def run_family(family: str, arrays: dict, protocol: dict, device, out_dir: Path,
-               tolerance: float, limit: int | None):
-    splits = END_TO_END[family] if family in END_TO_END else BRANCH_FAMILIES[family]
+def parse_family(item: str):
+    """Accept `name` (built-in) or `name=<endtoend|branch>:<split>[,<split>]`.
+
+    The explicit form is required for families created after this script, such as the
+    forecast-horizon ladder, so no new protocol has to edit these constants.
+    """
+    if "=" in item:
+        name, rest = item.split("=", 1)
+        kind, splits = rest.split(":")
+        if kind not in ("endtoend", "branch"):
+            raise ValueError(f"unknown family kind: {kind}")
+        return name, kind, tuple(x for x in splits.split(",") if x)
+    if item in END_TO_END:
+        return item, "endtoend", END_TO_END[item]
+    if item in BRANCH_FAMILIES:
+        return item, "branch", BRANCH_FAMILIES[item]
+    raise ValueError(f"unknown family {item}; use name=<endtoend|branch>:splits")
+
+
+def run_family(family: str, kind: str, splits, arrays: dict, protocol: dict, device,
+               out_dir: Path, tolerance: float, limit: int | None):
     base = ROOT / "results" / family
     runs = sorted(p for p in base.iterdir() if (p / "checkpoints" / "latest.pt").exists())
     if limit is not None:
@@ -160,7 +185,7 @@ def run_family(family: str, arrays: dict, protocol: dict, device, out_dir: Path,
         stored = json.loads(result_path.read_text(encoding="utf-8")) if result_path.exists() else None
         per_split = {}
         for split in splits:
-            if family in END_TO_END:
+            if kind == "endtoend":
                 pred = _end_to_end_prediction(cfg, ck, arrays, protocol, device, split)
             else:
                 mean_lift = bool(cfg.get("mean_lift", True))
@@ -206,16 +231,18 @@ def run_family(family: str, arrays: dict, protocol: dict, device, out_dir: Path,
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--families", default=",".join(list(END_TO_END) + list(BRANCH_FAMILIES)))
+    ap.add_argument("--data", default=str(DATA))
     ap.add_argument("--out", default="results/fluctuation_v1")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--tolerance", type=float, default=2e-5)
     ap.add_argument("--limit", type=int, default=None)
     args = ap.parse_args()
 
-    protocol = json.loads((DATA / "protocol.json").read_text(encoding="utf-8"))
-    if file_hash(DATA / "pairs.npz") != protocol["cache_sha256"]:
+    data = Path(args.data)
+    protocol = json.loads((data / "protocol.json").read_text(encoding="utf-8"))
+    if file_hash(data / "pairs.npz") != protocol["cache_sha256"]:
         raise ValueError("pair cache changed; refusing to diagnose against a moved dataset")
-    with np.load(DATA / "pairs.npz") as z:
+    with np.load(data / "pairs.npz") as z:
         arrays = {k: z[k].copy() for k in z.files}
 
     device = torch.device(args.device)
@@ -244,8 +271,9 @@ def main() -> None:
     for family in args.families.split(","):
         if family in ("reference", ""):
             continue
-        summaries[family] = run_family(family, arrays, protocol, device, out_dir,
-                                       args.tolerance, args.limit)
+        name, kind, splits = parse_family(family)
+        summaries[name] = run_family(name, kind, splits, arrays, protocol, device, out_dir,
+                                     args.tolerance, args.limit)
     atomic_json(out_dir / "summary.json", dict(
         families={k: dict(n_runs=len(v["runs"]),
                           max_abs_metric_difference=v["max_abs_metric_difference"],

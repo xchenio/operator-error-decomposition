@@ -584,3 +584,23 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   fluctuation skill. This is the same dissociation the manuscript reports, now measured.
 - E0 (5k/20k/50k step ladder) is still required: E1 rediscribes completed runs and
   cannot by itself exclude undertraining of the end-to-end model.
+
+## 2026-09-29 — E0 step-budget ladder, and a Windows atomic-replace workaround
+
+- `results/public_steps5k_v1` completed (15/15). 1500 updates take about 6 s, so the
+  5k ladder is minutes; 20k and 50k are launched through `scripts/run_steps_ladder.py`.
+- **Operational note (important, environment-specific):** `atomic_json` and `atomic_save`
+  use `Path.replace`, which on this machine intermittently raises
+  `PermissionError: [WinError 5] Access denied` when the destination is momentarily
+  locked (consistent with real-time antivirus scanning of freshly written files under
+  `F:\\Desktop`). It is transient: every retry resumes and makes progress.
+- **Deliberate decision: do not patch `src/resume.py` or `src/public_benchmark.py`.**
+  Both are inputs to `source_hash()` inside every run identity, so editing them would
+  change `source_sha256` and break identity comparison against the already-finished
+  families. Instead `scripts/run_steps_ladder.py` simply re-launches the unchanged
+  training script until every run of a budget reports a `result.json`.
+- Generalized `scripts/diagnose_fluctuation.py` with `--data` and an explicit
+  `name=<endtoend|branch>:splits` family spec, so later protocols (for example a
+  forecast-horizon ladder) do not require editing built-in constants. Added
+  `ParseFamilyTest` (3 tests, including rejection of unknown kinds).
+  Full discovery: 56 tests passed.

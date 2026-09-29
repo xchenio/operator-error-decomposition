@@ -10,7 +10,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from scripts.diagnose_fluctuation import decompose  # noqa: E402
+from scripts.diagnose_fluctuation import decompose, parse_family  # noqa: E402
 
 
 class DecomposeTest(unittest.TestCase):
@@ -44,6 +44,24 @@ class DecomposeTest(unittest.TestCase):
         Yc = Y - Y.mean(axis=1, keepdims=True)
         worse = -2.0 * Yc                      # anti-correlated fluctuation
         self.assertLess(decompose(worse, Y)["fluctuation_r2"], 0.0)
+
+
+class ParseFamilyTest(unittest.TestCase):
+    def test_builtin_names_resolve(self):
+        self.assertEqual(parse_family("public_fixed_t1_v1"),
+                         ("public_fixed_t1_v1", "endtoend", ("test", "val")))
+        self.assertEqual(parse_family("public_stability_v1"),
+                         ("public_stability_v1", "branch", ("val",)))
+
+    def test_explicit_spec_for_new_families(self):
+        self.assertEqual(parse_family("public_fixed_t05_v1=endtoend:test,val"),
+                         ("public_fixed_t05_v1", "endtoend", ("test", "val")))
+
+    def test_unknown_input_rejected(self):
+        with self.assertRaises(ValueError):
+            parse_family("public_nope_v1")
+        with self.assertRaises(ValueError):
+            parse_family("x=magic:test")
 
 
 class PublicDataTest(unittest.TestCase):
