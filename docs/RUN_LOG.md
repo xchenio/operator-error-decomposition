@@ -671,3 +671,26 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   compute. FLOP-level matching is still not performed and remains a stated limitation.
 - Added a compute/parameter section to the manuscript and extended the manuscript-table
   regression test to the 50000 budget. Full discovery: 60 tests passed.
+
+## 2026-09-29 — dense horizon ladder: a skill horizon, and FNO fails too
+
+- Prepared and ran four more horizons (t = 0.10, 0.75, 1.50, 2.00) at the same
+  1500-update budget, 5 seeds and 3 architectures, giving a seven-point decay curve
+  instead of the earlier three points. All recomputations reproduce stored metrics exactly.
+- Per-sample fluctuation R^2 across t = 0.10 to 2.00:
+  MLP +0.2199 / +0.1695 / +0.1238 / +0.0539 / -0.0042 / -0.0813 / -0.0918;
+  Fourier +0.6390 / +0.4248 / +0.2510 / +0.0675 / -0.0934 / -0.4064 / -0.3774;
+  FNO +0.9859 / +0.9474 / +0.8369 / +0.7378 / +0.6503 / +0.4051 / **-0.0586**.
+- **FNO goes below zero at t = 2.00**, so the effect is task difficulty first and
+  architecture second. Interpolated zero crossing (skill horizon): Fourier DeepONet ~0.86,
+  MLP DeepONet ~0.98, FNO ~1.94.
+- The Fourier trunk is the better trunk at short horizons (+0.6390 vs +0.2199 at t=0.10)
+  and the worse one at long horizons (-0.3774 vs -0.0918 at t=2.00). This qualifies rather
+  than contradicts the basis-quality literature.
+- Fluctuation energy fraction falls monotonically (0.5939 -> 0.1428) and is computable
+  before training, but it does not predict skill across architectures: at fixed energy the
+  three models differ by up to 0.8 in R^2. Recorded as a monotone proxy, not a predictor.
+- Wall-clock-matched control added: DeepONet at 3500 updates averages 14.0 s, matching FNO
+  at 1500 updates (14 s), and scores -0.0057 (MLP) / -0.0884 (Fourier) against +0.6503.
+- Manuscript section 5.5 rewritten around the skill horizon; abstract and limitations
+  updated; horizon table now regression-checked (61 tests pass).

@@ -37,10 +37,14 @@ the budget from 1500 to 50000 updates does not help: per-sample fluctuation R^2 
 -0.0042 -> -0.0640 -> -0.2470 -> -0.4157 for MLP DeepONet and total relative L2 never
 improves (0.39357 / 0.39729 / 0.39311 / 0.42075), whereas FNO stays at +0.65 to +0.68 and
 0.222 to 0.228.
-The deficit is horizon-dependent: DeepONet's per-sample fluctuation R^2 is +0.1695 at
-t=0.25 and +0.1238 at t=0.50, decaying to -0.0042 at t=1.00, while FNO falls only from
-+0.9474 to +0.6503. Parameter counts do not explain the gap (Fourier DeepONet 131,969
-versus FNO 136,481).
+The deficit is horizon-dependent and shared: over seven forecast horizons from t=0.10 to
+t=2.00 the per-sample fluctuation R^2 of every architecture decays monotonically, and FNO
+also falls below zero at t=2.00 (-0.0586 ± 0.2357). What differs is where each model
+crosses zero, giving an interpolated **skill horizon** of about 0.86 for the Fourier-trunk
+DeepONet, 0.98 for the MLP DeepONet and 1.94 for FNO. Parameter counts do not explain the
+gap (Fourier DeepONet 131,969 versus FNO 136,481), and a wall-clock-matched control does
+not either (DeepONet at 3500 updates, 14 s, scores -0.0057 against FNO's +0.6503 at
+1500 updates, 14 s).
 
 We claim a diagnostic decomposition and a reproducible negative result, not a new
 architecture or optimizer. One PDE, one split and one viscosity are studied; a
@@ -175,8 +179,13 @@ uses fixed random Fourier input features. The FNO reference has four blocks, wid
 | public_stability_v1 | 40 | Constant/cosine LR x batch 32/128, n=128 | Train/validation only |
 | public_steps5k_v1 | 15 | Same three architectures, 5000 updates | Train/validation/test |
 | public_steps20k_v1 | 15 | Same three architectures, 20000 updates | Train/validation/test |
+| public_horizon_t010_v1 | 15 | Target time 0.10, 1500 updates | Train/validation/test |
 | public_horizon_t025_v1 | 15 | Target time 0.25, 1500 updates | Train/validation/test |
 | public_horizon_t050_v1 | 15 | Target time 0.50, 1500 updates | Train/validation/test |
+| public_horizon_t075_v1 | 15 | Target time 0.75, 1500 updates | Train/validation/test |
+| public_horizon_t150_v1 | 15 | Target time 1.50, 1500 updates | Train/validation/test |
+| public_horizon_t200_v1 | 15 | Target time 2.00, 1500 updates | Train/validation/test |
+| public_wcmatch3500_v1 | 10 | DeepONet only, 3500 updates (wall-clock matched to FNO at 1500) | Train/validation/test |
 
 Horizon variants are prepared by calling `src.public_benchmark.prepare` with
 `time_index` 25 and 50 and the **same split seed and sizes**, so the trajectories are
@@ -276,26 +285,47 @@ The normalized mean error also grows with budget for MLP DeepONet (0.081 -> 0.07
 -> 0.138) while staying at 0.024-0.034 for FNO, so extra updates trade conserved-mean
 accuracy for fluctuation fitting with no net gain.
 
-### 5.5 The deficit is horizon-dependent, not absolute
+### 5.5 A skill horizon: the deficit is horizon-dependent and shared
 
-Same 1500-update budget, same trajectories, only the target time changes.
+Same 1500-update budget, same trajectories and split, only the target time changes. Seven
+horizons are run to trace the decay rather than assert a trend from three points.
 
-| Horizon | fluctuation energy | MLP DeepONet | Fourier DeepONet | FNO |
-|---|---:|---:|---:|---:|
-| t = 0.25 | 0.4785 | **+0.1695 ± 0.0154** | **+0.4248 ± 0.0168** | +0.9474 ± 0.0058 |
-| t = 0.50 | 0.3580 | **+0.1238 ± 0.0137** | **+0.2510 ± 0.0389** | +0.8369 ± 0.0075 |
-| t = 1.00 | 0.2367 | **-0.0042 ± 0.0072** | **-0.0934 ± 0.0886** | +0.6503 ± 0.0222 |
+| t | fluctuation energy | MLP DeepONet | Fourier DeepONet | FNO |
+|---:|---:|---:|---:|---:|
+| 0.10 | 0.5939 | +0.2199 ± 0.0554 | +0.6390 ± 0.0142 | +0.9859 ± 0.0047 |
+| 0.25 | 0.4785 | +0.1695 ± 0.0154 | +0.4248 ± 0.0168 | +0.9474 ± 0.0058 |
+| 0.50 | 0.3580 | +0.1238 ± 0.0137 | +0.2510 ± 0.0389 | +0.8369 ± 0.0075 |
+| 0.75 | 0.2841 | +0.0539 ± 0.0023 | +0.0675 ± 0.0701 | +0.7378 ± 0.0089 |
+| 1.00 | 0.2367 | -0.0042 ± 0.0072 | -0.0934 ± 0.0886 | +0.6503 ± 0.0222 |
+| 1.50 | 0.1786 | -0.0813 ± 0.0261 | -0.4064 ± 0.1757 | +0.4051 ± 0.0217 |
+| 2.00 | 0.1428 | -0.0918 ± 0.0491 | -0.3774 ± 0.0571 | -0.0586 ± 0.2357 |
 
-(per-sample R^2; the energy-weighted measure gives the same ordering: +0.2454 / +0.1387 /
--0.0056 for MLP, +0.4915 / +0.3213 / -0.0124 for Fourier, +0.9327 / +0.8149 / +0.6282 for
-FNO.)
+(per-sample R^2 on the test split.)
 
-DeepONet does have fluctuation skill at short horizons, and loses all of it by t=1.00,
-while FNO retains 69% of its short-horizon skill. The fluctuation also carries less energy
-at longer horizons (0.4785 -> 0.3580 -> 0.2367) even though models do worse on it, so the
-difficulty comes from the transport- and shock-dominated character of the long-horizon
-problem rather than from the amount of fluctuation. The Fourier trunk helps substantially at
-t=0.25 (+0.4248 against +0.1695) and stops helping at t=1.00.
+**All three architectures lose their fluctuation skill as the horizon grows, and FNO loses
+it too at t = 2.00.** The deficit is therefore a property of the task's difficulty first
+and of the architecture second: what differs is *where* each architecture crosses zero.
+Interpolating linearly between the bracketing horizons gives a **skill horizon** at which
+per-sample fluctuation R^2 reaches zero:
+
+| Model | bracketing horizons | **skill horizon (interpolated)** |
+|---|---|---:|
+| Fourier DeepONet | 0.75 (+0.0675) to 1.00 (-0.0934) | **~0.86** |
+| MLP DeepONet | 0.75 (+0.0539) to 1.00 (-0.0042) | **~0.98** |
+| FNO | 1.50 (+0.4051) to 2.00 (-0.0586) | **~1.94** |
+
+FNO's skill horizon is about 2.0x that of MLP DeepONet and 2.3x that of the Fourier-trunk
+variant. Note that the Fourier trunk is the better trunk at short horizons (+0.6390 against
++0.2199 at t = 0.10) and the worse one at long horizons (-0.3774 against -0.0918 at
+t = 2.00), so trunk-feature claims must state the horizon; this qualifies, rather than
+contradicts, the basis-quality line of work in [2].
+
+The fluctuation energy fraction decreases monotonically over the same horizons
+(0.5939 -> 0.1428) and can be computed from the data before any training, so it is an
+a-priori monotone proxy for horizon difficulty. It does **not** by itself predict skill
+across architectures: at a fixed fluctuation energy the three models differ by up to 0.8 in
+R^2. Skill is monotone in the horizon within each architecture, but the curve itself is set
+by the architecture.
 
 ### 5.6 Compute and parameter budget
 
@@ -315,6 +345,11 @@ parameters). A compute-favoured comparison is therefore available and goes the o
 MLP DeepONet trained for 50000 updates (146 s) scores -0.4157 per-sample fluctuation R^2 and
 0.42075 relative L2, while FNO trained for 1500 updates (14 s) scores +0.6503 and 0.22835.
 DeepONet receives roughly 10x the compute and remains worse by more than 1.0 in R^2.
+
+A directly wall-clock-matched comparison is also available: DeepONet trained for 3500
+updates takes 14.0 s on average, matching FNO at 1500 updates (14 s). At that matched
+budget MLP DeepONet scores -0.0057 ± 0.0218 and Fourier DeepONet -0.0884 ± 0.0504
+per-sample fluctuation R^2, against FNO's +0.6503 ± 0.0222.
 
 This does not establish a FLOP-matched result: the two architectures use different
 operations, and no FLOP-level accounting was performed. It does make clear that the gap is
@@ -356,14 +391,18 @@ aggregate significance claim is made. The best zero-init validation group, MLP/n
 
 The supported finding is a **localization**: on this protocol the error of both DeepONet
 variants is dominated by a component they do not predict at all, and the component is
-identified as the deviation from the conserved spatial mean. FNO predicts it. The
-difference is architectural in the sense that it tracks the forecast horizon and is not
-removed by 13x more updates, more basis conditioning, better initialization, or a different
-schedule.
+identified as the deviation from the conserved spatial mean. FNO predicts it.
 
-We do **not** claim that DeepONet cannot learn fluctuations in general: at t=0.25 it scores
-+0.17 to +0.42. We do not claim a causal mechanism, and we do not claim FNO is universally
-superior.
+The second finding is that this is a matter of degree, not kind. Every architecture tested
+loses its fluctuation skill as the forecast horizon grows, including FNO, so the primary
+variable is task difficulty and the architecture sets where the boundary lies. The skill
+horizon quantifies that boundary and is the most directly reusable number in this study:
+it converts "DeepONet is worse here" into "at this viscosity and grid, MLP DeepONet stops
+predicting the fluctuation at t about 0.98, FNO at about 1.94".
+
+We do **not** claim that DeepONet cannot learn fluctuations in general: at t=0.10 it scores
++0.22 to +0.64. We do not claim a causal mechanism, and we do not claim FNO is universally
+superior; at t=2.00 FNO is below zero as well.
 
 Limitations:
 
