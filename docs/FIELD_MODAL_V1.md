@@ -78,3 +78,23 @@ scripts/run_field_modal.py seal
 # commit selection lock
 scripts/run_field_modal.py confirm
 ```
+
+## Development, before new confirmation
+
+Source/protocol commitb2d554c. Reused33 historical neural checkpoints across three
+public tasks; only11 new Allen-Cahn fits (16500 updates). Independent audit replays
+field risks, modal gains, all joint gates, nested linear choices and final predictions.
+
+| Task | New retained modes (one-based) | Linear | Field rule | Matching energy | Old selected rule |
+|---|---|---:|---:|---:|---:|
+| Original Burgers | 1,2,4 | 0.373252 | 0.362597 | 0.364460 | 0.362262 |
+| Independent Burgers | 1,2 | 0.409382 | 0.402368 | 0.402368 | 0.402073 |
+| Advection | none | 0.019756125100 | 0.019756125100 | 0.019756125100 | 0.019756125100 |
+| Synthetic Allen-Cahn | 1–15 | 0.458885 | 0.359218 | 0.359218 | 0.359048 |
+
+Hard and field-shrunken masks give identical predictions in these four cases; tie
+selection picks field on the nonlinear tasks and none on Advection. New thresholds
+remove original Burgers mode3, Advection's irrelevant modes2/8 and Allen-Cahn mode16.
+Only original Burgers now differs from the matched-count energy mask. Every new rule
+is slightly worse than the old selected rule in nonlinear development means. This
+is disclosed before confirmation; no threshold or candidate rule is changed to repair it.

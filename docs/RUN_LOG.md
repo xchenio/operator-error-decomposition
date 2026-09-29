@@ -448,3 +448,12 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   fits planned. New500-ID confirmation lists/task exclude every consumed public split.
 - Before training/inspection: plan and source will be committed. No confirmation
   targets generated or opened at protocol creation. All previous records preserved.
+- Source commitb2d554c; development completed. Public models reused; Allen-Cahn11 fits,
+ 16500 updates. New masks: Burgers1/2/4 and1/2, Advection none, Allen-Cahn1–15.
+  Allen-Cahn linear0.458885→field0.359218, equal to same-k energy. Original Burgers
+  field0.362597 versus energy0.364460 but old rule0.362262. New rule is not tuned further.
+- Independent audit initially mixed float32 input means with float64 coefficient
+  replay, causing approximately1e-11 relative differences. Corrected audit conversion
+  by calling the existing coefficient helper; training/selection source unchanged.
+  All development predictions and field-risk/gate computations then replayed exactly
+  within original tolerances. Full regression42 tests passed before adding fresh-ID test.

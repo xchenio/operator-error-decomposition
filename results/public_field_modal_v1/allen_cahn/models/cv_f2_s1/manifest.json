@@ -1,0 +1,57 @@
+{
+  "identity": {
+    "config": {
+      "rank": 16,
+      "kind": "mlp",
+      "hidden": 32,
+      "layers": 1,
+      "seed": 1,
+      "objective": "normalized",
+      "mask": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "fixed_final": true,
+      "steps": 1500,
+      "batch_size": 32,
+      "lr": 0.001,
+      "lr_min": 1e-05,
+      "weight_decay": 0.0001,
+      "penalty": 1.0,
+      "eval_every": 100,
+      "checkpoint_every": 50,
+      "patience": 5,
+      "min_steps": 500,
+      "min_delta": 0.0001
+    },
+    "context": {
+      "plan": "b5267d613057fa99fa68204bae516ca3da0d712977cf94e9ed90bed2a99a2bc8",
+      "task": "allen_cahn",
+      "fold": 2
+    },
+    "environment": {
+      "python": "3.11.16",
+      "torch": "2.14.0+cu130",
+      "numpy": "2.4.6",
+      "device": "cuda",
+      "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+      "cuda": "13.0"
+    }
+  },
+  "status": "completed",
+  "git_commit": "b2d554ca9b4f94ed882ceb0c83aeef2c74806111"
+}

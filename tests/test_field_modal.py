@@ -1,10 +1,30 @@
 import unittest
+import json
+from pathlib import Path
 import numpy as np
 from scripts.run_field_modal import field_mask,compare
 from scripts.allen_cahn_data import initial,solve,reaction
 
 
 class FieldModalTest(unittest.TestCase):
+    def test_fresh_id_reservations(self):
+        root=Path(__file__).resolve().parents[1]
+        p=json.loads((root/'results/public_field_modal_v1/plan.json').read_text())
+        old=json.loads((root/'results/public_ridge_residual_v1/plan.json').read_text())
+        protocol=json.loads((root/'external_data/pdebench/fixed_t1_v1/protocol.json').read_text())
+        used={'burgers':set(old['confirmation_ids'])|set(range(128)),'advection':set()}
+        for ids in protocol['sample_ids'].values():used['burgers'].update(ids)
+        for task,s in p['parent']['tasks'].items():
+            family='burgers' if task.startswith('burgers') else 'advection'
+            used[family].update(s['train']+s['val']+s['reserved_confirmation'])
+        for task,s in p['tasks'].items():
+            ids=set(s['reserved']);self.assertEqual(len(ids),500)
+            if task=='allen_cahn':
+                self.assertFalse(ids&set(s['train']+s['val']+list(range(100000,100016))))
+            else:
+                family='burgers' if task.startswith('burgers') else 'advection'
+                self.assertFalse(ids&used[family]);used[family].update(ids)
+
     def test_projection_floor_matters(self):
         fold=dict(base_risk=[10.,.001],neural_risk=[9.,0.])
         mask,shares=field_mask([fold]*3,[100.]*3,[1.,1.],.001)
