@@ -1,0 +1,1135 @@
+{
+  "family": "public_stability_v1",
+  "splits": [
+    "val"
+  ],
+  "source_sha256": "e1c4b19976444db34978377f327bc90ee908cd80bdfdb319f137fad8b7c6ba16",
+  "git_commit": "fedc09900648ee38fb80d413d9b7f243236d3386",
+  "protocol_cache_sha256": "b7251f08c1b3bb379ffec0f19eee37e44a48dd7c48d9a89953b2d527afb5e777",
+  "tolerance": 2e-05,
+  "runs": [
+    {
+      "run": "deeponet_fourier_s0_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5709106329238726,
+          "relative_fro": 0.3127837368115471,
+          "rmse": 0.2090948902457334,
+          "fluctuation_r2": -1.0418925850897738,
+          "normalized_mean_error": 0.0010056394272253363,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5709106329238726,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s0_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5560911399557683,
+          "relative_fro": 0.30321797670855577,
+          "rmse": 0.20270021135596406,
+          "fluctuation_r2": -0.9188549152372036,
+          "normalized_mean_error": 0.0028711866284517763,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5560911399557683,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s0_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5878105843444533,
+          "relative_fro": 0.32483129384860476,
+          "rmse": 0.21714864215135302,
+          "fluctuation_r2": -1.2022188812488217,
+          "normalized_mean_error": 0.0007893364816780329,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5878105843444533,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s0_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5983088290421636,
+          "relative_fro": 0.3289672193500463,
+          "rmse": 0.21991349462611404,
+          "fluctuation_r2": -1.2586554610411982,
+          "normalized_mean_error": 0.000849094551527365,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5983088290421636,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5731409975175769,
+          "relative_fro": 0.315075788588789,
+          "rmse": 0.2106271192538186,
+          "fluctuation_r2": -1.071927825929086,
+          "normalized_mean_error": 0.0009006218454303177,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5731409975175769,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5613475372035039,
+          "relative_fro": 0.3054578235025643,
+          "rmse": 0.2041975415059732,
+          "fluctuation_r2": -0.9473122500866373,
+          "normalized_mean_error": 0.002876457321742875,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5613475372035039,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.6007603156365982,
+          "relative_fro": 0.331549825610656,
+          "rmse": 0.22163995834227423,
+          "fluctuation_r2": -1.2942582082404925,
+          "normalized_mean_error": 0.000835671967336481,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.6007603156365982,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5979611093336569,
+          "relative_fro": 0.32879759478979204,
+          "rmse": 0.21980010117039644,
+          "fluctuation_r2": -1.2563216800356263,
+          "normalized_mean_error": 0.0010713776554689535,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5979611093336569,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5494548639040105,
+          "relative_fro": 0.31044342827990773,
+          "rmse": 0.2075304017574489,
+          "fluctuation_r2": -1.0114416449981887,
+          "normalized_mean_error": 0.0013653252611902777,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5494548639040105,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5369966345516822,
+          "relative_fro": 0.29388226913585375,
+          "rmse": 0.19645932181938144,
+          "fluctuation_r2": -0.8025278926411339,
+          "normalized_mean_error": 0.002177788817176665,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5369966345516822,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5737388627462177,
+          "relative_fro": 0.32514399902463914,
+          "rmse": 0.2173576845239798,
+          "fluctuation_r2": -1.2064574137515587,
+          "normalized_mean_error": 0.0010123655403906282,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5737388627462177,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5725461242207827,
+          "relative_fro": 0.3151472756102276,
+          "rmse": 0.21067490809045722,
+          "fluctuation_r2": -1.072865905299817,
+          "normalized_mean_error": 0.0009633332434249337,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5725461242207827,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5694897291332434,
+          "relative_fro": 0.3071302510178455,
+          "rmse": 0.20531555375084376,
+          "fluctuation_r2": -0.9687490694196725,
+          "normalized_mean_error": 0.0006413747569467478,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5694897291332434,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5535737298013594,
+          "relative_fro": 0.29913694984496764,
+          "rmse": 0.19997205843845484,
+          "fluctuation_r2": -0.8675957105810561,
+          "normalized_mean_error": 0.0013750101036597712,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5535737298013594,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5963849883421208,
+          "relative_fro": 0.32430804223001913,
+          "rmse": 0.21679885018047118,
+          "fluctuation_r2": -1.1951321059660915,
+          "normalized_mean_error": 0.0005971600170658331,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5963849883421208,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.580096891261569,
+          "relative_fro": 0.3176358054252495,
+          "rmse": 0.21233848201488653,
+          "fluctuation_r2": -1.105728092300689,
+          "normalized_mean_error": 0.0012333589863083036,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.580096891261569,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5819860069088382,
+          "relative_fro": 0.3146306382227088,
+          "rmse": 0.2103295377110977,
+          "fluctuation_r2": -1.066075071114958,
+          "normalized_mean_error": 0.0010781705950273955,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5819860069088382,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5535882525372147,
+          "relative_fro": 0.3026222621380085,
+          "rmse": 0.20230197814212722,
+          "fluctuation_r2": -0.9112921487768455,
+          "normalized_mean_error": 0.003126097818929575,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5535882525372147,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.6085395260915146,
+          "relative_fro": 0.3306342112348974,
+          "rmse": 0.22102787317007744,
+          "fluctuation_r2": -1.2816016059165642,
+          "normalized_mean_error": 0.0010271327166677402,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.6085395260915146,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5888177159450527,
+          "relative_fro": 0.32627449029616645,
+          "rmse": 0.21811341418803895,
+          "fluctuation_r2": -1.2218235742445982,
+          "normalized_mean_error": 0.0012969493714278712,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5888177159450527,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4951502936223164,
+          "relative_fro": 0.2758699471124259,
+          "rmse": 0.184418144311394,
+          "fluctuation_r2": -0.5876708661098151,
+          "normalized_mean_error": 0.01091013026593854,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4951502936223164,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.43647446370442045,
+          "relative_fro": 0.25631210694596285,
+          "rmse": 0.17134379305279876,
+          "fluctuation_r2": -0.3711264215521761,
+          "normalized_mean_error": 0.0015731040769980608,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.43647446370442045,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4549898895930891,
+          "relative_fro": 0.27201013940541524,
+          "rmse": 0.18183787566605428,
+          "fluctuation_r2": -0.5442301976702684,
+          "normalized_mean_error": 0.0011646185244262666,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4549898895930891,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.45204132731687513,
+          "relative_fro": 0.2636084254945853,
+          "rmse": 0.17622135779345308,
+          "fluctuation_r2": -0.45031495516620645,
+          "normalized_mean_error": 0.0008557603858514976,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.45204132731687513,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5490282542628876,
+          "relative_fro": 0.30602340662018024,
+          "rmse": 0.2045756319435013,
+          "fluctuation_r2": -0.9506653331510093,
+          "normalized_mean_error": 0.02454043830257161,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5490282542628876,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.44781484053360743,
+          "relative_fro": 0.2553578299877942,
+          "rmse": 0.17070586207254276,
+          "fluctuation_r2": -0.360906700578405,
+          "normalized_mean_error": 0.0027197121719324015,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.44781484053360743,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4831156590453324,
+          "relative_fro": 0.2788855201550532,
+          "rmse": 0.18643404488475424,
+          "fluctuation_r2": -0.6232756160092958,
+          "normalized_mean_error": 0.0012343054542259656,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4831156590453324,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.46011796825176815,
+          "relative_fro": 0.26575685220128753,
+          "rmse": 0.17765757391842876,
+          "fluctuation_r2": -0.47405396279873835,
+          "normalized_mean_error": 0.0006970610732907782,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.46011796825176815,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.492758109054015,
+          "relative_fro": 0.2856131784565309,
+          "rmse": 0.19093146213700038,
+          "fluctuation_r2": -0.7023148634168708,
+          "normalized_mean_error": 0.0053427573650020955,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.492758109054015,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4460672948684609,
+          "relative_fro": 0.2543422319970137,
+          "rmse": 0.1700269381854483,
+          "fluctuation_r2": -0.35012749757477946,
+          "normalized_mean_error": 0.001927051879242954,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4460672948684609,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4685688678591597,
+          "relative_fro": 0.2753044422527933,
+          "rmse": 0.18404010618906816,
+          "fluctuation_r2": -0.5818623830594909,
+          "normalized_mean_error": 0.0010661608839920218,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4685688678591597,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4529175294555348,
+          "relative_fro": 0.26060392761007445,
+          "rmse": 0.17421286092654648,
+          "fluctuation_r2": -0.41744682889531837,
+          "normalized_mean_error": 0.0005851129195745138,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4529175294555348,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5040454995906775,
+          "relative_fro": 0.2865045300525215,
+          "rmse": 0.19152732772142594,
+          "fluctuation_r2": -0.713026831486063,
+          "normalized_mean_error": 0.004625934890127814,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5040454995906775,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.46214797286810105,
+          "relative_fro": 0.26335225875169677,
+          "rmse": 0.17605011117579036,
+          "fluctuation_r2": -0.44732487549111544,
+          "normalized_mean_error": 0.005363748002900343,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.46214797286810105,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.47994161185679585,
+          "relative_fro": 0.2807996423772789,
+          "rmse": 0.18771362923927692,
+          "fluctuation_r2": -0.6456414756472235,
+          "normalized_mean_error": 0.0012171344821703394,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.47994161185679585,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.46788467122421673,
+          "relative_fro": 0.26753078216320664,
+          "rmse": 0.17884344021209286,
+          "fluctuation_r2": -0.49379769067351664,
+          "normalized_mean_error": 0.0007494793936536307,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.46788467122421673,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_constant_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5012976454028198,
+          "relative_fro": 0.2851346067085693,
+          "rmse": 0.19061153851138354,
+          "fluctuation_r2": -0.6965786665452058,
+          "normalized_mean_error": 0.006082369218216399,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5012976454028198,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_constant_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "constant",
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.44035424818559143,
+          "relative_fro": 0.25478266504718744,
+          "rmse": 0.1703213662181377,
+          "fluctuation_r2": -0.35399726724938474,
+          "normalized_mean_error": 0.011190581083611624,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.44035424818559143,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_cosine_b128",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 128,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.48224341439040314,
+          "relative_fro": 0.2821435860510332,
+          "rmse": 0.18861205112599225,
+          "fluctuation_r2": -0.6614250678980109,
+          "normalized_mean_error": 0.0014854470403947596,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.48224341439040314,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_cosine_b32",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "batch_size": 32,
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "min_lr": 1e-05,
+        "n_train": 128,
+        "schedule": "cosine",
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4524563100045198,
+          "relative_fro": 0.2643583173198677,
+          "rmse": 0.17672265799052206,
+          "fluctuation_r2": -0.45857985601623397,
+          "normalized_mean_error": 0.000797473225826937,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4524563100045198,
+          "metric_abs_difference": 0.0
+        }
+      }
+    }
+  ],
+  "max_abs_metric_difference": 0.0,
+  "faithfulness_failures": [],
+  "splits_note": "recomputed from stored checkpoints; train split omitted for branch families that subsample training rows"
+}

@@ -9,6 +9,16 @@
 > restate an earlier effect. The modal-shrinkage line is CLOSED under its own predeclared
 > rule; 2000 targets consumed, no retuning and no sixth variant. See UNCERTAINTY_MODAL_V1.md.
 >
+> Latest2026-09-29 E1 completed: 175 stored runs across five public families were
+> recomputed into results/fluctuation_v1 by scripts/diagnose_fluctuation.py; every
+> recomputed mean_relative_l2 reproduces its stored value exactly (max difference
+> 0.00e+00). **Every DeepONet arm has fluctuation R^2 <= 0** (best -0.0009+-0.0377 at
+> MLP/n=1000/cosine, i.e. indistinguishable from the zero-fluctuation reference), while
+> FNO is +0.6282+-0.0167 on identical data and budget. Training the branch harder moves
+> R^2 from ~0 to negative (down to -1.24 and -15.3), never positive. Whitening and mean
+> lifting do not change this. E0 (step-budget ladder) is still required before any
+> architectural claim. See docs/FLUCTUATION_DIAGNOSIS_V1.md section E1.
+>
 > Latest2026-09-29 mean/fluctuation decomposition (new): on the public fixed-t1 protocol the
 > target spatial mean is exactly the input spatial mean (Burgers conservation; corr 1.000000,
 > mean |dy-dx| 3.18e-05), so the "input-mean baseline" is a conservation-law predictor, and

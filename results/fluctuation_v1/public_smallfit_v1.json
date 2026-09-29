@@ -1,0 +1,1515 @@
+{
+  "family": "public_smallfit_v1",
+  "splits": [
+    "val"
+  ],
+  "source_sha256": "e1c4b19976444db34978377f327bc90ee908cd80bdfdb319f137fad8b7c6ba16",
+  "git_commit": "fedc09900648ee38fb80d413d9b7f243236d3386",
+  "protocol_cache_sha256": "b7251f08c1b3bb379ffec0f19eee37e44a48dd7c48d9a89953b2d527afb5e777",
+  "tolerance": 2e-05,
+  "runs": [
+    {
+      "run": "deeponet_fourier_s0_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.42962409831040693,
+          "relative_fro": 0.2282954643503897,
+          "rmse": 0.152614760436551,
+          "fluctuation_r2": -0.08349303236389027,
+          "normalized_mean_error": 0.025365264152558492,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.42962409831040693,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s0_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.42730229887283555,
+          "relative_fro": 0.23823965875934058,
+          "rmse": 0.15926242140421376,
+          "fluctuation_r2": -0.18453758826091504,
+          "normalized_mean_error": 0.003095427490899759,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.42730229887283555,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s0_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.905477861806353,
+          "relative_fro": 0.4653074188972693,
+          "rmse": 0.3110564656482428,
+          "fluctuation_r2": -3.477106996707789,
+          "normalized_mean_error": 0.07640416470715675,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.905477861806353,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s0_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5560911399557683,
+          "relative_fro": 0.30321797670855577,
+          "rmse": 0.20270021135596406,
+          "fluctuation_r2": -0.9188549152372036,
+          "normalized_mean_error": 0.0028711866284517763,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5560911399557683,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s0_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.8268458775810585,
+          "relative_fro": 0.9167860610930808,
+          "rmse": 0.6128684399552808,
+          "fluctuation_r2": -16.18762502036646,
+          "normalized_mean_error": 0.20623861486459977,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.8268458775810585,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s0_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5584286828931642,
+          "relative_fro": 0.3013167771845796,
+          "rmse": 0.20142926578234377,
+          "fluctuation_r2": -0.8945902129468772,
+          "normalized_mean_error": 0.00699995075461447,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5584286828931642,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4902210786828755,
+          "relative_fro": 0.26013569158468547,
+          "rmse": 0.17389984669717562,
+          "fluctuation_r2": -0.4093845743878086,
+          "normalized_mean_error": 0.02074042163203289,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4902210786828755,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4362569007656723,
+          "relative_fro": 0.2453795732058686,
+          "rmse": 0.164035430521565,
+          "fluctuation_r2": -0.25655270530975405,
+          "normalized_mean_error": 0.004602704469325888,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4362569007656723,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.8403465541799945,
+          "relative_fro": 0.4398885784957398,
+          "rmse": 0.294064055179236,
+          "fluctuation_r2": -3.0032859835518284,
+          "normalized_mean_error": 0.06750903688928289,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.8403465541799945,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5613475372035039,
+          "relative_fro": 0.3054578235025643,
+          "rmse": 0.2041975415059732,
+          "fluctuation_r2": -0.9473122500866373,
+          "normalized_mean_error": 0.002876457321742875,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5613475372035039,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.783517633493122,
+          "relative_fro": 0.9136258335977364,
+          "rmse": 0.6107558383602409,
+          "fluctuation_r2": -16.05220617932472,
+          "normalized_mean_error": 0.212662578880736,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.783517633493122,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s1_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5694640990518955,
+          "relative_fro": 0.3070933848700503,
+          "rmse": 0.20529090885336407,
+          "fluctuation_r2": -0.968029143125287,
+          "normalized_mean_error": 0.005003921130281921,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5694640990518955,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4275400759613474,
+          "relative_fro": 0.23514403799130681,
+          "rmse": 0.15719300919201676,
+          "fluctuation_r2": -0.1477563339905914,
+          "normalized_mean_error": 0.03236618844899855,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4275400759613474,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.43850144305698224,
+          "relative_fro": 0.2486642313956312,
+          "rmse": 0.16623121362296375,
+          "fluctuation_r2": -0.2904198131382314,
+          "normalized_mean_error": 0.003953856786667166,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.43850144305698224,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.8739843222171447,
+          "relative_fro": 0.4414798977967922,
+          "rmse": 0.29512784685201066,
+          "fluctuation_r2": -3.0214921770785237,
+          "normalized_mean_error": 0.07863060386027126,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.8739843222171447,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5369966345516822,
+          "relative_fro": 0.29388226913585375,
+          "rmse": 0.19645932181938144,
+          "fluctuation_r2": -0.8025278926411339,
+          "normalized_mean_error": 0.002177788817176665,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5369966345516822,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.805621055637563,
+          "relative_fro": 0.8964451021148542,
+          "rmse": 0.5992705763694006,
+          "fluctuation_r2": -15.294971578631362,
+          "normalized_mean_error": 0.2368248992413691,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.805621055637563,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s2_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5580751539033567,
+          "relative_fro": 0.2989387659948738,
+          "rmse": 0.1998395731922388,
+          "fluctuation_r2": -0.8649961888743112,
+          "normalized_mean_error": 0.0037049349559881394,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5580751539033567,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.43719658956110136,
+          "relative_fro": 0.23452948494943837,
+          "rmse": 0.1567821825226075,
+          "fluctuation_r2": -0.11979138079769514,
+          "normalized_mean_error": 0.06417554796337972,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.43719658956110136,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4313133274947458,
+          "relative_fro": 0.24524280487878006,
+          "rmse": 0.163944001348702,
+          "fluctuation_r2": -0.25515589187068577,
+          "normalized_mean_error": 0.004360327523740845,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4313133274947458,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.8684333772827215,
+          "relative_fro": 0.43934754250895336,
+          "rmse": 0.2937023744172203,
+          "fluctuation_r2": -2.9942648119349213,
+          "normalized_mean_error": 0.06187491287785605,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.8684333772827215,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5535737298013594,
+          "relative_fro": 0.29913694984496764,
+          "rmse": 0.19997205843845484,
+          "fluctuation_r2": -0.8675957105810561,
+          "normalized_mean_error": 0.0013750101036597712,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5535737298013594,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.8134556727273137,
+          "relative_fro": 0.8862738014345694,
+          "rmse": 0.592471095612887,
+          "fluctuation_r2": -14.998401087685735,
+          "normalized_mean_error": 0.23909969651464738,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.8134556727273137,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s3_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5530350591695914,
+          "relative_fro": 0.297444867553374,
+          "rmse": 0.19884090704083385,
+          "fluctuation_r2": -0.846378895149746,
+          "normalized_mean_error": 0.004164536257928874,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5530350591695914,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.44522013008371836,
+          "relative_fro": 0.24184728837695868,
+          "rmse": 0.16167410983351854,
+          "fluctuation_r2": -0.2161619459416968,
+          "normalized_mean_error": 0.02751457978758645,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.44522013008371836,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.42167544191097717,
+          "relative_fro": 0.24044150855478416,
+          "rmse": 0.16073435068675584,
+          "fluctuation_r2": -0.20651985097168502,
+          "normalized_mean_error": 0.003325550083759639,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.42167544191097717,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.9044621689934328,
+          "relative_fro": 0.45226090111496925,
+          "rmse": 0.3023349117989689,
+          "fluctuation_r2": -3.1982335740184737,
+          "normalized_mean_error": 0.08805116866241793,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.9044621689934328,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5535882525372147,
+          "relative_fro": 0.3026222621380085,
+          "rmse": 0.20230197814212722,
+          "fluctuation_r2": -0.9112921487768455,
+          "normalized_mean_error": 0.003126097818929575,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5535882525372147,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.7263807047106365,
+          "relative_fro": 0.8533325195673969,
+          "rmse": 0.5704499579834708,
+          "fluctuation_r2": -13.968388704175187,
+          "normalized_mean_error": 0.16992113945413234,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.7263807047106365,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_fourier_s4_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_fourier",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5657053542351919,
+          "relative_fro": 0.29971849434302,
+          "rmse": 0.20036081900584496,
+          "fluctuation_r2": -0.8745360553078028,
+          "normalized_mean_error": 0.0064819694035766,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5657053542351919,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.395644847773153,
+          "relative_fro": 0.22579307224951523,
+          "rmse": 0.15094191962002418,
+          "fluctuation_r2": 0.004393149156062037,
+          "normalized_mean_error": 0.08623469264498095,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.395644847773153,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.3911907436268509,
+          "relative_fro": 0.22338048323453244,
+          "rmse": 0.14932911186845038,
+          "fluctuation_r2": -0.04133135284281764,
+          "normalized_mean_error": 0.004303222851527651,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.3911907436268509,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5387972059671303,
+          "relative_fro": 0.304928846184647,
+          "rmse": 0.20384392192408607,
+          "fluctuation_r2": -0.7787681253846073,
+          "normalized_mean_error": 0.13207528414446557,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5387972059671303,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.43647446370442045,
+          "relative_fro": 0.25631210694596285,
+          "rmse": 0.17134379305279876,
+          "fluctuation_r2": -0.3711264215521761,
+          "normalized_mean_error": 0.0015731040769980608,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.43647446370442045,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.424382746619066,
+          "relative_fro": 0.7284343535071208,
+          "rmse": 0.4869559483828326,
+          "fluctuation_r2": -7.43293781837817,
+          "normalized_mean_error": 0.5040539255271378,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.424382746619066,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s0_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 0,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.47458189626147956,
+          "relative_fro": 0.265498410132608,
+          "rmse": 0.1774848062530243,
+          "fluctuation_r2": -0.46913498462593495,
+          "normalized_mean_error": 0.01592993331890478,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.47458189626147956,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4271385047161874,
+          "relative_fro": 0.24433601368966693,
+          "rmse": 0.16333781444750242,
+          "fluctuation_r2": -0.20751174885667556,
+          "normalized_mean_error": 0.06645020425834751,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4271385047161874,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.3937317836269957,
+          "relative_fro": 0.22391332150929746,
+          "rmse": 0.1496853124871796,
+          "fluctuation_r2": -0.04619194138269944,
+          "normalized_mean_error": 0.005642245776578354,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.3937317836269957,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5284166052969559,
+          "relative_fro": 0.29955558315666075,
+          "rmse": 0.20025191341830123,
+          "fluctuation_r2": -0.6803021902432602,
+          "normalized_mean_error": 0.14501994620268405,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5284166052969559,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.44781484053360743,
+          "relative_fro": 0.2553578299877942,
+          "rmse": 0.17070586207254276,
+          "fluctuation_r2": -0.360906700578405,
+          "normalized_mean_error": 0.0027197121719324015,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.44781484053360743,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.2534346526891276,
+          "relative_fro": 0.6375036892839626,
+          "rmse": 0.4261691010565332,
+          "fluctuation_r2": -5.001421092471635,
+          "normalized_mean_error": 0.590038648063026,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.2534346526891276,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s1_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 1,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5394346418605303,
+          "relative_fro": 0.28375424259964555,
+          "rmse": 0.1896887696846,
+          "fluctuation_r2": -0.6745808115711631,
+          "normalized_mean_error": 0.02911493464920289,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5394346418605303,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.42587372598393985,
+          "relative_fro": 0.24541227828647047,
+          "rmse": 0.16405729375943226,
+          "fluctuation_r2": -0.224240244545709,
+          "normalized_mean_error": 0.05910737908760765,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.42587372598393985,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.39050278562396734,
+          "relative_fro": 0.22472471558236787,
+          "rmse": 0.1502277267328311,
+          "fluctuation_r2": -0.05389608452609074,
+          "normalized_mean_error": 0.00435147955376923,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.39050278562396734,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.589375745161098,
+          "relative_fro": 0.33275233474178156,
+          "rmse": 0.22244383170652046,
+          "fluctuation_r2": -1.0285059689796183,
+          "normalized_mean_error": 0.17673004056542735,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.589375745161098,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4460672948684609,
+          "relative_fro": 0.2543422319970137,
+          "rmse": 0.1700269381854483,
+          "fluctuation_r2": -0.35012749757477946,
+          "normalized_mean_error": 0.001927051879242954,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4460672948684609,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.3605468935111316,
+          "relative_fro": 0.7262512006816417,
+          "rmse": 0.4854965179626755,
+          "fluctuation_r2": -7.626483882923466,
+          "normalized_mean_error": 0.5885388760241224,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.3605468935111316,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s2_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 2,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.47322229269676036,
+          "relative_fro": 0.2647173498967695,
+          "rmse": 0.17696267007691505,
+          "fluctuation_r2": -0.46024836927001855,
+          "normalized_mean_error": 0.01759900242564384,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.47322229269676036,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.42795793160523216,
+          "relative_fro": 0.24146993324585686,
+          "rmse": 0.16142184918043687,
+          "fluctuation_r2": -0.16850838147037295,
+          "normalized_mean_error": 0.07241565622607479,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.42795793160523216,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.3875823691421887,
+          "relative_fro": 0.22115417455159467,
+          "rmse": 0.14784083190077268,
+          "fluctuation_r2": -0.020748241275796886,
+          "normalized_mean_error": 0.0024102371610786066,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.3875823691421887,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5920169674846134,
+          "relative_fro": 0.31477199463493066,
+          "rmse": 0.21042403400364912,
+          "fluctuation_r2": -0.8261531221878955,
+          "normalized_mean_error": 0.17602764530975792,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5920169674846134,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.46214797286810105,
+          "relative_fro": 0.26335225875169677,
+          "rmse": 0.17605011117579036,
+          "fluctuation_r2": -0.44732487549111544,
+          "normalized_mean_error": 0.005363748002900343,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.46214797286810105,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.3785799472663405,
+          "relative_fro": 0.6990309565890465,
+          "rmse": 0.46729987510322746,
+          "fluctuation_r2": -6.877279579854472,
+          "normalized_mean_error": 0.5746351844047805,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.3785799472663405,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s3_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 3,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4774998830611952,
+          "relative_fro": 0.2638728756102382,
+          "rmse": 0.1763981418183247,
+          "fluctuation_r2": -0.4509058861051085,
+          "normalized_mean_error": 0.017165153563903815,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4774998830611952,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_n1000_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4552109291703813,
+          "relative_fro": 0.26130694869361226,
+          "rmse": 0.1746828281882758,
+          "fluctuation_r2": -0.23169912290646533,
+          "normalized_mean_error": 0.14387159412613953,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4552109291703813,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_n1000_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 1000,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.38606501116414926,
+          "relative_fro": 0.22301889180844717,
+          "rmse": 0.1490873891998685,
+          "fluctuation_r2": -0.037945672461526136,
+          "normalized_mean_error": 0.004729380036894833,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.38606501116414926,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_n128_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.5828477395053988,
+          "relative_fro": 0.3162001458153194,
+          "rmse": 0.2113787483291501,
+          "fluctuation_r2": -0.8172841490873319,
+          "normalized_mean_error": 0.18568129219687143,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.5828477395053988,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_n128_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 128,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.44035424818559143,
+          "relative_fro": 0.25478266504718744,
+          "rmse": 0.1703213662181377,
+          "fluctuation_r2": -0.35399726724938474,
+          "normalized_mean_error": 0.011190581083611624,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.44035424818559143,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_n32_z0",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": false
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 1.2532166755273595,
+          "relative_fro": 0.6570093142847983,
+          "rmse": 0.43920854665015596,
+          "fluctuation_r2": -5.410829639782781,
+          "normalized_mean_error": 0.5394231752952958,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 1.2532166755273595,
+          "metric_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "run": "deeponet_mlp_s4_n32_z1",
+      "configuration": {
+        "architecture": "deeponet_mlp",
+        "checkpoint_every": 50,
+        "eval_every": 250,
+        "lr": 0.001,
+        "n_train": 32,
+        "seed": 4,
+        "steps": 3000,
+        "zero_init": true
+      },
+      "splits": {
+        "val": {
+          "mean_relative_l2": 0.4553304189963567,
+          "relative_fro": 0.2603747649911542,
+          "rmse": 0.17405966647615717,
+          "fluctuation_r2": -0.4054447611352787,
+          "normalized_mean_error": 0.03864097550056032,
+          "fluctuation_energy_fraction": 0.21889058497275812,
+          "stored_mean_relative_l2": 0.4553304189963567,
+          "metric_abs_difference": 0.0
+        }
+      }
+    }
+  ],
+  "max_abs_metric_difference": 0.0,
+  "faithfulness_failures": [],
+  "splits_note": "recomputed from stored checkpoints; train split omitted for branch families that subsample training rows"
+}

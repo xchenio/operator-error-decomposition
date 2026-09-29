@@ -562,3 +562,25 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   fluctuation invariance, negative R^2 is reported rather than clipped, conservation of
   the stored public data, and an end-to-end reconstruction check that two runs reproduce
   their stored metrics. Full discovery: 53 tests passed.
+
+## 2026-09-29 — E1: R^2 recomputed over 175 stored runs
+
+- `python scripts/diagnose_fluctuation.py --device cuda` wrote
+  `results/fluctuation_v1/{reference,public_*_v1,summary}.json`. **Every recomputed
+  `mean_relative_l2` equals its stored `result.json` value exactly
+  (`max_abs_metric_difference = 0.00e+00` in all five families)**, so the R^2 numbers
+  come from a reconstruction that reproduces the original metrics bit for bit.
+- Conservation holds on all three splits: correlation 1.000000, |dmean| 2.8e-05 to
+  3.2e-05 against |mean| ~0.5.
+- Result: **all 175 runs, every DeepONet configuration has R^2 <= 0.** Range by family:
+  fixed_t1 -0.0056 (MLP) / -0.0124 (Fourier); coefficients -0.0340 to -0.1089;
+  stability -0.3767 to -1.2359; scale1000 -0.0009 to -0.2386; smallfit -0.0400 to
+  -15.3003. FNO is +0.6282 +- 0.0167 at the same 1500-update budget.
+- Best DeepONet anywhere: MLP / n=1000 / cosine, R^2 = -0.0009 +- 0.0377, relL2 0.37481
+  versus the oracle conservation-law predictor 0.37451 — statistically indistinguishable
+  from predicting the conserved mean alone.
+- Interpretive note recorded: training the branch harder moves R^2 from about zero to
+  negative rather than positive, so interventions that improve fitting worsen
+  fluctuation skill. This is the same dissociation the manuscript reports, now measured.
+- E0 (5k/20k/50k step ladder) is still required: E1 rediscribes completed runs and
+  cannot by itself exclude undertraining of the end-to-end model.
