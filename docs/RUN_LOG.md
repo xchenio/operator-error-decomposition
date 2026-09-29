@@ -541,3 +541,24 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   (parameter/compute matching) are recorded in FLUCTUATION_DIAGNOSIS_V1.md.
   No manuscript claim of an architectural bottleneck is written before E0 completes.
 - Full `python -B -m unittest discover -s tests`: 48 tests passed before this commit.
+
+## 2026-09-29 — reusable mean/fluctuation diagnostic script and tests
+
+- Added `scripts/diagnose_fluctuation.py`. It rebuilds predictions from stored
+  checkpoints for five families (`public_fixed_t1_v1` end-to-end;
+  `public_coefficients_v1`, `public_smallfit_v1`, `public_stability_v1`,
+  `public_scale1000_v1` frozen-trunk branch + stored basis) and reports
+  `mean_relative_l2`, `fluctuation_r2`, `normalized_mean_error` and
+  `fluctuation_energy_fraction`.
+- **Faithfulness is enforced, not assumed**: every recomputed `mean_relative_l2` is
+  compared with the value stored in that run's `result.json`; runs disagreeing beyond
+  `--tolerance` (default 2e-5) are listed in `faithfulness_failures` instead of being
+  silently averaged. This mirrors the project rule that a recomputation must reproduce
+  the original metric before it is treated as evidence.
+- Documented definitional property: `R^2` is invariant to the mean, so both the
+  exact-mean predictor and the all-zero predictor score 0. It therefore measures
+  fluctuation skill only and must never be read as total accuracy.
+- Added `tests/test_fluctuation_diagnosis.py` (5 tests): perfect prediction, zero-
+  fluctuation invariance, negative R^2 is reported rather than clipped, conservation of
+  the stored public data, and an end-to-end reconstruction check that two runs reproduce
+  their stored metrics. Full discovery: 53 tests passed.
