@@ -94,3 +94,47 @@ Old/new nonzero mode counts remain11/11,9/9,13/13,16/16: no modes are newly dele
 Matched global amplitude factors are0.891607,0.797415,0.404901,1.0. On Allen-Cahn the
 box-constrained coefficients stay all1, so every nonlinear arm is an exact duplicate.
 No uncertainty advantage can be inferred from those identical predictions.
+
+## Confirmation results — primary endpoint FAILED (2026-09-29)
+
+Selection lock `704d9a85431048700e1bbb3674a7ddccb0a0f2a75d8562b9a1061b68393d273e` was
+committed at `bfd52cd`, THEN the four reserved 500-ID sets were opened. Zero new neural
+fits; no candidate, penalty strength or rule was changed after confirmation.
+
+| Task | selected | linear (none) | all | old_shrink | **uncertainty** | matched_global |
+|---|---|---:|---:|---:|---:|---:|
+| Original Burgers | uncertainty | 0.426201 | 0.420848 | **0.419806** | 0.419982 | 0.419670 |
+| Independent Burgers | uncertainty | 0.398433 | 0.382781 | **0.382451** | 0.384878 | 0.384784 |
+| Advection | none | 0.0178842 | 0.0178841 | 0.0178841 | 0.0178841 | 0.0178841 |
+| Synthetic Allen-Cahn | uncertainty | 0.469687 | **0.369091** (all arms identical) | = | = | = |
+
+Per-task comparisons versus the three strong controls (old_shrink, all, matched_global):
+
+| Task | vs old_shrink | vs all | vs matched_global |
+|---|---|---|---|
+| Original Burgers | -0.042%, interval crosses 0, **fail** | +0.206%, interval crosses 0, **fail** | -0.075%, interval crosses 0, **fail** |
+| Independent Burgers | -0.635%, interval [0.001133, 0.003818] above 0, **fail** | -0.548%, interval crosses 0, **fail** | -0.024%, interval crosses 0, **fail** |
+| Advection | differences ~1e-7, **fail** | **fail** | **fail** |
+| Synthetic Allen-Cahn | exactly 0 (degenerate), **fail** | 0, **fail** | 0, **fail** |
+
+### Reading
+
+1. **0 of the 12 comparisons against strong controls pass.** The only two passing
+   comparisons in the 16-comparison family are "versus no correction" on the two Burgers
+   splits, which restates an effect already established in earlier rounds; they do not
+   support the new rule.
+2. **The new uncertainty penalty is worse than the old continuous shrinkage on both
+   Burgers splits** (0.419982 vs 0.419806; 0.384878 vs 0.382451). The development-ordering
+   observed before confirmation is reproduced on fresh targets rather than reversed.
+3. **Allen-Cahn is fully degenerate**: the box-constrained coefficients stay at 1, so all
+   five nonlinear arms emit identical predictions. No modal conclusion can be drawn there.
+4. **Advection differences are ~1e-7**, i.e. numerically meaningless; it correctly falls
+   back to none.
+5. Per the predeclared rule, failure against either strong baseline prohibits claiming a
+   superior shrinkage method. **This line is closed; the 2000 new targets are consumed.**
+
+### Closure
+
+No sixth shrinkage variant, no new hard threshold and no retuning on these targets. The
+masks, models and predictions are preserved for the record. Subsequent work moves to a
+different question rather than another arm of the same family.

@@ -1,5 +1,24 @@
 # Current conclusions
 
+> Latest2026-09-29 UNCERTAINTY_MODAL_V1 confirmation: the continuous uncertainty-penalized
+> shrinkage FAILED its primary endpoint on four sealed 500-ID sets. 0 of 12 comparisons
+> against strong controls (old continuous shrinkage / all-mode / matched-energy) pass; the
+> new rule is worse than old continuous shrinkage on both Burgers splits (0.419982 vs
+> 0.419806; 0.384878 vs 0.382451). Allen-Cahn is degenerate (all arms identical); Advection
+> differences are ~1e-7. The only two passing comparisons are versus no correction, which
+> restate an earlier effect. The modal-shrinkage line is CLOSED under its own predeclared
+> rule; 2000 targets consumed, no retuning and no sixth variant. See UNCERTAINTY_MODAL_V1.md.
+>
+> Latest2026-09-29 mean/fluctuation decomposition (new): on the public fixed-t1 protocol the
+> target spatial mean is exactly the input spatial mean (Burgers conservation; corr 1.000000,
+> mean |dy-dx| 3.18e-05), so the "input-mean baseline" is a conservation-law predictor, and
+> fluctuation carries only 24.4% of target energy. Recomputed from stored checkpoints:
+> fluctuation R^2 is -0.0056+-0.0084 (MLP DeepONet), -0.0124+-0.0319 (Fourier DeepONet) and
+> +0.6282+-0.0167 (FNO). DeepONet therefore has zero or negative fluctuation skill, not merely
+> a weak baseline. This reframes the dissociation as an architectural bottleneck in the
+> input-to-coefficient map. Step-budget sufficiency is NOT yet established (all public runs
+> use 1500 updates) and is the next required control. See docs/FLUCTUATION_DIAGNOSIS_V1.md.
+
 > Latest2026-09-29 FIELD_MODAL_V1: whole-field relevance (including projection error)
 > keeps original Burgers modes1/2/4, independent1/2, Advection none, synthetic Allen-Cahn
 > 1–15. Sourceb2d554c, selectionseal8a4020b BEFORE four new500-ID confirmation sets.

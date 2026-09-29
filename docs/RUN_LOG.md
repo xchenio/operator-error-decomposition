@@ -506,3 +506,38 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - No coefficient newly becomes zero. Added fresh-ID exclusion/preflight metadata test.
   Freeze these results and commit selection before new target extraction; no changes
   to penalty strength or candidate rule follow the unfavorable development comparison.
+
+## 2026-09-29 — uncertainty confirmation FAILED and the modal line is closed
+
+- Opened the four reserved 500-ID sets only after selection lock
+  `704d9a85431048700e1bbb3674a7ddccb0a0f2a75d8562b9a1061b68393d273e` was committed at
+  `bfd52cd`. Zero new neural fits; no candidate, penalty strength or rule changed
+  afterwards. All four `confirmation.json` files were previously untracked and are now
+  committed in this entry.
+- Outcome: **0 of 12 comparisons against strong controls pass.** The new uncertainty
+  penalty is worse than old continuous shrinkage on both Burgers splits
+  (0.419982 vs 0.419806; 0.384878 vs 0.382451). Allen-Cahn is degenerate (all five
+  nonlinear arms emit identical predictions); Advection differences are ~1e-7.
+  The only two passing comparisons are versus no correction and restate earlier effects.
+- Under the predeclared rule this prohibits claiming a superior shrinkage method.
+  The modal-shrinkage line is closed; 2000 targets are consumed. No sixth variant and
+  no retuning on these targets. Recorded in UNCERTAINTY_MODAL_V1.md,
+  CURRENT_CONCLUSIONS.md and PUBLICATION_ASSESSMENT.md.
+
+## 2026-09-29 — mean/fluctuation decomposition of the public protocol (new direction)
+
+- Zero-training diagnostic on `external_data/pdebench/fixed_t1_v1`:
+  `corr(mean(x), mean(y)) = 1.000000`, `mean|bar(y)-bar(x)| = 3.18e-05` against
+  `mean|bar(y)| = 4.96e-01`, and `||Y_c||/||Y|| = 0.2442`. The "input spatial-mean
+  baseline" is therefore a conservation-law predictor, not a strawman.
+- Recomputed predictions from stored `checkpoints/latest.pt` in
+  `results/public_fixed_t1_v1` (1500 updates, 5 seeds, test split). Fluctuation R^2:
+  MLP DeepONet -0.0056 +- 0.0084, Fourier DeepONet -0.0124 +- 0.0319,
+  FNO +0.6282 +- 0.0167. The oracle-input-mean relL2 reproduces the manuscript value
+  0.37577 exactly, confirming the recomputation pipeline matches the manuscript.
+- **This is a redescription of existing runs, not fresh confirmation**, and the step
+  budget (1500 updates) is not controlled. Predeclared E0 (5k/20k/50k ladder),
+  E1 (R^2 back-calculation over all stored families), E2 (Nu ladder) and E3
+  (parameter/compute matching) are recorded in FLUCTUATION_DIAGNOSIS_V1.md.
+  No manuscript claim of an architectural bottleneck is written before E0 completes.
+- Full `python -B -m unittest discover -s tests`: 48 tests passed before this commit.
