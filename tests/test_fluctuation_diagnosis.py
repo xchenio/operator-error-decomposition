@@ -173,7 +173,11 @@ class ManuscriptTableTest(unittest.TestCase):
         label = {"deeponet_mlp": "MLP DeepONet", "deeponet_fourier": "Fourier DeepONet", "fno": "FNO"}
         paths = {1500: "results/fluctuation_v1/public_fixed_t1_v1.json",
                  5000: "results/fluctuation_steps_v1/public_steps5k_v1.json",
-                 20000: "results/fluctuation_steps_v1/public_steps20k_v1.json"}
+                 20000: "results/fluctuation_steps_v1/public_steps20k_v1.json",
+                 50000: "results/fluctuation_steps_v1/public_steps50k_v1.json"}
+        missing = [p for p in paths.values() if not (ROOT / p).exists()]
+        if missing:
+            self.skipTest(f"step ladder artifacts absent: {missing}")
         for budget, path in paths.items():
             for key, rows in self._groups(path).items():
                 rel, _ = self._stats(rows, "mean_relative_l2")

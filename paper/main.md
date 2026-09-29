@@ -33,9 +33,10 @@ DeepONet -0.0934 +- 0.0886 in per-sample fluctuation R^2, while FNO scores +0.65
 0.0222 on identical data, split and update budget. Across 175 reconstructed runs spanning
 trunk architecture, whitening, mean lifting, zero initialization, learning-rate schedule,
 batch size and training-subset size, no DeepONet configuration scores above zero. Raising
-the budget from 1500 to 20000 updates does not help: per-sample fluctuation R^2 moves
--0.0042 -> -0.0640 -> -0.2470 for MLP DeepONet and total relative L2 is unchanged
-(0.39357 / 0.39729 / 0.39311), whereas FNO stays at +0.65 to +0.68 and 0.222 to 0.228.
+the budget from 1500 to 50000 updates does not help: per-sample fluctuation R^2 moves
+-0.0042 -> -0.0640 -> -0.2470 -> -0.4157 for MLP DeepONet and total relative L2 never
+improves (0.39357 / 0.39729 / 0.39311 / 0.42075), whereas FNO stays at +0.65 to +0.68 and
+0.222 to 0.228.
 The deficit is horizon-dependent: DeepONet's per-sample fluctuation R^2 is +0.1695 at
 t=0.25 and +0.1238 at t=0.50, decaying to -0.0042 at t=1.00, while FNO falls only from
 +0.9474 to +0.6503. Parameter counts do not explain the gap (Fourier DeepONet 131,969
@@ -255,21 +256,25 @@ the component that causes it.
 | 20000 | MLP DeepONet | 0.39311 | +0.2126 ± 0.0557 | **-0.2470 ± 0.1304** |
 | 20000 | Fourier DeepONet | 0.47689 | -0.1623 ± 0.0609 | **-0.8037 ± 0.2393** |
 | 20000 | FNO | 0.22243 | +0.5538 ± 0.0139 | **+0.6660 ± 0.0170** |
+| 50000 | MLP DeepONet | 0.42075 | +0.1496 ± 0.0484 | **-0.4157 ± 0.1901** |
+| 50000 | Fourier DeepONet | 0.51959 | -0.2974 ± 0.0631 | **-1.1099 ± 0.2875** |
+| 50000 | FNO | 0.22190 | +0.5661 ± 0.0131 | **+0.6659 ± 0.0148** |
 
 Two readings, and the second is the one that matters:
 
-1. **Undertraining is not the explanation.** Total relative L2 is flat across a 13x budget
-   range: 0.39357 / 0.39729 / 0.39311 for MLP DeepONet and 0.22835 / 0.21619 / 0.22243 for
-   FNO. The ranking never changes.
+1. **Undertraining is not the explanation.** Across a 33x budget range the total relative
+   L2 of MLP DeepONet never improves (0.39357 / 0.39729 / 0.39311 / 0.42075) and FNO is
+   stable (0.22835 / 0.21619 / 0.22243 / 0.22190). The ranking never changes, and at the
+   largest budget DeepONet is worse, not better.
 2. **The energy-weighted measure would have produced a false positive.** At 20000 updates
    MLP DeepONet reads +0.2126 energy-weighted but -0.2470 per sample: improvement is
    concentrated in high-energy samples while typical samples get worse. Since the
    manuscript's metric is a per-sample mean, the per-sample measure decides the claim and
    the energy-weighted one is reported only alongside it.
 
-The normalized mean error also grows with budget for MLP DeepONet (0.081 -> 0.076 ->
-0.111) while staying at 0.024-0.034 for FNO, so extra updates trade conserved-mean accuracy
-for fluctuation fitting with no net gain.
+The normalized mean error also grows with budget for MLP DeepONet (0.081 -> 0.076 -> 0.111
+-> 0.138) while staying at 0.024-0.034 for FNO, so extra updates trade conserved-mean
+accuracy for fluctuation fitting with no net gain.
 
 ### 5.5 The deficit is horizon-dependent, not absolute
 
@@ -296,18 +301,20 @@ t=0.25 (+0.4248 against +0.1695) and stops helping at t=1.00.
 
 Recorded optimizer time (excluding evaluation and checkpointing) and parameter counts:
 
-| Model | parameters | ms per update | total s at 1500 | total s at 5000 | total s at 20000 |
-|---|---:|---:|---:|---:|---:|
-| MLP DeepONet | 115,713 | 3.97-4.25 | 6 | 20 | 85 |
-| Fourier DeepONet | 131,969 | 3.67-4.13 | 6 | 18 | 83 |
-| FNO | 136,481 | 9.02-9.32 | 14 | 46 | 180 |
+| Model | parameters | ms per update | 1500 | 5000 | 20000 | 50000 |
+|---|---:|---:|---:|---:|---:|---:|
+| MLP DeepONet | 115,713 | 2.93-4.25 | 6 | 20 | 85 | 146 |
+| Fourier DeepONet | 131,969 | 3.67-4.20 | 6 | 18 | 83 | 210 |
+| FNO | 136,481 | 9.02-9.32 | 14 | 46 | 180 | 454 |
+
+(wall-clock seconds of optimizer time, excluding evaluation and checkpointing)
 
 FNO costs about 2.2x more wall-clock per update, so an equal-update comparison gives FNO
 more compute, not less. Parameter counts are within 18% (Fourier DeepONet has 97% of FNO's
 parameters). A compute-favoured comparison is therefore available and goes the other way:
-MLP DeepONet trained for 20000 updates (85 s) scores -0.2470 per-sample fluctuation R^2 and
-0.39311 relative L2, while FNO trained for 1500 updates (14 s) scores +0.6503 and 0.22835.
-DeepONet receives roughly 6x the compute and remains worse by about 0.9 in R^2.
+MLP DeepONet trained for 50000 updates (146 s) scores -0.4157 per-sample fluctuation R^2 and
+0.42075 relative L2, while FNO trained for 1500 updates (14 s) scores +0.6503 and 0.22835.
+DeepONet receives roughly 10x the compute and remains worse by more than 1.0 in R^2.
 
 This does not establish a FLOP-matched result: the two architectures use different
 operations, and no FLOP-level accounting was performed. It does make clear that the gap is

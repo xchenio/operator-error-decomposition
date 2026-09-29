@@ -651,3 +651,23 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Fixed a separator bug: explicit family specs use `,` inside the split list, so
   `--families` items are now `;`-separated.
 - Full `python -B -m unittest discover -s tests`: 58 tests passed.
+
+## 2026-09-29 — E0 completed at 50000 updates; compute argument closed as far as wall-clock
+
+- `results/public_steps50k_v1` completed 15/15 through `scripts/run_steps_ladder.py`
+  (9 attempts; each crash is a transient `PermissionError` on `Path.replace` and every
+  attempt resumes from the last checkpoint).
+- 50000 updates: MLP DeepONet relL2 0.42075, per-sample R^2 **-0.4157 +- 0.1901**;
+  Fourier DeepONet 0.51959, **-1.1099 +- 0.2875**; FNO 0.22190, **+0.6659 +- 0.0148**.
+  All recomputations reproduce stored metrics exactly (max difference 0.0, no failures).
+- Across the full 1500 -> 50000 ladder MLP DeepONet's total relative L2 never improves
+  (0.39357 / 0.39729 / 0.39311 / 0.42075) and its per-sample fluctuation skill degrades
+  monotonically (-0.0042 / -0.0640 / -0.2470 / -0.4157); FNO is stable at +0.65 to +0.68.
+  Normalized mean error grows 0.081 -> 0.076 -> 0.111 -> 0.138 for MLP DeepONet versus
+  0.024-0.034 for FNO.
+- **Wall-clock:** FNO needs 9.02-9.32 ms per update against 2.93-4.25 ms for DeepONet, so
+  equal updates give FNO *more* compute. MLP DeepONet at 50000 updates (146 s) still loses
+  to FNO at 1500 updates (14 s) by more than 1.0 in R^2, i.e. it receives about 10x the
+  compute. FLOP-level matching is still not performed and remains a stated limitation.
+- Added a compute/parameter section to the manuscript and extended the manuscript-table
+  regression test to the 50000 budget. Full discovery: 60 tests passed.
