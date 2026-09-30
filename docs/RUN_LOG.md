@@ -756,3 +756,39 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Full instructions, dataset ids, sizes, MD5s and direct URLs are in
   [THIRD_PDE_DOWNLOAD_V1.md](THIRD_PDE_DOWNLOAD_V1.md).
 - Full discovery: 67 tests passed.
+
+## 2026-09-30 — user-supplied downloads: verified, and diffusion-sorption run
+
+- The user supplied all three files listed in THIRD_PDE_DOWNLOAD_V1.md by hand. **All three
+  match the published size and MD5** (`1D_diff-sorp_NA_NA.h5`, `2D_DarcyFlow_beta1.0_Train.hdf5`,
+  `1D_Burgers_Sols_Nu0.01.hdf5`). Moved into `external_data/pdebench/darus/` (gitignored) and
+  removed the 16 MB partial file.
+- **Layouts differ from Burgers.** Diffusion-sorption stores one HDF5 group per sample
+  (`0000`..`9999`, each with `data (101,1024,1)` and `grid/t`, `grid/x`), and Darcy stores
+  `nu (10000,128,128)` plus `tensor (10000,1,128,128)` with no time axis. Neither can be read
+  by `src.public_benchmark.prepare()`, which expects a single `tensor (10000,201,1024)` and
+  pins the Burgers digest.
+- **Data caveat found by checking, not assumed:** diffusion-sorption's stored `t=0` layer is
+  spatially constant for every sample (std below 4e-8, only the constant varies: 0.10976,
+  0.08340, 0.13929, 0.04581, 0.16468). It carries one degree of freedom, so "constant ->
+  field" would measure generation rather than transport. **Decision: input is layer 20
+  (t=100, spatial std 0.2390), all targets strictly later**, recorded in every protocol file.
+- **A preparation bug was caught by that check:** the input column was being taken from the
+  first requested horizon rather than the designated input layer, which silently made the
+  t=125 target an identity map (`||Y-X||/||X|| = 0.0000`, cos = 1.000000). Fixed, and the
+  script now rejects any target index that is not strictly after the input index.
+- Protocol and prediction committed **before** any run on this data
+  (`docs/THIRD_PDE_DIFFSORP_V1.md`): a-priori fluctuation energy 0.7333 down to 0.6506, far
+  above all thresholds, so positive skill predicted for every architecture at every horizon.
+- Result: **18/18 predictions confirmed**; all models +0.998 to +1.000. Applying the
+  thresholds unchanged to the six held-out settings gives **6/6 for each architecture**, so
+  the rule passes its first out-of-sample test.
+- **Stated weakness (predeclared, restated after):** 99% of the target fluctuation energy
+  lies in one spatial mode and every model saturates, so this confirms the rule where it is
+  easy and does not probe it where it is hard. No third-PDE setting lies near a threshold, so
+  the boundary is still untested out of sample. Not refitted.
+- The threshold machinery now fits on Burgers and advection **only** and reports fitting,
+  held-out and overall accuracy separately, enforced by a test.
+- Manuscript: section 5.6 split into 5.6.1 (advection) and 5.6.2 (diffusion-sorption),
+  section 5.8 updated to 20 settings with the out-of-sample result, abstract and limitations
+  updated to three PDEs. Full discovery: 70 tests passed.

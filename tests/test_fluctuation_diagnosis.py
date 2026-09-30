@@ -232,5 +232,26 @@ class ManuscriptTableTest(unittest.TestCase):
             self.assertIn(f"| {tag/100:.2f} | {energy:.4f} | " + " | ".join(cells) + " |", text)
 
 
+    def test_section_5_6_2_diffusion_sorption_table(self):
+        text = self.main.read_text(encoding="utf-8")
+        paths = {125: "results/fluctuation_diffsorp_v1/t025/diffsorp_in020_t025_v1.json",
+                 200: "results/fluctuation_diffsorp_v1/t040/diffsorp_in020_t040_v1.json",
+                 275: "results/fluctuation_diffsorp_v1/t055/diffsorp_in020_t055_v1.json",
+                 350: "results/fluctuation_diffsorp_v1/t070/diffsorp_in020_t070_v1.json",
+                 425: "results/fluctuation_diffsorp_v1/t085/diffsorp_in020_t085_v1.json",
+                 500: "results/fluctuation_diffsorp_v1/t100/diffsorp_in020_t100_v1.json"}
+        missing = [p for p in paths.values() if not (ROOT / p).exists()]
+        if missing:
+            self.skipTest(f"diff-sorp artifacts absent: {missing}")
+        for horizon, path in paths.items():
+            rows = self._groups(path)
+            energy, _ = self._stats(rows["deeponet_mlp"], "fluctuation_energy_fraction")
+            cells = []
+            for key in ("deeponet_mlp", "deeponet_fourier", "fno"):
+                p, ps = self._stats(rows[key], "fluctuation_r2_per_sample")
+                cells.append(f"{p:+.4f} ± {ps:.4f}")
+            self.assertIn(f"| {horizon} | {energy:.4f} | " + " | ".join(cells) + " |", text)
+
+
 if __name__ == "__main__":
     unittest.main()

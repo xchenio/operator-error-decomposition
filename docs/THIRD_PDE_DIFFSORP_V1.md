@@ -83,6 +83,41 @@ python scripts/diagnose_fluctuation.py \
     --out results/fluctuation_diffsorp_v1/t025 --device cuda
 ```
 
-## 7. Result
+## 7. Result (measured after the protocol was committed)
 
-Filled in after the runs; see also `docs/RUN_LOG.md`.
+Per-sample fluctuation R^2 on the test split, 5 seeds, 1500 updates:
+
+| t | fluctuation energy | MLP DeepONet | Fourier DeepONet | FNO |
+|---:|---:|---:|---:|---:|
+| 125 | 0.7333 | +0.9983 ± 0.0014 | +0.9998 ± 0.0003 | +1.0000 ± 0.0000 |
+| 200 | 0.7173 | +0.9990 ± 0.0010 | +1.0000 ± 0.0000 | +1.0000 ± 0.0000 |
+| 275 | 0.7004 | +0.9988 ± 0.0012 | +1.0000 ± 0.0000 | +1.0000 ± 0.0000 |
+| 350 | 0.6834 | +0.9997 ± 0.0002 | +0.9999 ± 0.0001 | +1.0000 ± 0.0000 |
+| 425 | 0.6667 | +0.9998 ± 0.0001 | +0.9999 ± 0.0001 | +1.0000 ± 0.0000 |
+| 500 | 0.6506 | +0.9999 ± 0.0001 | +0.9999 ± 0.0001 | +1.0000 ± 0.0000 |
+
+All recomputations reproduce their stored metrics exactly (`max_abs_metric_difference =
+0.0`). Conservation holds (corr 0.999996); the oracle input-mean predictor gives 0.74001 at
+t = 125, so unlike Burgers the mean-only predictor is far from competitive here.
+
+**The prediction is confirmed: 18 of 18 settings (6 horizons x 3 architectures) are
+positive, as predicted.** Applying the thresholds unchanged to these six held-out settings
+gives 6/6 for every architecture, so the rule passes its first out-of-sample test.
+
+Two readings, both recorded as stated in advance:
+
+1. **The confirmation is weak.** As predeclared, 99% of the target fluctuation energy lies
+   in a single mode, and every model scores essentially 1.000. This regime does not
+   discriminate between architectures.
+2. **It does discriminate between mechanisms, and that is the useful part.** The fluctuation
+   energy here *does* decay with horizon (0.7333 to 0.6506) yet no skill decay appears,
+   because the energy never approaches any architecture's threshold. Combined with Burgers,
+   where the same decay continues past the thresholds and the skill collapses, the evidence
+   supports the threshold form of the rule rather than "longer forecast is harder".
+
+### Remaining gap
+
+No third-PDE setting sits near a threshold, so the rule's *boundary* is still untested
+out of sample. A diffusion-dominated problem whose fluctuation energy falls below 0.15
+would be the decisive test; none of the downloaded files provides one at the horizons
+available. This is stated rather than manufactured by refitting.

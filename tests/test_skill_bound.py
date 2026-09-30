@@ -60,17 +60,41 @@ class ReportTest(unittest.TestCase):
         if not path.exists():
             self.skipTest("predictor report absent")
         report = json.loads(path.read_text(encoding="utf-8"))
-        self.assertEqual(len(report["rows"]), 14)
-        self.assertEqual({r["pde"] for r in report["rows"]}, {"burgers", "advection"})
+        self.assertEqual(len(report["rows"]), 20)
+        self.assertEqual({r["pde"] for r in report["rows"]},
+                         {"burgers", "advection", "diffsorp"})
         for row in report["rows"]:
             self.assertIn(row["pde"] + "_" + row["time_tag"],
                           {"burgers_010", "burgers_025", "burgers_050", "burgers_075",
                            "burgers_100", "burgers_150", "burgers_200", "advection_010",
                            "advection_025", "advection_050", "advection_075",
-                           "advection_100", "advection_150", "advection_200"})
-            # advection is pure transport: fluctuation energy must be horizon-independent
-            if row["pde"] == "advection":
-                self.assertAlmostEqual(row["fluctuation_energy_fraction"], 0.6485, places=3)
+                           "advection_100", "advection_150", "advection_200",
+                           "diffsorp_025", "diffsorp_040", "diffsorp_055",
+                           "diffsorp_070", "diffsorp_085", "diffsorp_100"})
+
+    def test_thresholds_are_fitted_without_the_held_out_pde(self):
+        """The out-of-sample claim only holds if the third PDE never entered the fit."""
+        path = ROOT / "results/skill_prediction_v1/report.json"
+        if not path.exists():
+            self.skipTest("predictor report absent")
+        report = json.loads(path.read_text(encoding="utf-8"))
+        info = report["critical_fluctuation_energy"]
+        self.assertEqual(info["fitted_on"], ["advection", "burgers"])
+        self.assertEqual(info["held_out"], ["diffsorp"])
+        for arch in ("deeponet_mlp", "deeponet_fourier", "fno"):
+            self.assertEqual(info[arch + "_rule_held_out"], "6/6")
+
+    def test_advection_fluctuation_energy_is_horizon_independent(self):
+        """Pure transport must leave the fluctuation energy unchanged; this is the check that
+        the advection preparation extracted a translation and not something else."""
+        path = ROOT / "results/skill_prediction_v1/report.json"
+        if not path.exists():
+            self.skipTest("predictor report absent")
+        rows = [r for r in json.loads(path.read_text(encoding="utf-8"))["rows"]
+                if r["pde"] == "advection"]
+        self.assertEqual(len(rows), 7)
+        for row in rows:
+            self.assertAlmostEqual(row["fluctuation_energy_fraction"], 0.6485, places=3)
 
 
 if __name__ == "__main__":

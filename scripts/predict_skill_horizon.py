@@ -51,10 +51,13 @@ BURGERS = [("burgers", t, f"external_data/pdebench/{BURGERS_DATA[t]}",
 ADVECTION = [("advection", t, f"external_data/pdebench/advection/fixed_t{t}_v1",
               f"results/fluctuation_advection_v1/t{t}/advection_horizon_t{t}_v1.json")
              for t in ("010", "025", "050", "075", "100", "150", "200")]
+# input layer 20 because the stored initial state is spatially constant (see
+# docs/THIRD_PDE_DIFFSORP_V1.md); target times are 125..500, read from protocol.json
+DIFFSORP = [("diffsorp", t, f"external_data/pdebench/diffsorp/in020_t{t}_v1",
+             f"results/fluctuation_diffsorp_v1/t{t}/diffsorp_in020_t{t}_v1.json")
+            for t in ("025", "040", "055", "070", "085", "100")]
 
-ALL = BURGERS + ADVECTION
-TARGET_TIME = {"010": 0.10, "025": 0.25, "050": 0.50, "075": 0.75,
-               "100": 1.00, "150": 1.50, "200": 2.00}
+ALL = BURGERS + ADVECTION + DIFFSORP
 MODES = 64  # fixed subspace dimension for the input/target overlap
 
 
@@ -149,7 +152,8 @@ def main() -> None:
         if not data_path.exists() or not diag_path.exists():
             print(f"[skip] missing {pde} t={tag}", flush=True)
             continue
-        row = dict(pde=pde, time_tag=tag, target_time=TARGET_TIME[tag],
+        protocol = json.loads((data_path / "protocol.json").read_text(encoding="utf-8"))
+        row = dict(pde=pde, time_tag=tag, target_time=float(protocol["target_time"]),
                    **a_priori(data_path), **measured(diag_path))
         rows.append(row)
         print(f"{pde:9s} t={row['target_time']:.2f} "
@@ -178,9 +182,15 @@ def main() -> None:
     # Critical fluctuation-energy threshold per architecture: interpolate the value of
     # fluctuation_energy_fraction at which measured skill crosses zero. Purely descriptive;
     # with two PDEs it is a hypothesis to be tested on a third, not an established law.
-    report["critical_fluctuation_energy"] = {}
+    # Thresholds are interpolated from the ORIGINAL fitting set only. The third PDE is held
+    # out so that applying them to it is an out-of-sample test, not a refit.
+    FIT_PDES = ("burgers", "advection")
+    fitting = [r for r in rows if r["pde"] in FIT_PDES]
+    held_out = [r for r in rows if r["pde"] not in FIT_PDES]
+    report["critical_fluctuation_energy"] = dict(
+        fitted_on=sorted(FIT_PDES), held_out=sorted({r["pde"] for r in held_out}))
     for arch in ("deeponet_mlp", "deeponet_fourier", "fno"):
-        ordered = sorted(rows, key=lambda r: -r["fluctuation_energy_fraction"])
+        ordered = sorted(fitting, key=lambda r: -r["fluctuation_energy_fraction"])
         threshold = None
         for a, b in zip(ordered, ordered[1:]):
             if a[arch] > 0 >= b[arch]:
@@ -189,24 +199,31 @@ def main() -> None:
                                   + b["fluctuation_energy_fraction"] * w)
                 break
         report["critical_fluctuation_energy"][arch] = threshold
-        if threshold is not None:
-            # check the rule against every setting of both PDEs
-            verdicts = []
-            for r in rows:
-                predicted = r["fluctuation_energy_fraction"] >= threshold
-                actual = r[arch] > 0
-                verdicts.append(predicted == actual)
-            report["critical_fluctuation_energy"][arch + "_rule_accuracy"] = (
-                f"{sum(verdicts)}/{len(verdicts)}")
-            report["critical_fluctuation_energy"][arch + "_rule_failures"] = [
-                f"{r['pde']} t={r['target_time']:.2f}" for r, ok in zip(rows, verdicts) if not ok]
+        if threshold is None:
+            continue
+
+        def verdicts_for(subset):
+            return [(r["fluctuation_energy_fraction"] >= threshold) == (r[arch] > 0)
+                    for r in subset]
+
+        for label, subset in (("all", rows), ("fitting", fitting), ("held_out", held_out)):
+            v = verdicts_for(subset)
+            report["critical_fluctuation_energy"][f"{arch}_rule_{label}"] = (
+                f"{sum(v)}/{len(v)}" if v else "n/a")
+            bad = [f"{r['pde']} t={r['target_time']:.2f}"
+                   for r, ok in zip(subset, v) if not ok]
+            if bad:
+                report["critical_fluctuation_energy"][f"{arch}_rule_{label}_failures"] = bad
 
     (out_dir / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print("\nCritical fluctuation-energy threshold (interpolated zero crossing):")
+    print("\nCritical fluctuation-energy threshold, fitted on "
+          f"{report['critical_fluctuation_energy']['fitted_on']} only:")
     for arch in ("deeponet_mlp", "deeponet_fourier", "fno"):
         info = report["critical_fluctuation_energy"]
-        print(f"  {arch}: {info[arch]}  rule accuracy {info.get(arch + '_rule_accuracy')} "
-              f"failures={info.get(arch + '_rule_failures')}")
+        print(f"  {arch}: {info[arch]}  all={info.get(arch + '_rule_all')} "
+              f"fitting={info.get(arch + '_rule_fitting')} "
+              f"held_out={info.get(arch + '_rule_held_out')} "
+              f"failures={info.get(arch + '_rule_all_failures', [])}")
     print("\nSpearman correlation of a-priori statistic with measured per-sample R^2 "
           "(pooled over both PDEs, n=%d):" % len(rows))
     for arch in ("deeponet_mlp", "deeponet_fourier", "fno"):

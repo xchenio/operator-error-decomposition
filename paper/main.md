@@ -49,7 +49,11 @@ not either (DeepONet at 3500 updates, 14 s, scores -0.0057 against FNO's +0.6503
 On linear advection, the same seven horizons show constant fluctuation energy (0.6446) and
 **no** skill decay for any architecture (MLP +0.20 to +0.25, Fourier +0.93 to +0.95, FNO
 +0.9994), so the decay tracks nonlinear spectral evolution rather than elapsed forecast
-time.
+time. On diffusion-sorption, whose fluctuation energy decays from 0.7333 to 0.6506 without
+approaching any threshold, no architecture decays either (all +0.998 to +1.000), supporting
+the threshold form of the rule over "a longer forecast is harder". A fluctuation-energy
+threshold fitted on the first two PDEs predicts the sign of skill on the third: 6 of 6
+held-out settings for each architecture, with the thresholds unchanged.
 
 An exact bound depending only on the trunk span (section 3.3) shows the constraint is the
 branch, not the basis: the Fourier trunk's bound is +0.96 to +1.00 on both PDEs at every
@@ -216,6 +220,12 @@ uses fixed random Fourier input features. The FNO reference has four blocks, wid
 | public_horizon_t150_v1 | 15 | Target time 1.50, 1500 updates | Train/validation/test |
 | public_horizon_t200_v1 | 15 | Target time 2.00, 1500 updates | Train/validation/test |
 | public_wcmatch3500_v1 | 10 | DeepONet only, 3500 updates (wall-clock matched to FNO at 1500) | Train/validation/test |
+| diffsorp_in020_t*_v1 | 90 | Diffusion-sorption, input layer 20, six targets t=125..500 | Train/validation/test |
+
+The diffusion-sorption input is layer 20 rather than layer 0 because the stored initial
+state is spatially constant for every sample; see section 5.6.2 and
+[THIRD_PDE_DIFFSORP_V1.md](../docs/THIRD_PDE_DIFFSORP_V1.md). Its protocol and prediction
+were committed before any run on that data.
 
 Horizon variants are prepared by calling `src.public_benchmark.prepare` with
 `time_index` 25 and 50 and the **same split seed and sizes**, so the trajectories are
@@ -357,7 +367,15 @@ across architectures: at a fixed fluctuation energy the three models differ by u
 R^2. Skill is monotone in the horizon within each architecture, but the curve itself is set
 by the architecture.
 
-### 5.6 A second PDE: the decay tracks nonlinearity, not elapsed time
+### 5.6 Two more PDEs: the decay is not a cost of elapsed time
+
+Two controls were run at the same 1500-update budget, seeds, architectures and split. Both
+use `scripts/prepare_*_horizons.py`, which reuse the extraction and splitting helpers
+unchanged rather than editing `prepare()`, because that function pins the Burgers digest and
+would change `source_hash()` in every run identity. The layouts are identical, so training
+and diagnostics run unmodified, and all recomputations reproduce stored metrics exactly.
+
+### 5.6.1 Linear advection
 
 The Burgers result could be a generic consequence of forecasting further into the future
 rather than a consequence of nonlinear evolution. To separate these, the same seven
@@ -393,10 +411,36 @@ being a phase shift in a Fourier basis; on Burgers that advantage is present at 
 well matched to the *linear* part of the operator is not automatically well matched once
 nonlinear steepening dominates.
 
-The advection caches are prepared by `scripts/prepare_advection_horizons.py`, which reuses
-the existing extraction and splitting helpers unchanged and records the advection file's own
-hash, because `prepare()` pins the Burgers digest. The layout is identical, so training and
-diagnostics run unmodified; all recomputations reproduce stored metrics exactly.
+### 5.6.2 A third class: diffusion-dominated, dissipative
+
+PDEBench 1D diffusion-sorption (`t` in [0, 500], 101 layers) is parabolic and dissipative
+with no shocks and no translation. **Its stored `t = 0` state is spatially constant for
+every sample** (spatial standard deviation below 4e-8; only the constant value varies), so
+it carries one degree of freedom and would make the task "generate a field from a scalar".
+The input is therefore layer 20 (`t = 100`, spatial standard deviation 0.2390) and all six
+targets are strictly later. This caveat is recorded in every protocol file; it was found by
+checking the data, and an earlier preparation bug that silently made one horizon an identity
+map was caught by the same check.
+
+| t | fluctuation energy | MLP DeepONet | Fourier DeepONet | FNO |
+|---:|---:|---:|---:|---:|
+| 125 | 0.7333 | +0.9983 ± 0.0014 | +0.9998 ± 0.0003 | +1.0000 ± 0.0000 |
+| 200 | 0.7173 | +0.9990 ± 0.0010 | +1.0000 ± 0.0000 | +1.0000 ± 0.0000 |
+| 275 | 0.7004 | +0.9988 ± 0.0012 | +1.0000 ± 0.0000 | +1.0000 ± 0.0000 |
+| 350 | 0.6834 | +0.9997 ± 0.0002 | +0.9999 ± 0.0001 | +1.0000 ± 0.0000 |
+| 425 | 0.6667 | +0.9998 ± 0.0001 | +0.9999 ± 0.0001 | +1.0000 ± 0.0000 |
+| 500 | 0.6506 | +0.9999 ± 0.0001 | +0.9999 ± 0.0001 | +1.0000 ± 0.0000 |
+
+No architecture shows any skill decay. The fluctuation energy *does* decay here (0.7333 to
+0.6506), just as it does on Burgers, yet no zero crossing occurs, because the energy never
+approaches any architecture's threshold. That asymmetry is the strongest evidence for the
+threshold form of the rule in section 5.8 as opposed to "a longer forecast is harder".
+
+**Stated weakness:** 99% of the target fluctuation energy lies in a single spatial mode at
+every horizon, so all three models score essentially 1.000 and the setting does not
+discriminate between architectures. A confirmation here is weak support; a falsification
+would have been strong evidence. No setting on this PDE lies near a threshold, so the rule's
+boundary remains untested out of sample.
 
 ### 5.7 The binding constraint is the branch, not the trunk
 
@@ -441,33 +485,40 @@ horizon, the map onto it does.
 
 The skill horizon is measured after training. A diagnostic method should predict it before.
 `scripts/predict_skill_horizon.py` computes five statistics from the **training split only**,
-with no model and no test targets, over all 14 settings (two PDEs x seven horizons), and
-correlates them with the measured skill.
+with no model and no test targets, over all 20 settings (Burgers 7, advection 7,
+diffusion-sorption 6), and correlates them with the measured skill.
 
 | Statistic | MLP | Fourier | FNO |
 |---|---:|---:|---:|
-| fluctuation energy fraction | **0.921** | 0.837 | 0.886 |
-| POD modes for 99% energy | -0.552 | -0.530 | -0.736 |
-| spectral effective rank | -0.108 | -0.393 | -0.314 |
-| spectral decay exponent | -0.613 | -0.604 | -0.644 |
-| input-to-target subspace distance | -0.459 | -0.556 | -0.714 |
+| fluctuation energy fraction | **0.922** | **0.916** | **0.922** |
+| POD modes for 99% energy | -0.812 | -0.824 | -0.857 |
+| spectral effective rank | -0.693 | -0.768 | -0.752 |
+| input-to-target subspace distance | -0.764 | -0.820 | -0.863 |
+| spectral decay exponent | -0.433 | -0.472 | -0.472 |
 
-(Spearman correlation with measured per-sample R^2, pooled over both PDEs, n = 14. Within
-Burgers alone the correlation of fluctuation energy with skill is 1.000 for MLP and FNO and
-0.964 for Fourier, n = 7.)
+(Spearman correlation with measured per-sample R^2, pooled over all three PDEs, n = 20.
+Within Burgers alone the correlation of fluctuation energy with skill is 1.000 for MLP and
+FNO and 0.964 for Fourier, n = 7.)
 
-Two honest qualifications matter more than the numbers:
+**The threshold rule now has one out-of-sample test, and it passes.** The thresholds are
+interpolated from Burgers and advection only — about 0.248 for MLP DeepONet, 0.273 for
+Fourier DeepONet and 0.150 for FNO — and then applied unchanged to the six held-out
+diffusion-sorption settings: 6/6 correct for each architecture (20/20 over all settings).
+
+Three qualifications still limit the claim:
 
 1. **The pooled correlations are inflated by clustering.** Within advection the fluctuation
-   energy is constant, so it carries no information there; the pooled value largely reflects
-   the separation of the two PDE clusters. The trustworthy statement is the within-Burgers
-   monotonicity, not the pooled coefficient.
-2. **A threshold rule fits these data but is not validated by them.** Interpolating the
-   fluctuation energy at which skill crosses zero gives about 0.248 for MLP DeepONet, 0.273
-   for Fourier DeepONet and 0.150 for FNO. Applying those thresholds reproduces the sign of
-   the skill in 14 of 14 settings — but the thresholds were interpolated from those same
-   settings, and the advection points sit far from the threshold and do not test it. The
-   rule is a falsifiable hypothesis for a third operator class, not an established predictor.
+   energy is constant and within diffusion-sorption all models saturate, so neither
+   contributes within-PDE ordering; the pooled values largely reflect the separation of
+   clusters. The trustworthy statement is the within-Burgers monotonicity.
+2. **The out-of-sample confirmation is weak.** As predeclared in
+   [THIRD_PDE_DIFFSORP_V1.md](../docs/THIRD_PDE_DIFFSORP_V1.md), every model scores
+   essentially 1.000 on diffusion-sorption, so those settings do not discriminate. They
+   confirm the rule where it is easy and do not probe it where it is hard.
+3. **The boundary is still untested out of sample.** No third-PDE setting lies near a
+   threshold. A dissipative problem whose fluctuation energy falls below 0.15 would be the
+   decisive test, and none of the available files provides one at the horizons stored. This
+   is reported rather than manufactured by refitting.
 
 One hypothesis was tested and failed: the input-to-target subspace distance was expected to
 grow with horizon where the fluctuation spectrum evolves. It does the opposite on Burgers
@@ -558,11 +609,15 @@ superior; at t=2.00 FNO is below zero as well.
 
 Limitations:
 
-- Two PDEs, one viscosity each, one split each. Advection is a linear transport problem
-  and Burgers a nonlinear one, so the pair isolates nonlinearity but does not sample the
-  space of operator classes; a third class (elliptic, or a system) is still missing, and
-  the cross-PDE gap identified in
+- Three PDEs, one parameter set each, one split each. Advection is linear transport,
+  Burgers nonlinear convection-diffusion and diffusion-sorption dissipative parabolic, so
+  the triple separates transport from dissipation from steepening, but all three are 1D
+  scalar evolution problems; a steady elliptic operator or a system of equations is still
+  missing, and the cross-PDE gap identified in
   [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is narrowed, not closed.
+  The diffusion-sorption contribution is additionally weak: its target fluctuation lies in
+  one spatial mode and every model saturates, and its stored initial state is spatially
+  constant, so it is used from layer 20 onward.
 - **Compute is not FLOP-matched.** Parameter counts are within 18% and FNO costs about
   2.2x more wall-clock per update, so the gap is not explained by DeepONet having less of
   either (section 5.6). No FLOP-level accounting or FLOP-matched control was run, and the
