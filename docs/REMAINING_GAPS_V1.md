@@ -1,82 +1,53 @@
-# Remaining gaps, and the two that were closed
+# Remaining gaps: status after the last round
 
-Date: 2026-10-08. Supersedes the earlier version of this file.
+Date: 2026-10-08.
 
-## Gap 1: the threshold boundary on a steady operator — CLOSED AS UNTESTABLE
-
-Both additional Darcy `beta` files were fetched and prepared. The a-priori statistics, taken
-before any run, refuted the hypothesis: across a 1000-fold change in `beta` the target
-fluctuation energy only moves between 0.492 and 0.564, always far above every threshold, and
-the smoothest setting has the *highest* fluctuation energy.
-
-`beta = 10.0` was run and confirmed the prediction (3 of 3). `beta = 0.01` failed outright and
-was **excluded** for two measured reasons: its validation curves are non-monotone, and its
-target norms have a coefficient of variation of 2.43 with a 343-fold spread, against at most
-0.66 and 100-fold in every reported family, which makes the per-sample metric uninterpretable
-there. Full detail and the scope condition this established are in
-`DARCY_BETA_LADDER_V1.md`.
-
-**Conclusion: no Darcy setting in this deposit approaches a threshold, so the boundary on a
-steady operator is untestable with the available data.** This is reported as a data limitation.
-It was not worked around by refitting the thresholds or by redefining the metric.
-
-## Gap 2: a system of equations — CLOSED, AND THE RULE FAILED
-
-`1D_CFD_Rand_Eta0.01_Zeta0.01_periodic_Train.hdf5` (12.4 GB, three coupled fields) was
-fetched, prepared and run. Sign accuracy was **3 of 6**, with every prediction of positive
-skill wrong, and the thresholds were not refitted. Full detail in `CFD_SYSTEM_V1.md`.
-
-**The rule therefore has a stated boundary of validity: scalar operators, not systems of
-coupled fields.** The manuscript's claim was narrowed rather than defended.
-
-This is arguably the most useful single result of the last round: a predictive rule that had
-passed three out-of-sample tests was finally broken by a structurally different setting, and
-the break was recorded instead of repaired.
-
-## Closed since the previous version
+## Closed since the first version of this file
 
 1. **FLOP accounting — closed to an estimate.** An analytic FFT term (~`2.5 n log2(n)` per
    real transform, four per spectral layer for forward and backward, because
    `torch.utils.flop_counter` registers no FFT op) raises FNO from 2.68e8 to 3.52e8 FLOPs per
-   step. The matched DeepONet budgets rise to 6744 and 5559 updates, and re-running there
-   gives -0.0892 and -0.2139 against FNO's +0.6503: unchanged, with a larger margin. The FFT
-   term remains an **estimate**, reported separately from the measured dense count, and it
-   belongs to FNO so any error favours FNO.
-2. **FNO control on the system — closed via `src/fno1d_multi.py`.** FNO scores -0.0628,
-   -0.8215 and -0.2501 per component, **worse than both DeepONet trunks on all three**,
-   against +0.65 to +0.99 on every scalar problem. The FNO advantage is specific to
-   single-field inputs and reverses on a system, which also explains why the threshold rule
-   fails there.
-3. **Physics-informed arm extended to a second horizon (T = 0.5)** on the same operator. The
-   preregistered prediction — that it would not reach positive skill even where supervised
-   training does — was **falsified**: it reaches +0.0088 and +0.0516 against supervised
-   +0.1500 and +0.1878. The deficit remains in the mean share (0.071 and 0.157 against 0.017
-   and 0.033).
+   step. Matched DeepONet budgets rise to 6744 and 5559 updates, giving -0.0892 and -0.2139
+   against FNO's +0.6503: unchanged, with a larger margin. The FFT term remains an **estimate**,
+   reported separately from the measured dense count, and it belongs to FNO so any error
+   favours FNO.
+2. **FNO control on the 1D system — closed via `src/fno1d_multi.py`.** FNO scores -0.0628,
+   -0.8215 and -0.2501 per component, worse than both DeepONet trunks on all three.
+3. **FNO control on the 2D system — closed via `src/fno2d_multi.py`.** FNO scores +0.9869 and
+   +0.9879 against Fourier DeepONet +0.2377 and +0.3734 and MLP +0.0310 and +0.0910. So FNO
+   dominates here exactly as on the scalar families, and the 1D CFD system is the single
+   exception in the study on every architecture — not a consequence of coupling.
+4. **Physics-informed arm extended** to a second horizon (Burgers T = 0.5) and a second
+   operator (linear advection). It recovers at most 0.38 of supervised fluctuation skill.
+5. **A second, multi-dimensional system tested**, which **withdrew an over-strong narrowing**
+   ("scalar operators only") that had been introduced after the 1D CFD failure.
+6. **The leading explanation for the CFD failure was eliminated without new data**: Darcy
+   beta 1.0 at fluctuation energy 0.4964 holds while CFD Vx at 0.4659 fails, so fluctuation
+   energy level is not the discriminator; coupling is not either, because the 2D system holds.
 
-## What remains open, with the evidence for why
+## What remains open
 
-4. **Closed: a second, multi-dimensional system was tested and the rule held.**
-   `2D_diff-react_NA_NA.h5` (13.2 GB, id 133017, MD5 `b8d0b86064193195ddc30c33be5dc949`) was
-   fetched and run: 4 of 4 (`DIFFREACT2D_SYSTEM_V1.md`). This **corrected an over-strong
-   narrowing** — after CFD failed the claim had become "scalar operators only", which is
-   wrong. There is no shallow-water dataset anywhere in the deposit (verified by listing all
-   336 files), but the study now covers a 2D scalar operator, a 1D system and a 2D system.
-
-   The one thing still unexplained is **why 1D CFD fails**: the two systems differ
-   simultaneously in PDE type, fluctuation energy and component count, so no cause is claimed.
-5. **The threshold boundary remains tested on evolution problems only.** This was
-   investigated rather than asserted: across a 1000-fold change in Darcy `beta` the target
-   fluctuation energy stays between 0.492 and 0.564, so no steady-operator setting approaches
-   a threshold (detail in `DARCY_BETA_LADDER_V1.md`). One direction does carry over to the
-   system: pressure, with fluctuation energy 0.0744 below every threshold, was predicted
-   negative and is negative for both trunks, so the rule keeps its *negative* predictive
-   content on a system while losing its *positive* content.
-6. **The physics-informed arm is still narrow**: one operator (Burgers), one viscosity
-   (Nu = 0.01, the only one here with a trustworthy residual), two horizons. Its work per
-   update is not matched to the supervised runs.
+1. **Why 1D compressible CFD fails is not established.** This is now a sharper open question
+   than before, because three candidates have been eliminated and the one substantial miss has
+   been localised: Vx is the only setting in the study where the mean share dominates the error
+   (0.598 and 0.747 against at most 0.017 everywhere else) and where the spatial mean is not
+   conserved. The other two misses are inside |R^2| < 0.03, indistinguishable from the
+   zero-fluctuation reference. Closing this would need a compressible system at a different
+   parameter set; none of the files in this deposit is small enough (2D CFD starts at 55 GB).
+2. **FLOP accounting is an estimate, not a measurement.** A true count needs a custom counter
+   that registers FFT work. The direction of the error favours FNO, so the sign of the
+   conclusion is safe.
+3. **No shallow-water data anywhere in the deposit** (verified by listing all 336 files), so
+   there is no incompressible multi-dimensional system available.
+4. **The physics-informed arm covers two operators and three horizons**, not more, because
+   only Burgers Nu = 0.01 and linear advection admit a trustworthy residual with this data
+   (Nu = 0.001 does not fit, R^2 = 0.79, and diff-sorp's stored initial state is degenerate).
+   Its work per update is also not matched to the supervised runs.
 
 ## What is not a gap
 
-Update-count, wall-clock and measured FLOP budgets; parameter counts; seven forecast horizons
-per evolution problem; two viscosities; the trunk-span bound; the physics-informed comparison;
-and cross-operator transfer across four scalar operators are all covered.
+Six settings (linear advection, Burgers at two viscosities, diffusion-sorption, steady 2D
+Darcy, a 1D three-field system, a 2D two-field system), a physics-informed arm, update-count,
+wall-clock and measured-plus-estimated FLOP budgets, parameter counts, seven forecast horizons
+per evolution problem, the trunk-span bound, and 55 preregistered held-out sign predictions of
+which 52 were correct.

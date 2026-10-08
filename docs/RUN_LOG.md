@@ -963,3 +963,33 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   overall accuracy that separates them.
 - Sections 5.13 and 5.14, the abstract and the limitations updated; a test pins the
   correction. Full discovery: 78 tests passed.
+
+## 2026-10-08 — synthesis of the held-out record, FNO on the 2D system, physics on advection
+
+### Held-out synthesis (pure analysis, no new data)
+- The rule made **55 preregistered sign predictions and 52 are correct**: 18/18
+  diffusion-sorption, 21/21 Burgers Nu=0.01, 3/3 Darcy beta 1.0, 3/3 Darcy beta 10, 4/4 2D
+  reaction-diffusion, 3/6 1D CFD. Thresholds never refitted.
+- **Three candidates eliminated with existing data**: coupling in general (the 2D system is a
+  system and holds), a multi-field branch input (same system, two fields, holds), and
+  fluctuation energy level (Darcy beta 1.0 at 0.4964 holds while CFD Vx at 0.4659 fails).
+- **The miss is localised**: two of the three are inside |R^2| < 0.03, i.e. indistinguishable
+  from the zero-fluctuation reference; the one substantial miss (Vx, Fourier, -0.2356) is the
+  only setting anywhere with a mean-share-dominated error (0.598 and 0.747 against at most
+  0.017) and a spatial mean that is not conserved. No cause claimed; nothing adjusted.
+
+### FNO on the 2D system
+- New `src/fno2d_multi.py`; `src/fno2d.py` is hashed into the Darcy identities and was not
+  edited. FNO scores **+0.9869 and +0.9879** against Fourier +0.2377 / +0.3734 and MLP
+  +0.0310 / +0.0910. So FNO dominates here as on the scalar families, and 1D CFD is the single
+  exception on every architecture — not an effect of coupling.
+
+### Physics-informed arm on linear advection
+- Residual `u_t + beta u_x = 0` with beta = 0.4 read from the file attributes, so no
+  coefficient had to be fitted. Chosen because supervised skill there is high (MLP +0.1817,
+  Fourier +0.9424), making it the strongest test available.
+- **The prediction was partially falsified again**: MLP sits at -0.0033, indistinguishable
+  from the zero reference, while Fourier reaches +0.3590 (0.38 of supervised). Across three
+  operator-horizon combinations the recovered fraction of supervised skill is at most 0.38 and
+  is never close to 1. Reported as measured; nothing adjusted.
+- Full discovery: 78 tests passed.
