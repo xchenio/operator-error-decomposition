@@ -89,6 +89,50 @@ python scripts/diagnose_fluctuation.py \
     --out results/fluctuation_burgers_nu001_v1/t075 --device cuda
 ```
 
-## 7. Result
+## 7. Result (measured after the protocol was committed)
 
-Filled in after the runs; see also `docs/RUN_LOG.md`.
+Per-sample fluctuation R^2 on the test split, 5 seeds, 1500 updates:
+
+| t | fluctuation energy | MLP DeepONet | Fourier DeepONet | FNO | predicted |
+|---:|---:|---:|---:|---:|---|
+| 0.10 | 0.5661 | +0.2346 ± 0.0521 | +0.6891 ± 0.0215 | +0.9975 ± 0.0004 | + / + / + |
+| 0.25 | 0.4507 | +0.1737 ± 0.0126 | +0.4392 ± 0.0336 | +0.9800 ± 0.0038 | + / + / + |
+| 0.50 | 0.3320 | +0.1500 ± 0.0152 | +0.1878 ± 0.0747 | +0.9519 ± 0.0060 | + / + / + |
+| 0.75 | 0.2596 | +0.0628 ± 0.0215 | -0.0122 ± 0.0795 | +0.8751 ± 0.0126 | + / - / + |
+| 1.00 | 0.2131 | -0.0273 ± 0.0159 | -0.2443 ± 0.1387 | +0.8072 ± 0.0335 | - / - / + |
+| 1.50 | 0.1559 | -0.2387 ± 0.0258 | -0.8703 ± 0.4734 | +0.4670 ± 0.0419 | - / - / + |
+| 2.00 | 0.1217 | -0.2972 ± 0.1299 | -1.1128 ± 0.3465 | -0.2219 ± 0.4127 | - / - / - |
+
+All recomputations reproduce their stored metrics exactly.
+
+### Test 1: signs — passed
+
+**21 of 21 correct** (7 horizons x 3 architectures); 7/7 for each architecture separately.
+Every crossing in the table above was predicted in advance and landed where predicted.
+
+### Test 2: skill horizons — passed, with quantified error
+
+| Model | predicted | measured here | measured at Nu=0.001 | absolute error |
+|---|---:|---:|---:|---:|
+| Fourier DeepONet | 0.740 | **0.735** | 0.860 | 0.005 |
+| MLP DeepONet | 0.860 | **0.924** | 0.980 | 0.064 |
+| FNO | 1.650 | **1.839** | 1.940 | 0.189 |
+
+All three are **shorter** than at Nu=0.001, as predicted, so the ordering prediction passes.
+The absolute error grows with the horizon length (0.005, 0.064, 0.189), which is what one
+expects from linear interpolation over a coarse 0.5-wide grid at the far end of the ladder.
+
+### What this adds
+
+The diffusion-sorption test confirmed the rule where it is easy; this test confirms it **at
+its boundary**, on data never used to fit the thresholds, with the thresholds unchanged. The
+rule now has two out-of-sample confirmations, one of them quantitative to within 0.005-0.19
+in forecast time.
+
+### Remaining limits, restated
+
+This is a parameter ladder on the same operator, solver and initial-condition generator, so
+it shows the rule tracks a physical parameter; it does not by itself show the rule
+generalises to a new operator class. The thresholds remain fitted on Burgers Nu0.001 plus
+advection only, and were not refitted here or on diffusion-sorption. A steady elliptic
+operator is still untested.

@@ -52,8 +52,10 @@ On linear advection, the same seven horizons show constant fluctuation energy (0
 time. On diffusion-sorption, whose fluctuation energy decays from 0.7333 to 0.6506 without
 approaching any threshold, no architecture decays either (all +0.998 to +1.000), supporting
 the threshold form of the rule over "a longer forecast is harder". A fluctuation-energy
-threshold fitted on the first two PDEs predicts the sign of skill on the third: 6 of 6
-held-out settings for each architecture, with the thresholds unchanged.
+threshold fitted on the first two PDEs, and never refitted, predicts the sign of skill on
+both held-out families: 6 of 6 diffusion-sorption settings and 21 of 21 Burgers Nu=0.01
+settings, including every threshold crossing, with predicted skill horizons 0.740 / 0.860 /
+1.650 against measured 0.735 / 0.924 / 1.839.
 
 An exact bound depending only on the trunk span (section 3.3) shows the constraint is the
 branch, not the basis: the Fourier trunk's bound is +0.96 to +1.00 on both PDEs at every
@@ -367,7 +369,7 @@ across architectures: at a fixed fluctuation energy the three models differ by u
 R^2. Skill is monotone in the horizon within each architecture, but the curve itself is set
 by the architecture.
 
-### 5.6 Two more PDEs: the decay is not a cost of elapsed time
+### 5.6 Other operators and a viscosity ladder
 
 Two controls were run at the same 1500-update budget, seeds, architectures and split. Both
 use `scripts/prepare_*_horizons.py`, which reuse the extraction and splitting helpers
@@ -442,6 +444,39 @@ discriminate between architectures. A confirmation here is weak support; a falsi
 would have been strong evidence. No setting on this PDE lies near a threshold, so the rule's
 boundary remains untested out of sample.
 
+### 5.6.3 A viscosity ladder: the rule at its boundary
+
+Section 5.6.2 confirms the rule where every model saturates, which is easy. A stronger test
+needs settings that straddle a threshold. Burgers at `Nu = 0.01`, ten times the viscosity,
+dissipates faster, so the fluctuation energy crosses the thresholds earlier. Its protocol and
+all 21 sign predictions were committed before any run on that data
+([VISCOSITY_NU001_V1.md](../docs/VISCOSITY_NU001_V1.md)); the thresholds are those fitted on
+Nu0.001 plus advection and were not refitted.
+
+| t | fluctuation energy | MLP DeepONet | Fourier DeepONet | FNO | predicted |
+|---:|---:|---:|---:|---:|---|
+| 0.10 | 0.5661 | +0.2346 ± 0.0521 | +0.6891 ± 0.0215 | +0.9975 ± 0.0004 | + / + / + |
+| 0.25 | 0.4507 | +0.1737 ± 0.0126 | +0.4392 ± 0.0336 | +0.9800 ± 0.0038 | + / + / + |
+| 0.50 | 0.3320 | +0.1500 ± 0.0152 | +0.1878 ± 0.0747 | +0.9519 ± 0.0060 | + / + / + |
+| 0.75 | 0.2596 | +0.0628 ± 0.0215 | -0.0122 ± 0.0795 | +0.8751 ± 0.0126 | + / - / + |
+| 1.00 | 0.2131 | -0.0273 ± 0.0159 | -0.2443 ± 0.1387 | +0.8072 ± 0.0335 | - / - / + |
+| 1.50 | 0.1559 | -0.2387 ± 0.0258 | -0.8703 ± 0.4734 | +0.4670 ± 0.0419 | - / - / + |
+| 2.00 | 0.1217 | -0.2972 ± 0.1299 | -1.1128 ± 0.3465 | -0.2219 ± 0.4127 | - / - / - |
+
+**All 21 predictions are correct** (7/7 per architecture), including every crossing. The
+interpolated skill horizons are:
+
+| Model | predicted from the rule | measured here | measured at Nu=0.001 | absolute error |
+|---|---:|---:|---:|---:|
+| Fourier DeepONet | 0.740 | **0.735** | 0.860 | 0.005 |
+| MLP DeepONet | 0.860 | **0.924** | 0.980 | 0.064 |
+| FNO | 1.650 | **1.839** | 1.940 | 0.189 |
+
+All three are shorter than at Nu=0.001, as predicted. The error grows with horizon length,
+which is what linear interpolation over a coarse grid implies at the far end of the ladder.
+This is a parameter ladder on one operator, so it shows the rule tracks a physical parameter;
+it does not by itself show the rule transfers to a new operator class.
+
 ### 5.7 The binding constraint is the branch, not the trunk
 
 Section 3.3 gives an exact upper bound on fluctuation skill that depends only on the trunk
@@ -500,10 +535,17 @@ diffusion-sorption 6), and correlates them with the measured skill.
 Within Burgers alone the correlation of fluctuation energy with skill is 1.000 for MLP and
 FNO and 0.964 for Fourier, n = 7.)
 
-**The threshold rule now has one out-of-sample test, and it passes.** The thresholds are
-interpolated from Burgers and advection only — about 0.248 for MLP DeepONet, 0.273 for
-Fourier DeepONet and 0.150 for FNO — and then applied unchanged to the six held-out
-diffusion-sorption settings: 6/6 correct for each architecture (20/20 over all settings).
+**The threshold rule now has two out-of-sample tests, and it passes both.** The thresholds
+are interpolated from Burgers Nu0.001 and advection only — about 0.248 for MLP DeepONet,
+0.273 for Fourier DeepONet and 0.150 for FNO — and then applied unchanged to:
+
+* the six held-out diffusion-sorption settings: 6/6 correct for each architecture;
+* the 21 held-out Burgers Nu=0.01 settings: 21/21 correct (7/7 per architecture), with
+  predicted skill horizons 0.740 / 0.860 / 1.650 against measured 0.735 / 0.924 / 1.839
+  (section 5.6.3).
+
+The second test is the stronger one because its settings straddle the thresholds rather than
+lying far from them.
 
 Three qualifications still limit the claim:
 
@@ -515,10 +557,10 @@ Three qualifications still limit the claim:
    [THIRD_PDE_DIFFSORP_V1.md](../docs/THIRD_PDE_DIFFSORP_V1.md), every model scores
    essentially 1.000 on diffusion-sorption, so those settings do not discriminate. They
    confirm the rule where it is easy and do not probe it where it is hard.
-3. **The boundary is still untested out of sample.** No third-PDE setting lies near a
-   threshold. A dissipative problem whose fluctuation energy falls below 0.15 would be the
-   decisive test, and none of the available files provides one at the horizons stored. This
-   is reported rather than manufactured by refitting.
+3. **What remains untested.** The viscosity ladder straddles the thresholds but stays on the
+   same operator, solver and initial-condition generator. Whether the thresholds transfer to
+   a genuinely different operator class — in particular a steady elliptic one — is still
+   open, and no refitting was done to make them appear to.
 
 One hypothesis was tested and failed: the input-to-target subspace distance was expected to
 grow with horizon where the fluctuation spectrum evolves. It does the opposite on Burgers

@@ -253,5 +253,27 @@ class ManuscriptTableTest(unittest.TestCase):
             self.assertIn(f"| {horizon} | {energy:.4f} | " + " | ".join(cells) + " |", text)
 
 
+    def test_section_5_6_3_viscosity_ladder_table(self):
+        text = self.main.read_text(encoding="utf-8")
+        paths = {10: "results/fluctuation_burgers_nu001_v1/t010/burgers_nu001_t010_v1.json",
+                 25: "results/fluctuation_burgers_nu001_v1/t025/burgers_nu001_t025_v1.json",
+                 50: "results/fluctuation_burgers_nu001_v1/t050/burgers_nu001_t050_v1.json",
+                 75: "results/fluctuation_burgers_nu001_v1/t075/burgers_nu001_t075_v1.json",
+                 100: "results/fluctuation_burgers_nu001_v1/t100/burgers_nu001_t100_v1.json",
+                 150: "results/fluctuation_burgers_nu001_v1/t150/burgers_nu001_t150_v1.json",
+                 200: "results/fluctuation_burgers_nu001_v1/t200/burgers_nu001_t200_v1.json"}
+        missing = [p for p in paths.values() if not (ROOT / p).exists()]
+        if missing:
+            self.skipTest(f"Nu=0.01 artifacts absent: {missing}")
+        for tag, path in paths.items():
+            rows = self._groups(path)
+            energy, _ = self._stats(rows["deeponet_mlp"], "fluctuation_energy_fraction")
+            cells = []
+            for key in ("deeponet_mlp", "deeponet_fourier", "fno"):
+                p, ps = self._stats(rows[key], "fluctuation_r2_per_sample")
+                cells.append(f"{p:+.4f} ± {ps:.4f}")
+            self.assertIn(f"| {tag/100:.2f} | {energy:.4f} | " + " | ".join(cells) + " |", text)
+
+
 if __name__ == "__main__":
     unittest.main()

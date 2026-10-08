@@ -792,3 +792,22 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Manuscript: section 5.6 split into 5.6.1 (advection) and 5.6.2 (diffusion-sorption),
   section 5.8 updated to 20 settings with the out-of-sample result, abstract and limitations
   updated to three PDEs. Full discovery: 70 tests passed.
+
+## 2026-09-30 — viscosity ladder Nu=0.01: the rule passes at its boundary
+
+- `1D_Burgers_Sols_Nu0.01.hdf5` has the identical `(10000,201,1024)` tensor layout and was
+  prepared with the new generic `scripts/prepare_pdebench_1d_horizons.py`; `prepare()` is
+  still not used because it pins the Nu0.001 digest.
+- Protocol and all 21 sign predictions committed **before** any run
+  (`docs/VISCOSITY_NU001_V1.md`). A-priori fluctuation energy 0.5714 -> 0.1254, consistently
+  below the Nu0.001 values at the same horizons, so the curve crosses the thresholds earlier.
+- Result: **21/21 signs correct (7/7 per architecture)**, including every crossing. Measured
+  skill horizons Fourier 0.735, MLP 0.924, FNO 1.839 against predicted 0.740, 0.860, 1.650;
+  absolute errors 0.005 / 0.064 / 0.189. All three are shorter than at Nu=0.001
+  (0.860 / 0.980 / 1.940), so the ordering prediction passes.
+- This is the strong out-of-sample test: unlike diffusion-sorption, these settings straddle
+  the thresholds instead of lying far from them. Thresholds were not refitted on either
+  held-out family.
+- Manuscript: new section 5.6.3, section 5.6 retitled, abstract and section 5.8 updated to
+  two out-of-sample tests, limitation narrowed to "a genuinely different operator class,
+  in particular a steady elliptic one, is still open". Full discovery: 71 tests passed.
