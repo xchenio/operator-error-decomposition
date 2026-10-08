@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "identity": {
+    "configuration": {
+      "architecture": "fno",
+      "seed": 3,
+      "steps": 1500,
+      "lr": 0.001,
+      "batch_size": 32,
+      "checkpoint_every": 50,
+      "eval_every": 250
+    },
+    "source_sha256": "69b642b13665eea77c1862b0623ca58aecbed85121b9cb5ffd34deb780b2371e",
+    "data_protocol": {
+      "cache_sha256": "64a07af43639feaaa22a5b46ca5cbc5c341e390e5fb093763090a4d33c435364",
+      "grid_shape": [
+        32,
+        32
+      ],
+      "grid_size": 1024,
+      "branch_in": 2048,
+      "trunk_in": 2,
+      "input_components": [
+        0,
+        1
+      ]
+    },
+    "environment": {
+      "python": "3.11.16",
+      "torch": "2.14.0+cu130",
+      "numpy": "2.4.6",
+      "device": "cuda",
+      "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+      "cuda": "13.0"
+    }
+  },
+  "git_commit": "b25080788110ddbeb08e1061610dbf5ce0c3b813"
+}

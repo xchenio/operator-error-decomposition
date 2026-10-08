@@ -1,0 +1,120 @@
+{
+  "identity": {
+    "configuration": {
+      "architecture": "fno",
+      "seed": 1,
+      "steps": 1500,
+      "lr": 0.001,
+      "batch_size": 32,
+      "checkpoint_every": 50,
+      "eval_every": 250
+    },
+    "source_sha256": "69b642b13665eea77c1862b0623ca58aecbed85121b9cb5ffd34deb780b2371e",
+    "data_protocol": {
+      "cache_sha256": "4128db38352129393ec3d90479e6921c4473db3c47906688a198e244f86ecb6b",
+      "grid_shape": [
+        32,
+        32
+      ],
+      "grid_size": 1024,
+      "branch_in": 2048,
+      "trunk_in": 2,
+      "input_components": [
+        0,
+        1
+      ]
+    },
+    "environment": {
+      "python": "3.11.16",
+      "torch": "2.14.0+cu130",
+      "numpy": "2.4.6",
+      "device": "cuda",
+      "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+      "cuda": "13.0"
+    }
+  },
+  "git_commit": "b25080788110ddbeb08e1061610dbf5ce0c3b813",
+  "metrics": {
+    "train": {
+      "mean_relative_l2": 0.06903081897312208,
+      "relative_fro": 0.06891430526090256,
+      "rmse": 0.006993116078741974
+    },
+    "val": {
+      "mean_relative_l2": 0.1102722365381627,
+      "relative_fro": 0.11035011701436391,
+      "rmse": 0.011156986889324969
+    },
+    "test": {
+      "mean_relative_l2": 0.11095952488875897,
+      "relative_fro": 0.11120750751679129,
+      "rmse": 0.011344695184432055
+    }
+  },
+  "history": [
+    {
+      "step": 250,
+      "loss": 0.11964960396289825,
+      "validation": {
+        "mean_relative_l2": 0.29704266571352644,
+        "relative_fro": 0.2962803436081966,
+        "rmse": 0.02995552699569019
+      },
+      "train_seconds": 2.605958100000862
+    },
+    {
+      "step": 500,
+      "loss": 0.03338177874684334,
+      "validation": {
+        "mean_relative_l2": 0.1717087028219715,
+        "relative_fro": 0.17134345831613576,
+        "rmse": 0.017323739835780057
+      },
+      "train_seconds": 5.162948000011966
+    },
+    {
+      "step": 750,
+      "loss": 0.01649991050362587,
+      "validation": {
+        "mean_relative_l2": 0.13443498034267315,
+        "relative_fro": 0.13431537561509005,
+        "rmse": 0.01358000267980918
+      },
+      "train_seconds": 7.668587399995886
+    },
+    {
+      "step": 1000,
+      "loss": 0.012507444247603416,
+      "validation": {
+        "mean_relative_l2": 0.12184694971527021,
+        "relative_fro": 0.1218150427371339,
+        "rmse": 0.012316152184631175
+      },
+      "train_seconds": 10.161249299999326
+    },
+    {
+      "step": 1250,
+      "loss": 0.008481452241539955,
+      "validation": {
+        "mean_relative_l2": 0.11423912369724488,
+        "relative_fro": 0.11427784404908022,
+        "rmse": 0.011554101094699783
+      },
+      "train_seconds": 12.65860490000341
+    },
+    {
+      "step": 1500,
+      "loss": 0.00785006769001484,
+      "validation": {
+        "mean_relative_l2": 0.1102722365381627,
+        "relative_fro": 0.11035011701436391,
+        "rmse": 0.011156986889324969
+      },
+      "train_seconds": 15.21978320000926
+    }
+  ],
+  "train_seconds": 15.21978320000926,
+  "real_parameter_count": 1185121,
+  "selection": "last fixed-budget checkpoint",
+  "timing_note": "optimizer update time includes batch sampling; excludes validation and checkpointing"
+}

@@ -33,6 +33,7 @@ sys.path.insert(0, str(ROOT))
 
 from src.fno1d_multi import FNO1dMulti  # noqa: E402
 from src.fno2d import FNO2d  # noqa: E402
+from src.fno2d_multi import FNO2dMulti  # noqa: E402
 from src.models import DeepONet  # noqa: E402
 from src.public_benchmark import atomic_json, file_hash  # noqa: E402
 from src.resume import atomic_save, random_state, restore_random  # noqa: E402
@@ -41,7 +42,7 @@ from src.utils import env_fingerprint, set_seed  # noqa: E402
 
 def source_hash() -> str:
     files = [Path(__file__), ROOT / "src/fno2d.py", ROOT / "src/models.py",
-             ROOT / "src/fno1d_multi.py", ROOT / "src/resume.py",
+             ROOT / "src/fno1d_multi.py", ROOT / "src/fno2d_multi.py", ROOT / "src/resume.py",
              ROOT / "src/public_benchmark.py",
              ROOT / "src/utils.py", ROOT / "src/derivatives.py"]
     h = hashlib.sha256()
@@ -68,8 +69,12 @@ def build(architecture, protocol, device):
                          layers=4).to(device)
         components = protocol.get("input_components")
         if components:
-            # multi-channel initial state, e.g. the CFD system; FNO1d cannot take it because
-            # it requires the input and the coordinate to have equal length
+            # multi-channel initial state. FNO1d needs equal input and coordinate lengths and
+            # FNO2d lifts a single value channel, so both need their multi-channel variant.
+            if protocol.get("grid_shape"):
+                return FNO2dMulti(grid_shape=tuple(protocol["grid_shape"]),
+                                  channels=len(components), width=32, modes=12,
+                                  layers=4).to(device)
             return FNO1dMulti(grid_size=int(protocol["grid_size"]), channels=len(components),
                               width=32, modes=16, layers=4).to(device)
         raise ValueError("cache declares no FNO variant: add fno2d or input_components")

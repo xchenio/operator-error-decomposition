@@ -55,6 +55,7 @@ sys.path.insert(0, str(ROOT))
 from src.fno import FNO1d                      # noqa: E402
 from src.fno1d_multi import FNO1dMulti         # noqa: E402
 from src.fno2d import FNO2d                    # noqa: E402
+from src.fno2d_multi import FNO2dMulti         # noqa: E402
 from src.models import DeepONet, MLP           # noqa: E402
 from src.public_benchmark import atomic_json, file_hash   # noqa: E402
 
@@ -158,9 +159,15 @@ def _end_to_end_prediction(cfg, ck, arrays, protocol, device, split, eval_time=N
             model = FNO2d(grid_shape=tuple(protocol["grid_shape"]), width=32, modes=12,
                           layers=4).to(device)
         elif components:
-            # multi-channel initial state, e.g. the CFD system
-            model = FNO1dMulti(grid_size=int(protocol["grid_size"]), channels=len(components),
-                               width=32, modes=16, layers=4).to(device)
+            # multi-channel initial state; 2D when the cache declares a grid shape
+            if protocol.get("grid_shape"):
+                model = FNO2dMulti(grid_shape=tuple(protocol["grid_shape"]),
+                                   channels=len(components), width=32, modes=12,
+                                   layers=4).to(device)
+            else:
+                model = FNO1dMulti(grid_size=int(protocol["grid_size"]),
+                                   channels=len(components), width=32, modes=16,
+                                   layers=4).to(device)
         else:
             model = FNO1d(width=32, modes=16, layers=4).to(device)
     else:

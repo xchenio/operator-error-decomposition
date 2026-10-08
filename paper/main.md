@@ -895,6 +895,19 @@ elsewhere.
 
 **4 of 4: the rule holds here.**
 
+With the multi-channel FNO control added (`src/fno2d_multi.py`), the architecture ordering is
+the same as on every scalar problem:
+
+| component | FNO | Fourier DeepONet | MLP DeepONet |
+|---|---:|---:|---:|
+| 0 | **+0.9869 ± 0.0014** | +0.2377 | +0.0310 |
+| 1 | **+0.9879 ± 0.0053** | +0.3734 | +0.0910 |
+
+FNO dominates here by more than 0.6 in R^2, exactly as it does on the scalar families, and in
+complete contrast to 1D compressible CFD, where FNO is the *worst* of the three (section
+5.13). So it is not coupling, and not a multi-field input, that costs FNO its advantage; the
+CFD system remains the single exception in the study, on every architecture.
+
 This corrects a narrowing that was too strong. After section 5.13 the claim had been reduced
 to "valid for scalar operators only"; that is wrong. The corrected statement is that the rule
 holds on every scalar family tested, with three held-out confirmations, **and** on 2D
