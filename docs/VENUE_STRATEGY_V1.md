@@ -53,6 +53,50 @@ track normally expects the authors to *contribute* a benchmark or dataset; this 
 analyses an existing one. Could be reconsidered for a future cycle only if the study grows
 into a released benchmark artefact.
 
+### Tier 1b — computational mathematics venues
+
+Assessed 2026-10-08 on request. "Computational mathematics" spans a wide band, and the fit
+varies sharply inside it.
+
+**What this paper already has that is genuinely computational mathematics:**
+
+- the mean/fluctuation split is an **exact orthogonal identity**, which can be stated and
+  proved as a proposition (the constant vector and the zero-mean residual are orthogonal) —
+  it is an a-posteriori error decomposition;
+- the trunk-span bound is a **projection argument** giving a hard upper bound;
+- the energy-weighted versus per-sample disagreement is a **norm-choice** issue, which is
+  classical numerical-analysis territory.
+
+**What it does not have, and what most computational-mathematics journals ask for:**
+
+- no new numerical algorithm;
+- no convergence analysis and no theorem.
+
+At present the manuscript contains **no Lemma, Proposition, Theorem or Proof environment at
+all**; the split is described as an "identity" and the bound as a "hard upper bound".
+
+| Venue | Fit | Fee | Note |
+|---|---|---|---|
+| **SIAM J. Sci. Comput. (SISC)** | moderate, needs work | subscription route typically free (verify); OA extra | A real precedent exists: Lee and Shin's DeepONet training paper is published here (10.1137/23M1598751), so SIAM does carry DeepONet work. But SISC normally expects a new method or analysis, so the propositions below are needed first. |
+| **SIAM J. Math. Data Sci. (SIMODS)** | moderate, needs work | verify | Right subject area — mathematics of operator learning — but expects mathematical depth. |
+| **J. Sci. Comput.** (Springer) | moderate | subscription free / OA extra | Publishes ML-for-PDE work; lower bar than SISC. |
+| **Appl. Numer. Math.**, **J. Comput. Appl. Math.**, **Comput. Math. Appl.** | moderate, broader | subscription free / OA extra | Broader applied-mathematics scope, more tolerant of empirical content. |
+| **Adv. Comput. Math.** | weak | verify | Theory-leaning; unlikely without new analysis. |
+| **SINUM**, **Math. Comp.**, **Numer. Math.** | poor | verify | Pure numerical analysis expecting new algorithms with proofs. Not suitable as the paper stands. |
+
+**Before submitting to any of these, three changes are required:**
+
+1. State §3's split as **Proposition 1** with its two-line proof.
+2. State §5.7's trunk-span bound as **Proposition 2** with its projection proof.
+3. **De-emphasise the empirical threshold rule** (§5.8). At an ML venue the 52-of-55
+   cross-family record is a highlight; at a computational-mathematics venue an unproved
+   empirical rule is a liability. Move it to an appendix or label it explicitly as an
+   empirical boundary and not a theorem.
+
+Also retitle away from a leaderboard reading ("who is better") toward an error-decomposition
+reading, for example *An Exact A Posteriori Error Decomposition for Operator Learning:
+Conservation, Fluctuation and the Limit of Branch Capacity*.
+
 ### Cheapest realistic path in China
 
 Chinese core journals charge a much smaller page fee (order of a few hundred to a couple of
