@@ -54,6 +54,11 @@ CATALOG = {
         dict(id=164672, size=12410888600,
              md5="2fdd00138f1d7abc794fb953021a9f43",
              note="1D compressible CFD, three-component system"),
+    # only multi-dimensional system small enough to be practical; see the survey in
+    # docs/REMAINING_GAPS_V1.md (2D CFD starts at 55 GB, 3D CFD at 66 GB, no shallow water)
+    "2D_diff-react_NA_NA.h5": dict(id=133017, size=13243560688,
+                                   md5="b8d0b86064193195ddc30c33be5dc949",
+                                   note="2D reaction-diffusion, two-component system"),
 }
 DATASET = "doi:10.18419/darus-2986"
 

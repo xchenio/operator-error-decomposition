@@ -1,6 +1,10 @@
-# DeepONet Learns the Conserved Mean and Loses the Fluctuation: A Mean/Fluctuation Diagnosis on PDEBench Burgers
+# Conserved Means and Lost Fluctuations: A Mean/Fluctuation Diagnosis of Operator Learning Across Five PDEBench Settings
 
-**Evidence-audited research draft v3 — 2026-09-29. Not a submitted manuscript.**
+**Evidence-audited research draft v4 — 2026-10-08. Not a submitted manuscript.**
+
+The earlier title named Burgers only; the study now covers linear advection, Burgers at two
+viscosities, diffusion-sorption, steady 2D Darcy and a three-field CFD system, plus a
+physics-informed arm, so the title was narrowed to the method rather than the benchmark.
 
 **Latest 2026-09-29 follow-up:** [mean/fluctuation decomposition](../docs/FLUCTUATION_DIAGNOSIS_V1.md).
 The target spatial mean is a conserved quantity, so the previously reported "input-mean
@@ -24,9 +28,17 @@ supervised operator learning, not a physics-informed training result.
 On periodic Burgers the spatial mean of the solution is conserved, so a model can appear
 competitive on relative L2 while predicting nothing beyond a conserved scalar. We separate
 prediction error into a conserved-mean part and a fluctuation part and measure skill on
-each. On PDEBench 1D Burgers (Nu0.001), forecasting t=0 to t=1.0, the conserved mean
+each, across five PDEBench settings (linear advection, Burgers at two viscosities,
+diffusion-sorption, steady 2D Darcy, a three-field CFD system) and one physics-informed arm.
+On PDEBench 1D Burgers (Nu0.001), forecasting t=0 to t=1.0, the conserved mean
 carries 97.4% of the target energy and the fluctuation carries 23.7% of the per-sample
 squared norm; the exact input mean alone already achieves 0.37577 mean relative L2.
+
+The mean baseline turns out to be a property of the operator, not of the metric: on Darcy the
+input-output mean correlation is -0.873 and the same construction gives 3.6843 instead of
+0.37577, while within the CFD system mass and momentum are conserved to 1e-6 and 4e-4 but the
+spatial mean of velocity alone is not (12%). The zero-fluctuation reference, by contrast,
+needs no physics and carries over unchanged.
 
 Against a zero-fluctuation reference, MLP DeepONet scores -0.0042 +- 0.0072 and Fourier
 DeepONet -0.0934 +- 0.0886 in per-sample fluctuation R^2, while FNO scores +0.6503 +-
@@ -665,10 +677,17 @@ therefore not explained by DeepONet receiving less compute, fewer updates, or fe
 parameters; it survives an equal-work comparison and gets worse when DeepONet is given
 almost four times the work.
 
-The one thing this does not settle is a FLOP *accounting* difference between spectral and
-dense layers: FFT work is uncounted, so equal measured FLOPs are not provably equal real
-work. Given that the uncounted part belongs to FNO, the direction of the error favours FNO,
-so the conclusion is safe in sign.
+FFT work is not registered by the counter, so an analytic estimate was added: about
+`2.5 n log2(n)` per real transform, counted four times per spectral layer for the forward and
+the backward. That raises FNO from 2.68e8 to 3.52e8 FLOPs per step and the matched DeepONet
+budgets from 5135 and 4233 to **6744 and 5559** updates. Re-running at those budgets gives
+-0.0892 ± 0.1193 for MLP and -0.2139 ± 0.0683 for Fourier, so the conclusion is unchanged and
+the margin is larger.
+
+What remains is that the FFT term is an **estimate**, not a measurement, so equal *estimated*
+FLOPs are still not provably equal real work. The estimate is reported separately from the
+measured dense count so a reader can use either, and since the estimated part belongs to FNO
+the direction of any error favours FNO.
 
 ### 5.10 Fitting interventions stabilize training without improving validation
 
@@ -810,8 +829,26 @@ single operator.
 | Vx | 0.4659 | -0.0160 ± 0.0201 | -0.2356 ± 0.0813 | + / + | **wrong / wrong** |
 | pressure | 0.0744 | -0.0448 ± 0.0759 | -0.1967 ± 0.0857 | - / - | ok / ok |
 
+With the multi-channel FNO control added (`src/fno1d_multi.py`), the reversal is sharper than
+a missing reference:
+
+| component | FNO relL2 | **FNO R^2 per sample** | MLP DeepONet | Fourier DeepONet |
+|---|---:|---:|---:|---:|
+| density | 0.26690 | **-0.0628 ± 0.0323** | -0.0237 | -0.1132 |
+| Vx | 1.12518 | **-0.8215 ± 0.4606** | -0.0160 | -0.2356 |
+| pressure | 0.08858 | **-0.2501 ± 0.0689** | -0.0448 | -0.1967 |
+
+**FNO is worse than both DeepONet trunks on every component of the system**, whereas on every
+scalar problem it is far better (+0.65 to +0.99 against -0.09 to -0.24). The FNO advantage is
+therefore specific to single-field inputs: it does not merely shrink on a system, it reverses.
+This also explains the rule's failure, since the thresholds encode a large FNO-to-DeepONet gap
+that exists only in the single-field case.
+
 **Sign accuracy 3 of 6: the rule is falsified on this system for every prediction of positive
-skill.** In line with the preregistered criterion the thresholds were not refitted. The runs
+skill.** The one direction that survives is the negative branch: pressure, whose fluctuation
+energy 0.0744 lies below every threshold, was predicted negative and is negative for both
+trunks. So on the system the rule retains its *negative* predictive content and loses its
+*positive* predictive content. In line with the preregistered criterion the thresholds were not refitted. The runs
 converged — validation curves plateau at 0.28, 1.10 and 0.096 — so these are measurements and
 not failed optimisations, unlike the excluded Darcy beta 0.01 setting.
 

@@ -904,3 +904,40 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   is uninterpretable because it averages channels of very different scale.
 - **The manuscript's claim was narrowed: the rule is valid for scalar operators only.**
 - Full discovery: 76 tests passed.
+
+## 2026-10-08 — the five remaining items, and the title
+
+### Closed
+- **FLOP accounting.** Analytic FFT term added (~2.5 n log2 n per real transform, four per
+  spectral layer for forward and backward). FNO rises 2.68e8 -> 3.52e8 FLOPs per step; matched
+  DeepONet budgets rise to 6744 and 5559 updates, giving -0.0892 and -0.2139 against FNO's
+  +0.6503. Conclusion unchanged, margin larger. The FFT term is an estimate, reported
+  separately from the measured dense count.
+- **FNO control on the system.** New `src/fno1d_multi.py` (src/fno.py is hashed into every
+  run identity and was not edited). FNO scores -0.0628, -0.8215 and -0.2501 per component:
+  **worse than both DeepONet trunks on all three**, against +0.65 to +0.99 on every scalar
+  problem. The FNO advantage is specific to single-field inputs and reverses on a system.
+- **Physics-informed arm extended to T = 0.5**, preregistered. **The prediction was
+  falsified**: it reaches +0.0088 and +0.0516 where supervised reaches +0.1500 and +0.1878.
+  Reported as falsified, weights not adjusted. The deficit stays in the mean share (0.071 and
+  0.157 against 0.017 and 0.033), the same pattern as at T = 1.0.
+
+### Remaining, with evidence rather than assertion
+- **No multi-dimensional system, and no shallow water anywhere.** A full listing of the 336
+  files in the deposit was queried: no shallow-water dataset exists; the smallest
+  multi-dimensional system is `2D_diff-react_NA_NA.h5` at 13.2 GB (id 133017,
+  MD5 b8d0b86064193195ddc30c33be5dc949), added to the download catalogue; 2D CFD starts at
+  55.1 GB and 3D CFD at 66.1 GB.
+- **Boundary still tested on evolution problems only**, but one direction carries over: on the
+  system, pressure (fluctuation energy 0.0744, below every threshold) was predicted negative
+  and is negative, so the rule keeps its negative predictive content on a system and loses its
+  positive content.
+- **Physics-informed arm still narrow**: one operator, one viscosity, two horizons.
+
+### Manuscript
+- **Title changed** to "Conserved Means and Lost Fluctuations: A Mean/Fluctuation Diagnosis of
+  Operator Learning Across Five PDEBench Settings". The previous title named Burgers only,
+  which the study had outgrown; the new one names the method rather than the benchmark.
+  Abstract updated to state the five settings, the physics-informed arm, and the finding that
+  the mean baseline is a property of the operator rather than the metric.
+- Draft marked v4. Full discovery: 77 tests passed.
