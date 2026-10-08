@@ -618,14 +618,42 @@ MLP DeepONet trained for 50000 updates (146 s) scores -0.4157 per-sample fluctua
 0.42075 relative L2, while FNO trained for 1500 updates (14 s) scores +0.6503 and 0.22835.
 DeepONet receives roughly 10x the compute and remains worse by more than 1.0 in R^2.
 
-A directly wall-clock-matched comparison is also available: DeepONet trained for 3500
-updates takes 14.0 s on average, matching FNO at 1500 updates (14 s). At that matched
-budget MLP DeepONet scores -0.0057 ± 0.0218 and Fourier DeepONet -0.0884 ± 0.0504
-per-sample fluctuation R^2, against FNO's +0.6503 ± 0.0222.
+Update counts are only a proxy for work, so the work itself was measured. `scripts/
+measure_flops.py` counts forward-plus-backward FLOPs per training step with
+`torch.utils.flop_counter` on the actual models:
 
-This does not establish a FLOP-matched result: the two architectures use different
-operations, and no FLOP-level accounting was performed. It does make clear that the gap is
-not explained by DeepONet having less compute or fewer parameters.
+| Model | parameters | FLOPs per step | FLOPs for 1500 steps |
+|---|---:|---:|---:|
+| MLP DeepONet | 115,713 | 7.82e7 | 4.02e11 |
+| Fourier DeepONet | 131,969 | 9.49e7 | 4.02e11 (at 4233 steps) |
+| FNO | 136,481 | 2.68e8 | 4.02e11 (at 1500 steps) |
+
+**Caveat that makes the comparison conservative:** no FFT-related op was counted, so the
+FNO total is a **lower bound** and the FLOP-matched DeepONet budgets (5135 and 4233 updates,
+chosen to give FNO's 4.02e11) are correspondingly **lower bounds** on truly equal work.
+DeepONet is therefore given less work than FNO actually performed.
+
+A directly wall-clock-matched comparison agrees: DeepONet at 3500 updates takes 14.0 s on
+average, matching FNO at 1500 updates (14 s), and scores -0.0057 ± 0.0218 (MLP) and
+-0.0884 ± 0.0504 (Fourier) against FNO's +0.6503 ± 0.0222.
+
+At the FLOP-matched budgets the result is the same in sign and larger in magnitude:
+
+| Model | matched updates | test relL2 | **R^2 per sample** |
+|---|---:|---:|---:|
+| FNO | 1500 | 0.22835 | **+0.6503 ± 0.0222** |
+| MLP DeepONet | 5135 | 0.39091 | **-0.0475 ± 0.0826** |
+| Fourier DeepONet | 4233 | 0.40781 | **-0.1148 ± 0.0418** |
+
+And at 3.9 times that FLOP budget (20000 updates) MLP DeepONet is still -0.2470. The gap is
+therefore not explained by DeepONet receiving less compute, fewer updates, or fewer
+parameters; it survives an equal-work comparison and gets worse when DeepONet is given
+almost four times the work.
+
+The one thing this does not settle is a FLOP *accounting* difference between spectral and
+dense layers: FFT work is uncounted, so equal measured FLOPs are not provably equal real
+work. Given that the uncounted part belongs to FNO, the direction of the error favours FNO,
+so the conclusion is safe in sign.
 
 ### 5.10 Fitting interventions stabilize training without improving validation
 
