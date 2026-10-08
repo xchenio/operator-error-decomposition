@@ -53,6 +53,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.fno import FNO1d                      # noqa: E402
+from src.fno2d import FNO2d                    # noqa: E402
 from src.models import DeepONet, MLP           # noqa: E402
 from src.public_benchmark import atomic_json, file_hash   # noqa: E402
 
@@ -138,12 +139,22 @@ def conservation_check(arrays: dict, split: str) -> dict:
 
 def _end_to_end_prediction(cfg, ck, arrays, protocol, device, split):
     n = protocol["normalization"]
-    coords = torch.tensor(arrays["x"][:, None], device=device, dtype=torch.float32)
+    grid = arrays["x"]
+    # 1D caches store a (N,) coordinate vector; 2D caches store (N, 2) pairs. Everything
+    # downstream is driven from the cache so no size is hard-coded.
+    coords = torch.tensor(grid[:, None] if grid.ndim == 1 else grid,
+                          device=device, dtype=torch.float32)
+    trunk_in = 1 if grid.ndim == 1 else grid.shape[1]
     x = torch.tensor((arrays[split + "_x"] - n["input_mean"]) / max(n["input_std"], 1e-6), device=device)
     if cfg["architecture"] == "fno":
-        model = FNO1d(width=32, modes=16, layers=4).to(device)
+        if protocol.get("fno") == "fno2d":
+            model = FNO2d(grid_shape=tuple(protocol["grid_shape"]), width=32, modes=12,
+                          layers=4).to(device)
+        else:
+            model = FNO1d(width=32, modes=16, layers=4).to(device)
     else:
-        model = DeepONet(branch_in=len(arrays["x"]), trunk_in=1, width=64,
+        model = DeepONet(branch_in=int(arrays[split + "_x"].shape[1]), trunk_in=trunk_in,
+                         width=64,
                          branch_hidden=128, trunk_hidden=128, branch_layers=3,
                          trunk_layers=3,
                          trunk_type="fourier" if cfg["architecture"] == "deeponet_fourier" else "mlp").to(device)
