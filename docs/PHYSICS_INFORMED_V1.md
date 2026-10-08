@@ -117,6 +117,35 @@ python scripts/diagnose_fluctuation.py \
     --out results/fluctuation_physics_v1 --device cuda
 ```
 
+## 6c. Result on linear advection (measured after the extension was preregistered)
+
+| Model | relL2 | **R^2 per sample** | supervised | ratio |
+|---|---:|---:|---:|---:|
+| physics-informed MLP DeepONet | 0.7115 | **-0.0033 ± 0.0044** | +0.1817 | -0.02 |
+| physics-informed Fourier DeepONet | 0.5503 | **+0.3590 ± 0.0407** | +0.9424 | **0.38** |
+
+All recomputations reproduce stored metrics to 1.3e-08. The PDE loss fell to about 5e-2.
+
+**The prediction was partially falsified again.** It said physics-informed training would
+reach positive skill on both trunks. The MLP trunk does not: -0.0033, which is at the
+zero-fluctuation reference within its own standard deviation. The Fourier trunk does, at
++0.3590.
+
+The part of the prediction that survives, and that is the more useful result, is the ratio.
+Across the three operator-horizon combinations now measured, physics-informed training
+recovers:
+
+| setting | MLP | Fourier |
+|---|---:|---:|
+| Burgers, T = 1.0 | ~0 (relL2 0.436 vs 0.362 supervised) | none (negative vs negative) |
+| Burgers, T = 0.5 | 0.06 | 0.28 |
+| advection, T = 1.0 | ~0 | **0.38** |
+
+Physics-informed training therefore reaches between roughly zero and 0.4 of supervised
+fluctuation skill, and never approaches supervised performance. Its best relative showing is
+on the linear operator with a Fourier trunk, which is consistent with translation being the
+easiest residual to satisfy. Reported as measured; nothing was adjusted.
+
 ## 6b. Result at T = 0.5 (measured after the extension was preregistered)
 
 | Model | relL2 | mean share | fluctuation share | **R^2 per sample** |

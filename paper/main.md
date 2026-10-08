@@ -777,11 +777,29 @@ than the preregistered one: at a horizon where supervision succeeds, physics-inf
 also succeeds but barely, and its deficit stays concentrated in the conserved mean rather than
 in the fluctuation.
 
+A third arm uses **linear advection**, whose residual needs no fitted coefficient
+(`u_t + beta u_x = 0`, `beta = 0.4` from the file attributes). It is the strongest test
+available because supervised skill there is high.
+
+| Model | relL2 | **R^2 per sample** | supervised | ratio |
+|---|---:|---:|---:|---:|
+| physics-informed MLP DeepONet | 0.7115 | **-0.0033 ± 0.0044** | +0.1817 | -0.02 |
+| physics-informed Fourier DeepONet | 0.5503 | **+0.3590 ± 0.0407** | +0.9424 | **0.38** |
+
+The preregistered prediction was partially falsified again: it expected positive skill from
+both trunks, and the MLP trunk sits at -0.0033, indistinguishable from the zero-fluctuation
+reference. What survives is the ratio, and it is the more informative result. Across the three
+operator-horizon combinations measured, physics-informed training recovers a fraction of
+supervised fluctuation skill of roughly 0.06 and 0.28 on Burgers at T = 0.5, and roughly 0 and
+0.38 on advection. It never approaches supervised performance; its best relative showing is on
+the linear operator with a Fourier trunk, consistent with translation being the easiest
+residual to satisfy.
+
 Caveats: no physics-informed FNO control was run, because the 1D FNO maps a field to a field
 at one fixed time and has no time coordinate to differentiate; FNO appears only as the
 supervised reference. This arm also uses a different batch and collocation size, so its work
-per update is not matched to the supervised runs, and it exists on one operator at two
-horizons because only Nu = 0.01 admits a trustworthy residual here.
+per update is not matched to the supervised runs, and it covers two operators because only
+Burgers Nu = 0.01 and linear advection admit a trustworthy residual with the data available.
 
 ### 5.12 A scope condition on the per-sample measures
 
