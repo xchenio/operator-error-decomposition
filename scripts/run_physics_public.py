@@ -185,7 +185,12 @@ def train_one(cfg, arrays, protocol, folder, device):
         u_t_phys = u_t * ystd
         u_x_phys = u_x * ystd
         u_xx_phys = u_xx * ystd
-        residual = u_t_phys + u_phys * u_x_phys - cfg["nu"] * u_xx_phys
+        if cfg["equation"] == "advection":
+            # linear advection: u_t + beta u_x = 0, beta taken from the file attributes
+            residual = u_t_phys + cfg["beta"] * u_x_phys
+        else:
+            # Burgers: u_t + u u_x - nu u_xx = 0, nu measured from the data first
+            residual = u_t_phys + u_phys * u_x_phys - cfg["nu"] * u_xx_phys
 
         loss_ic = ((u_ic * ystd + ymean - (u0 * xstd + xmean)) ** 2).mean()
         loss_pde = (residual ** 2).mean()
@@ -244,6 +249,10 @@ def main() -> None:
     ap.add_argument("--collocation", type=int, default=256)
     ap.add_argument("--boundary-points", type=int, default=32)
     ap.add_argument("--nu", type=float, default=NU)
+    ap.add_argument("--equation", default="burgers", choices=("burgers", "advection"),
+                    help="advection uses u_t + beta u_x = 0 with beta from the file attributes")
+    ap.add_argument("--beta", type=float, default=None,
+                    help="required for --equation advection; normally read from the cache")
     ap.add_argument("--time-max", type=float, default=TIME_MAX,
                     help="target time; has to match the evaluation cache")
     ap.add_argument("--device", default="cuda")
@@ -261,6 +270,17 @@ def main() -> None:
                 dict(protocol, physics=dict(nu=args.nu, time_max=args.time_max,
                                             losses="initial condition + PDE residual + "
                                                    "periodicity, all weight 1")))
+    beta = args.beta
+    if args.equation == "advection":
+        if beta is None:
+            attrs = protocol.get("file_attrs") or {}
+            if "beta" not in attrs:
+                raise ValueError("advection needs --beta; the cache declares no file_attrs")
+            beta = float(attrs["beta"])
+        print(f"advection with beta={beta} from the cache", flush=True)
+    else:
+        beta = 0.0
+
     device = torch.device(args.device)
     for architecture in args.architectures.split(","):
         if architecture not in ("deeponet_mlp", "deeponet_fourier"):
@@ -269,7 +289,7 @@ def main() -> None:
             cfg = dict(architecture=architecture, seed=seed, steps=args.steps, lr=1e-3,
                        batch_size=args.batch_size, trunk_in=2,
                        collocation=args.collocation, boundary_points=args.boundary_points,
-                       nu=args.nu, time_max=args.time_max,
+                       nu=args.nu, beta=beta, equation=args.equation, time_max=args.time_max,
                        checkpoint_every=50, eval_every=250)
             train_one(cfg, arrays, protocol, out / f"{architecture}_s{seed}", device)
 

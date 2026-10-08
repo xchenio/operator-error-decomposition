@@ -83,6 +83,24 @@ than at `T = 1.0`, where nothing succeeds.
 per-sample fluctuation skill even where supervised training does, so its R^2 is predicted to
 be at or below zero and below the supervised values at this horizon.
 
+## 4c. Extension to linear advection, preregistered before the runs
+
+A second operator, so the arm is not tied to one equation. PDEBench 1D linear advection has a
+residual that needs no fitted coefficient: `u_t + beta u_x = 0` with `beta = 0.4` taken
+directly from the file attributes. Using the existing `fixed_t100_v1` cache (t = 1.0), the
+same split ids, the same budget, seeds and loss weights.
+
+This operator is chosen because **supervised skill there is high**: MLP +0.1817, Fourier
++0.9424, FNO +0.9994. It is therefore the strongest available test of whether a physics
+residual can substitute for target-time supervision.
+
+**Prediction, revised in the light of section 6b.** The original Burgers-based prediction was
+that physics-informed training would never reach positive skill; that was falsified at
+T = 0.5, where it reached +0.0088 and +0.0516 against supervised +0.1500 and +0.1878. The
+prediction here is therefore the corrected one: physics-informed training **will** reach
+positive skill, and will remain **clearly below** supervised training. The specific quantity
+of interest is the ratio, not the sign.
+
 ## 5. Secondary reporting
 
 Relative L2 at `T = 1.0` and the mean/fluctuation split are reported alongside the supervised
