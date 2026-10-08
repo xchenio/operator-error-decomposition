@@ -835,3 +835,39 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   evidence still rests on the viscosity ladder alone.
 - Manuscript: new section 5.6.4, abstract and limitations updated to four operators.
   Full discovery: 72 tests passed.
+
+## 2026-09-30 — FLOP-matched control, physics-informed arm, and the remaining gaps
+
+### FLOP matching (closes the compute objection)
+- `scripts/measure_flops.py` uses `torch.utils.flop_counter` on the real models: 7.82e7 FLOPs
+  per step for MLP DeepONet, 9.49e7 for Fourier, 2.68e8 for FNO. DeepONet was then trained at
+  FLOP-matched budgets of 5135 and 4233 updates.
+- **No FFT op is counted**, so the FNO total is a lower bound and the matched DeepONet budgets
+  are lower bounds on equal work: DeepONet is given less work than FNO actually performed.
+  At matched FLOPs MLP DeepONet scores -0.0475 and Fourier -0.1148 against FNO's +0.6503, and
+  at 3.9x the budget MLP DeepONet is still -0.2470.
+
+### Physics-informed arm (closes the "everything is supervised" objection)
+- Prerequisite settled first: `scripts/estimate_burgers_nu.py` fits the convection and
+  diffusion coefficients by least squares. On Nu=0.01 the fitted convection is 0.995 and the
+  fitted diffusion 3.140e-3 against nu_file/pi = 3.183e-3 with R^2 = 0.9999, so Burgers with
+  nu = nu_file/pi is satisfied. On Nu=0.001 the fit is poor (R^2 0.79, convection 0.68) from
+  under-resolved shocks, so **no physics loss is written there**.
+- A sign error in the spectral second derivative was found by an analytic sanity check on
+  cos(2 pi x) and fixed: `k` is `i*2*pi*f`, so `k**2` is the correct multiplier and writing
+  `-(k**2)` produced a spurious negative diffusion coefficient.
+- Trained with initial condition + PDE residual + periodicity, no target-time supervision.
+  PDE loss fell from about 1e-1 to 6e-5. Per-sample fluctuation R^2 = -0.0003 (MLP) and
+  -0.2240 (Fourier): **the preregistered prediction holds**, so the branch-bottleneck claim
+  survives.
+- The split is sharper than "physics does not help": physics-informed MLP reaches a
+  fluctuation share of 0.1875, exactly the oracle's (marginally better than supervised
+  -0.0273), but its mean share rises from 0.0334 to 0.1246, so it fails at the conservation
+  law rather than at the fluctuation.
+
+### Remaining gaps, documented rather than manufactured
+- `docs/REMAINING_GAPS_V1.md` records what is still untested and the exact DaRUS ids, byte
+  sizes and MD5s needed: Darcy `beta` variants 0.01 / 0.1 / 10.0 (1.31 GB each) for the
+  threshold boundary on a steady operator, and 1D CFD (12.4 GB) for a system of equations.
+  Downloading here is impractical at the measured throughput.
+- Full discovery: 73 tests passed.

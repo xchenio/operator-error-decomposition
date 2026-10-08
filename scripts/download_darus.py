@@ -39,6 +39,21 @@ CATALOG = {
     "1D_Burgers_Sols_Nu0.01.hdf5": dict(id=281363, size=8232968312,
                                         md5="e6d9a4f62baf9a29121a816b919e2770",
                                         note="1D Burgers, higher viscosity"),
+    # boundary test for the threshold rule on a steady elliptic operator
+    "2D_DarcyFlow_beta0.01_Train.hdf5": dict(id=133217, size=1310724760,
+                                             md5="d05c287d4c0b7d3178b0097084238251",
+                                             note="2D Darcy, smooth coefficient"),
+    "2D_DarcyFlow_beta0.1_Train.hdf5": dict(id=133218, size=1310724488,
+                                            md5="294f9a03a4aa16b0e386469ca8b471be",
+                                            note="2D Darcy, smooth coefficient"),
+    "2D_DarcyFlow_beta10.0_Train.hdf5": dict(id=133220, size=1310724488,
+                                             md5="a7f23cf8011fc211b180828af39b7d1a",
+                                             note="2D Darcy, rough coefficient"),
+    # a system of equations (density, velocity, pressure)
+    "1D_CFD_Rand_Eta0.01_Zeta0.01_periodic_Train.hdf5":
+        dict(id=164672, size=12410888600,
+             md5="2fdd00138f1d7abc794fb953021a9f43",
+             note="1D compressible CFD, three-component system"),
 }
 DATASET = "doi:10.18419/darus-2986"
 
