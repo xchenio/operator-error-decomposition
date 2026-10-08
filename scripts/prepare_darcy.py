@@ -39,8 +39,16 @@ sys.path.insert(0, str(ROOT))
 from src.public_benchmark import (  # noqa: E402  reused, not modified
     atomic_json, file_hash, split_indices)
 
+# published MD5s from the DaRUS deposit, keyed by filename, so beta variants can be
+# verified without loosening the check
+EXPECTED_MD5 = {
+    "2D_DarcyFlow_beta0.01_Train.hdf5": "d05c287d4c0b7d3178b0097084238251",
+    "2D_DarcyFlow_beta0.1_Train.hdf5": "294f9a03a4aa16b0e386469ca8b471be",
+    "2D_DarcyFlow_beta1.0_Train.hdf5": "81694ed31306ff2e5f6b76349b0b4389",
+    "2D_DarcyFlow_beta10.0_Train.hdf5": "a7f23cf8011fc211b180828af39b7d1a",
+    "2D_DarcyFlow_beta100.0_Train.hdf5": "7c09f3b1bb097737d3fd52ffb0c6f1c8",
+}
 SOURCE = ROOT / "external_data/pdebench/darus/2D_DarcyFlow_beta1.0_Train.hdf5"
-EXPECTED_MD5 = "81694ed31306ff2e5f6b76349b0b4389"
 OUT = ROOT / "external_data/pdebench/darcy"
 
 
@@ -65,7 +73,10 @@ def main() -> None:
     source, out = Path(args.source), Path(args.out)
     sizes = tuple(int(s) for s in args.sizes.split(","))
     digest = md5_of(source)
-    if digest != EXPECTED_MD5:
+    expected = EXPECTED_MD5.get(source.name)
+    if expected is None:
+        raise ValueError(f"unknown Darcy file {source.name}; add its published MD5 first")
+    if digest != expected:
         raise ValueError(f"MD5 mismatch for {source.name}: {digest}")
 
     with h5py.File(source, "r") as h:
