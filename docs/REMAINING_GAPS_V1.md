@@ -55,22 +55,15 @@ the break was recorded instead of repaired.
 
 ## What remains open, with the evidence for why
 
-4. **No multi-dimensional system, and no shallow water anywhere in the deposit.** A full
-   listing of the 336 files in `doi:10.18419/darus-2986` was queried rather than assumed:
+4. **Closed: a second, multi-dimensional system was tested and the rule held.**
+   `2D_diff-react_NA_NA.h5` (13.2 GB, id 133017, MD5 `b8d0b86064193195ddc30c33be5dc949`) was
+   fetched and run: 4 of 4 (`DIFFREACT2D_SYSTEM_V1.md`). This **corrected an over-strong
+   narrowing** — after CFD failed the claim had become "scalar operators only", which is
+   wrong. There is no shallow-water dataset anywhere in the deposit (verified by listing all
+   336 files), but the study now covers a 2D scalar operator, a 1D system and a 2D system.
 
-   * there is **no** shallow-water, SWE or similar dataset in this deposit at all;
-   * the smallest multi-dimensional *system* is `2D_diff-react_NA_NA.h5`, **13.2 GB**
-     (id 133017, MD5 `b8d0b86064193195ddc30c33be5dc949`), a two-component reaction-diffusion
-     system;
-   * everything larger is impractical: 2D CFD starts at 55.1 GB, 3D CFD at 66.1 GB, and
-     several files exceed 88 GB.
-
-   So the only realistic way to test a second, multi-dimensional system is
-   `2D_diff-react_NA_NA.h5`, already added to `scripts/download_darus.py`. Its value is that
-   it would show whether the rule's failure on systems generalises across a second and
-   structurally different system, or was specific to compressible flow. Note that the study
-   does already contain a **2D scalar** operator (Darcy) and a **1D system** (CFD); only the
-   combination is missing.
+   The one thing still unexplained is **why 1D CFD fails**: the two systems differ
+   simultaneously in PDE type, fluctuation energy and component count, so no cause is claimed.
 5. **The threshold boundary remains tested on evolution problems only.** This was
    investigated rather than asserted: across a 1000-fold change in Darcy `beta` the target
    fluctuation energy stays between 0.492 and 0.564, so no steady-operator setting approaches

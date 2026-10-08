@@ -941,3 +941,25 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   Abstract updated to state the five settings, the physics-informed arm, and the finding that
   the mean baseline is a property of the operator rather than the metric.
 - Draft marked v4. Full discovery: 77 tests passed.
+
+## 2026-10-08 — 2D reaction-diffusion: the rule recovers, and a narrowing is withdrawn
+
+- `2D_diff-react_NA_NA.h5` (13.2 GB) fetched and MD5-verified. Layout: one group per sample,
+  `data (101,128,128,2)`, **only 1000 samples**, so the split is 600/200/200.
+- Two properties measured before writing any code, following the 1D diffusion-sorption
+  precedent: the stored initial layer is broadband noise (4.9% of spectral energy inside
+  r < 0.25 Nyquist, 19% inside r < 0.5) so it is not used; the field smooths fast (70.6% by
+  layer 5, 96.8% by layer 20) so the input is layer 20 and the target layer 100.
+- Result: **4 of 4** (+0.0310 and +0.2377 for component 0, +0.0910 and +0.3734 for component
+  1), thresholds unrefitted.
+- **This withdraws the previous narrowing.** After CFD failed the claim had become "valid for
+  scalar operators only". A two-component, two-dimensional system supports the rule, so the
+  corrected statement is: the rule holds on every scalar family tested and on 2D
+  reaction-diffusion, and fails on 1D compressible CFD — specific to that operator, not to
+  coupling.
+- Why CFD fails is **explicitly left open**: the systems differ simultaneously in PDE type,
+  fluctuation energy (0.07-0.47 against 0.83-0.91) and component count. Both are predicted
+  poorly in total terms (best relL2 0.66 to 1.10), so it is the fluctuation measure and not
+  overall accuracy that separates them.
+- Sections 5.13 and 5.14, the abstract and the limitations updated; a test pins the
+  correction. Full discovery: 78 tests passed.
