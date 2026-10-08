@@ -871,3 +871,36 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   threshold boundary on a steady operator, and 1D CFD (12.4 GB) for a system of equations.
   Downloading here is impractical at the measured throughput.
 - Full discovery: 73 tests passed.
+
+## 2026-10-08 — Darcy beta ladder and the CFD system: one gap closed as untestable, one closed by falsification
+
+### Darcy beta ladder (gap 1)
+- Both additional beta files fetched and MD5-verified. A-priori statistics, taken before any
+  run, refuted the hypothesis: fluctuation energy is 0.5638 at beta 0.01, 0.4964 at beta 1.0
+  and 0.4918 at beta 10.0, so no Darcy setting approaches a threshold.
+- beta 10.0 confirmed the prediction 3 of 3 (+0.7780 / +0.9387 / +0.9874) with monotone
+  convergence. beta 0.01 gave relL2 0.70 to 3.80 and R^2 -1.9 to -87 and is **excluded**: its
+  validation curves are non-monotone and its target norms have CV 2.43 with a 343-fold spread,
+  against at most 0.66 and 100-fold in every reported family.
+- This established an explicit scope condition on the per-sample measures (roughly CV below 1
+  and spread below 100-fold), enforced by two tests, and closed gap 1 as **untestable with the
+  available data** rather than by refitting.
+
+### CFD system (gap 2)
+- Fetched, verified, prepared per output component (branch sees all three initial fields,
+  predicts one), and run. FNO deferred with a stated reason: FNO1d needs equal input and
+  coordinate lengths, and src/fno.py is hashed into every run identity.
+- **Sign accuracy 3 of 6, with every positive prediction wrong.** Density -0.0237 where + was
+  predicted; Vx -0.0160 and -0.2356 where + was predicted for both trunks; pressure correctly
+  negative. Thresholds not refitted.
+- Not a convergence artifact: validation curves plateau at 0.28, 1.10 and 0.096, unlike the
+  excluded beta 0.01 setting. A-priori fluctuation energy spans 0.074 to 0.542 across the
+  components, straddling every threshold, yet every measured skill is negative.
+- Likely confound stated as an observation without repair: the branch encodes three coupled
+  fields (768 values) here against one field (256) in every setting where the rule was fitted.
+- Conservation measured within the system: mass and momentum have input-output mean
+  correlations of 1.000000, while the spatial mean of Vx alone does not (0.9874, 12% mean
+  difference). Diagnostic caveat recorded: for multi-channel input the oracle input-mean row
+  is uninterpretable because it averages channels of very different scale.
+- **The manuscript's claim was narrowed: the rule is valid for scalar operators only.**
+- Full discovery: 76 tests passed.

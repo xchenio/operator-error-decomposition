@@ -1,82 +1,56 @@
-# Remaining gaps: what is still untested and what data would close it
+# Remaining gaps, and the two that were closed
 
-Date: 2026-09-30. Downloading from this machine is not practical (see
-`THIRD_PDE_DOWNLOAD_V1.md`: 34 KB/s single connection, 96 KB/s with four parallel ranges).
-The files below were therefore identified from the DaRUS catalogue with exact ids, sizes and
-MD5s so they can be fetched elsewhere and dropped into `external_data/pdebench/darus/`.
+Date: 2026-10-08. Supersedes the earlier version of this file.
 
-## Gap 1: the threshold boundary on a steady, non-evolution operator
+## Gap 1: the threshold boundary on a steady operator — CLOSED AS UNTESTABLE
 
-The rule has three out-of-sample confirmations, but only the viscosity ladder probes its
-boundary. Darcy at `beta = 1.0` sits far above every threshold (fluctuation energy 0.4964
-against 0.2477 / 0.2728 / 0.1502), so it confirmed the rule where it is easy.
+Both additional Darcy `beta` files were fetched and prepared. The a-priori statistics, taken
+before any run, refuted the hypothesis: across a 1000-fold change in `beta` the target
+fluctuation energy only moves between 0.492 and 0.564, always far above every threshold, and
+the smoothest setting has the *highest* fluctuation energy.
 
-**What would close it:** another Darcy `beta`. `beta` controls the roughness of the
-coefficient field, so a smoother coefficient should give a smoother solution and a lower
-fluctuation energy, potentially crossing a threshold.
+`beta = 10.0` was run and confirmed the prediction (3 of 3). `beta = 0.01` failed outright and
+was **excluded** for two measured reasons: its validation curves are non-monotone, and its
+target norms have a coefficient of variation of 2.43 with a 343-fold spread, against at most
+0.66 and 100-fold in every reported family, which makes the per-sample metric uninterpretable
+there. Full detail and the scope condition this established are in
+`DARCY_BETA_LADDER_V1.md`.
 
-| File | id | bytes | MD5 | hypothesis |
-|---|---:|---:|---|---|
-| `2D_DarcyFlow_beta0.01_Train.hdf5` | 133217 | 1,310,724,760 | `d05c287d4c0b7d3178b0097084238251` | smoothest; most likely to cross a threshold |
-| `2D_DarcyFlow_beta0.1_Train.hdf5` | 133218 | 1,310,724,488 | `294f9a03a4aa16b0e386469ca8b471be` | intermediate |
-| `2D_DarcyFlow_beta10.0_Train.hdf5` | 133220 | 1,310,724,488 | `a7f23cf8011fc211b180828af39b7d1a` | rougher; expected to stay positive |
+**Conclusion: no Darcy setting in this deposit approaches a threshold, so the boundary on a
+steady operator is untestable with the available data.** This is reported as a data limitation.
+It was not worked around by refitting the thresholds or by redefining the metric.
 
-Take `beta0.01` if you fetch one, `beta0.01` and `beta10.0` if you fetch two, so the ladder
-has both ends.
+## Gap 2: a system of equations — CLOSED, AND THE RULE FAILED
 
-Ready to run once the file is present:
+`1D_CFD_Rand_Eta0.01_Zeta0.01_periodic_Train.hdf5` (12.4 GB, three coupled fields) was
+fetched, prepared and run. Sign accuracy was **3 of 6**, with every prediction of positive
+skill wrong, and the thresholds were not refitted. Full detail in `CFD_SYSTEM_V1.md`.
 
-```bash
-python scripts/download_darus.py --file 2D_DarcyFlow_beta0.01_Train.hdf5   # verifies MD5
-python scripts/prepare_darcy.py --source external_data/pdebench/darus/2D_DarcyFlow_beta0.01_Train.hdf5 \
-    --out external_data/pdebench/darcy_beta001
-python scripts/run_darcy_benchmark.py --steps 1500 --device cuda
-```
+**The rule therefore has a stated boundary of validity: scalar operators, not systems of
+coupled fields.** The manuscript's claim was narrowed rather than defended.
 
-The prediction must be written down **before** those runs, from the a-priori fluctuation
-energy of the new target and the existing thresholds, and the thresholds must not be
-refitted. If the setting still lies far from the thresholds, say so rather than treating it
-as a boundary test.
+This is arguably the most useful single result of the last round: a predictive rule that had
+passed three out-of-sample tests was finally broken by a structurally different setting, and
+the break was recorded instead of repaired.
 
-## Gap 2: a system of equations
+## What remains open
 
-All four operators are scalar. A system tests whether the decomposition carries over when
-there are several coupled fields, and it is the one structural gap left in the study.
-
-This deposit has no shallow-water data. The smallest system available is 1D compressible CFD
-(density, velocity, pressure):
-
-| File | id | bytes | MD5 |
-|---|---:|---:|---|
-| `1D_CFD_Rand_Eta0.01_Zeta0.01_periodic_Train.hdf5` | 164672 | 12,410,888,600 | `2fdd00138f1d7abc794fb953021a9f43` |
-
-The other CFD files are 19.9 GB and 24.8 GB; there is no smaller system in this deposit.
-
-Open questions that must be settled before any run, because the answers change the design:
-
-* how many components the stored tensor has and whether they share a time axis;
-* whether a per-component mean/fluctuation split is the right generalisation, or whether the
-  conserved quantities (mass, momentum, energy) should define the reference instead — for a
-  system the conserved-mean argument is richer than for a scalar field, and this is arguably
-  the more interesting version of the decomposition;
-* whether the existing 1D runner can be extended or needs a multi-field variant.
-
-No preparation script is written yet, deliberately: writing one before seeing the layout
-risks the same class of silent mismatch that the diffusion-sorption check caught.
-
-## Gap 3: carried over from earlier
-
-* FLOP **accounting** is still incomplete: FFT work is uncounted, so equal measured FLOPs
-  are not provably equal real work. The direction of the error favours FNO, so the sign of
-  the conclusion is safe, but a true accounting would need a custom counter.
-* The physics-informed arm uses a different batch and collocation size from the supervised
-  runs, so its work per update is not matched.
-* The physics-informed arm exists on one operator at one viscosity, because only Nu = 0.01
-  admits a trustworthy residual here.
+1. **FLOP accounting is still incomplete.** FFT work is not counted by
+   `torch.utils.flop_counter`, so equal measured FLOPs are not provably equal real work. The
+   uncounted part belongs to FNO, so the error favours FNO and the sign of the conclusion is
+   safe, but a true accounting needs a custom counter.
+2. **No FNO control on the system.** `FNO1d` requires the input and the coordinate to have
+   equal length, which the three-channel input violates. `src/fno.py` is hashed into every
+   existing run identity, so a multi-input variant would have to be a new module.
+3. **The physics-informed arm is narrow**: one operator, one viscosity, and only Nu = 0.01
+   admits a trustworthy residual because Nu = 0.001 is under-resolved. Its work per update is
+   also not matched to the supervised runs.
+4. **No shallow-water or multi-dimensional system.** Only the 1D CFD system was tested, and
+   the rule already fails there, so it is unclear whether any system would support it.
+5. **The threshold boundary was tested on evolution problems only** (the viscosity ladder).
 
 ## What is not a gap
 
-Update-count budget, wall-clock budget, measured FLOP budget, parameter count, seven
-forecast horizons per evolution problem, two viscosities, and the trunk-span bound are all
-covered. Cross-operator transfer is covered by three held-out families. The remaining items
-are the boundary on a steady operator, systems, and exact FLOP accounting.
+Update-count, wall-clock and measured FLOP budgets; parameter counts; seven forecast horizons
+per evolution problem; two viscosities; the trunk-span bound; the physics-informed comparison;
+and cross-operator transfer across four scalar operators are all covered.
