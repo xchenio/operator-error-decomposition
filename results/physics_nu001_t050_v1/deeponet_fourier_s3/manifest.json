@@ -1,0 +1,32 @@
+{
+  "status": "completed",
+  "identity": {
+    "configuration": {
+      "architecture": "deeponet_fourier",
+      "seed": 3,
+      "steps": 1500,
+      "lr": 0.001,
+      "batch_size": 4,
+      "trunk_in": 2,
+      "collocation": 256,
+      "boundary_points": 32,
+      "nu": 0.003083,
+      "time_max": 0.5,
+      "checkpoint_every": 50,
+      "eval_every": 250
+    },
+    "source_sha256": "0b89156a5104d433a4e04c6310ce681eae61a8bc8a87a2139777d9efa3eea9ea",
+    "data_protocol": {
+      "cache_sha256": "7b3b25d1885e12c963a2b28d0edafed5566f64feba6b4f2dcaea652a0b640ad9"
+    },
+    "environment": {
+      "python": "3.11.16",
+      "torch": "2.14.0+cu130",
+      "numpy": "2.4.6",
+      "device": "cuda",
+      "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+      "cuda": "13.0"
+    }
+  },
+  "git_commit": "8cb897b22de1d41857c0893c6fdadc6b70386810"
+}

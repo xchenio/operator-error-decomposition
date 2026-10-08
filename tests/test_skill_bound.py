@@ -96,6 +96,34 @@ class ReportTest(unittest.TestCase):
         for run in payload["runs"]:
             self.assertLessEqual(run["splits"]["test"]["fluctuation_r2_per_sample"], 0.5)
 
+    def test_physics_arm_at_the_short_horizon_falsified_the_strict_prediction(self):
+        """The preregistered prediction was that physics-informed training would NOT reach
+        positive skill at T=0.5. It did (+0.0088, +0.0516), so the test asserts the corrected
+        record: positive but far below supervised, with the deficit in the mean share."""
+        pi = ROOT / "results/fluctuation_physics_v1/t050/physics_nu001_t050_v1.json"
+        sup = ROOT / "results/fluctuation_burgers_nu001_v1/t050/burgers_nu001_t050_v1.json"
+        if not pi.exists() or not sup.exists():
+            self.skipTest("t=0.5 artifacts absent")
+
+        def by_arch(path):
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            out = {}
+            for run in payload["runs"]:
+                out.setdefault(run["configuration"]["architecture"], []).append(
+                    run["splits"]["test"])
+            return {k: {m: float(np.mean([r[m] for r in v]))
+                        for m in ("fluctuation_r2_per_sample", "squared_error_mean_share")}
+                    for k, v in out.items()}
+
+        p, s = by_arch(pi), by_arch(sup)
+        for arch in ("deeponet_mlp", "deeponet_fourier"):
+            self.assertGreater(p[arch]["fluctuation_r2_per_sample"], 0.0,
+                               "the falsification record no longer applies")
+            self.assertLess(p[arch]["fluctuation_r2_per_sample"],
+                            s[arch]["fluctuation_r2_per_sample"] / 2.0)
+            self.assertGreater(p[arch]["squared_error_mean_share"],
+                               s[arch]["squared_error_mean_share"])
+
     def test_cfd_system_falsifies_the_positive_predictions(self):
         """The preregistered falsification criterion: on the three-field system the rule
         predicted positive skill for density (MLP) and for both trunks on Vx, and it was

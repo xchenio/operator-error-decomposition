@@ -99,6 +99,37 @@ python scripts/diagnose_fluctuation.py \
     --out results/fluctuation_physics_v1 --device cuda
 ```
 
+## 6b. Result at T = 0.5 (measured after the extension was preregistered)
+
+| Model | relL2 | mean share | fluctuation share | **R^2 per sample** |
+|---|---:|---:|---:|---:|
+| oracle (exact mean, zero fluctuation) | 0.43080 | 0.0000 | 0.2748 | 0.0000 |
+| supervised MLP DeepONet | 0.41646 | 0.0169 | 0.2336 | +0.1500 ± 0.0152 |
+| supervised Fourier DeepONet | 0.40288 | 0.0327 | 0.2232 | +0.1878 ± 0.0747 |
+| **physics-informed MLP DeepONet** | 0.49731 | **0.0707** | 0.2724 | **+0.0088 ± 0.0054** |
+| **physics-informed Fourier DeepONet** | 0.52047 | **0.1565** | 0.2606 | **+0.0516 ± 0.0364** |
+
+### The strict prediction is falsified; the substantive one holds
+
+Section 4b predicted that physics-informed training would **not** reach positive per-sample
+fluctuation skill even where supervised training does. That is **wrong**: it reaches
++0.0088 and +0.0516, both positive. The prediction is reported as falsified, and the
+thresholds and loss weights were not adjusted.
+
+What does hold is the comparison and the localisation:
+
+* physics-informed skill is **far below** supervised skill at the same horizon — 17 times
+  lower for the MLP trunk and 4 times lower for the Fourier trunk — so the "physics-informed
+  supersedes supervision" reading is not supported here;
+* the **mean share is again where the damage is** (0.071 and 0.157 against 0.017 and 0.033),
+  exactly as at `T = 1.0`. Physics-informed training is consistently worse at the conserved
+  mean and broadly comparable on the fluctuation.
+
+So the corrected statement is: at a horizon where supervised training succeeds,
+physics-informed training also succeeds, but barely, and its deficit remains concentrated in
+the mean component rather than the fluctuation. That is a weaker and more accurate claim than
+the preregistered one, and it replaces it.
+
 ## 7. Result (measured after the protocol was committed)
 
 Test split, 5 seeds, 1500 updates. The supervised column is the same setting, same split,

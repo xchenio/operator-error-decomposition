@@ -732,10 +732,35 @@ from 0.0334 to 0.1246**. With no target-time supervision the conserved mean has 
 from the residual and the initial condition alone, and it does not. Physics-informed training
 here is not worse at the fluctuation; it is worse at the conservation law.
 
+The arm was then extended to a shorter horizon, `T = 0.5`, chosen because **supervised
+training succeeds there** (MLP +0.1500, Fourier +0.1878), with the prediction preregistered
+that physics-informed training would still fail to reach positive skill.
+
+| Model | relL2 | mean share | fluctuation share | **R^2 per sample** |
+|---|---:|---:|---:|---:|
+| oracle (exact mean, zero fluctuation) | 0.43080 | 0.0000 | 0.2748 | 0.0000 |
+| supervised MLP DeepONet | 0.41646 | 0.0169 | 0.2336 | +0.1500 ± 0.0152 |
+| supervised Fourier DeepONet | 0.40288 | 0.0327 | 0.2232 | +0.1878 ± 0.0747 |
+| **physics-informed MLP DeepONet** | 0.49731 | **0.0707** | 0.2724 | **+0.0088 ± 0.0054** |
+| **physics-informed Fourier DeepONet** | 0.52047 | **0.1565** | 0.2606 | **+0.0516 ± 0.0364** |
+
+**The preregistered prediction was wrong and is reported as falsified**: physics-informed
+training does reach positive skill at this horizon, +0.0088 and +0.0516. The loss weights and
+the coefficient were not adjusted in response.
+
+What survives is the comparison and the localisation. Physics-informed skill is 17 times
+lower than supervised for the MLP trunk and 4 times lower for the Fourier trunk, and the
+**mean share is again where the damage is** (0.071 and 0.157 against 0.017 and 0.033), the
+same pattern as at `T = 1.0`. The corrected statement is therefore weaker and more accurate
+than the preregistered one: at a horizon where supervision succeeds, physics-informed training
+also succeeds but barely, and its deficit stays concentrated in the conserved mean rather than
+in the fluctuation.
+
 Caveats: no physics-informed FNO control was run, because the 1D FNO maps a field to a field
 at one fixed time and has no time coordinate to differentiate; FNO appears only as the
 supervised reference. This arm also uses a different batch and collocation size, so its work
-per update is not matched to the supervised runs.
+per update is not matched to the supervised runs, and it exists on one operator at two
+horizons because only Nu = 0.01 admits a trustworthy residual here.
 
 ### 5.12 A scope condition on the per-sample measures
 
