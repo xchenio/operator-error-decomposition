@@ -811,3 +811,27 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Manuscript: new section 5.6.3, section 5.6 retitled, abstract and section 5.8 updated to
   two out-of-sample tests, limitation narrowed to "a genuinely different operator class,
   in particular a steady elliptic one, is still open". Full discovery: 71 tests passed.
+
+## 2026-09-30 — steady elliptic Darcy: rule transfers; mean baseline shown to be physics-dependent
+
+- Protocol and prediction committed before any run (`docs/DARCY_ELLIPTIC_V1.md`). Added
+  `src/fno2d.py` and `scripts/run_darcy_benchmark.py` as **new files**; `src/fno.py` was not
+  edited because it is hashed into every existing run identity.
+  `scripts/diagnose_fluctuation.py` now derives coordinates, trunk dimension, branch width
+  and the FNO variant from the cache instead of hard-coding 1D sizes, so it handles both
+  layouts without changing any 1D result.
+- Result: per-sample fluctuation R^2 = +0.7614 (MLP), +0.9153 (Fourier), +0.9790 (FNO).
+  A-priori fluctuation energy 0.4964 is above every threshold, so positive skill was
+  predicted for all three: **3/3 correct**.
+- **The mean baseline's meaning is now shown to be operator-dependent.** Input-output mean
+  correlation is -0.873, so there is no conservation law, and the input-spatial-mean
+  predictor gives test relative L2 **3.6843** versus 0.37577 on Burgers where the same
+  construction is a genuine conservation-law predictor.
+- Ordering matches the other families (FNO > Fourier trunk > MLP trunk).
+- Recomputation reproduces stored metrics to 1.8e-08 here rather than exactly, because the
+  2D grid is stored as float32 coordinate pairs; still far below tolerance, no run flagged.
+- Stated weakness predeclared and restated: the single Darcy setting is far above every
+  threshold, so it can falsify but a confirmation is weak. The quantitative boundary
+  evidence still rests on the viscosity ladder alone.
+- Manuscript: new section 5.6.4, abstract and limitations updated to four operators.
+  Full discovery: 72 tests passed.

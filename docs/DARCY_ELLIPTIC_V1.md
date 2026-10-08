@@ -85,6 +85,38 @@ python scripts/diagnose_fluctuation.py \
     --out results/fluctuation_darcy_v1 --device cuda
 ```
 
-## 9. Result
+## 9. Result (measured after the protocol was committed)
 
-Filled in after the runs; see also `docs/RUN_LOG.md`.
+Per-sample fluctuation R^2 on the test split, 5 seeds, 1500 updates:
+
+| Model | test relL2 | **R^2 per sample** | R^2 energy-weighted | predicted |
+|---|---:|---:|---:|---|
+| MLP DeepONet | 0.26353 | **+0.7614 ± 0.0160** | +0.8081 | + |
+| Fourier DeepONet | 0.16450 | **+0.9153 ± 0.0079** | +0.9333 | + |
+| FNO | 0.08330 | **+0.9790 ± 0.0009** | +0.9731 | + |
+
+**3 of 3 predictions correct.** The threshold rule, fitted on 1D evolution problems and
+never refitted, predicts the sign of fluctuation skill on a steady elliptic 2D operator.
+
+The measured target fluctuation energy is 0.4964, close to the a-priori 0.4993 (the small
+gap is the train/test split).
+
+### The predeclared caveat is confirmed by the data
+
+The input-output mean correlation is **-0.873** on the test split (and -0.872 / -0.885 on
+train / validation), so there is no conservation law, exactly as stated in advance. The
+input-spatial-mean predictor consequently gives a test relative L2 of **3.6843** — it is
+worse than useless here — whereas on Burgers the same construction was a genuine conservation-
+law predictor at 0.37577. This is the clearest demonstration in the study that the mean
+baseline's meaning comes from the physics of the operator and not from the metric.
+
+Ordering is consistent with the other families: FNO > Fourier trunk > MLP trunk.
+
+### Notes
+
+* Recomputation reproduces stored metrics to 1.8e-08 here rather than exactly, because the
+  2D grid is stored as float32 coordinate pairs; it remains far below the faithfulness
+  tolerance and no run was flagged.
+* As predeclared, this is a non-boundary test: it can falsify the rule and did not, so it is
+  weak support. The boundary was tested by the viscosity ladder. Nothing about a skill
+  horizon is claimed here because a steady problem has no horizon.

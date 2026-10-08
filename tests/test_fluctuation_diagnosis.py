@@ -275,5 +275,19 @@ class ManuscriptTableTest(unittest.TestCase):
             self.assertIn(f"| {tag/100:.2f} | {energy:.4f} | " + " | ".join(cells) + " |", text)
 
 
+    def test_section_5_6_4_darcy_table(self):
+        text = self.main.read_text(encoding="utf-8")
+        path = ROOT / "results/fluctuation_darcy_v1/darcy_v1.json"
+        if not path.exists():
+            self.skipTest("darcy artifacts absent")
+        rows = self._groups(path)
+        for key, label in (("deeponet_mlp", "MLP DeepONet"),
+                           ("deeponet_fourier", "Fourier DeepONet"),
+                           ("fno", "FNO")):
+            rel, _ = self._stats(rows[key], "mean_relative_l2")
+            p, ps = self._stats(rows[key], "fluctuation_r2_per_sample")
+            self.assertIn(f"| {label} | {rel:.5f} | {p:+.4f} ± {ps:.4f} |", text)
+
+
 if __name__ == "__main__":
     unittest.main()

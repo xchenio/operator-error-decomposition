@@ -55,7 +55,8 @@ the threshold form of the rule over "a longer forecast is harder". A fluctuation
 threshold fitted on the first two PDEs, and never refitted, predicts the sign of skill on
 both held-out families: 6 of 6 diffusion-sorption settings and 21 of 21 Burgers Nu=0.01
 settings, including every threshold crossing, with predicted skill horizons 0.740 / 0.860 /
-1.650 against measured 0.735 / 0.924 / 1.839.
+1.650 against measured 0.735 / 0.924 / 1.839, and 3 of 3 on a steady elliptic operator where
+the input-output mean correlation is -0.873 and the mean baseline is consequently worthless.
 
 An exact bound depending only on the trunk span (section 3.3) shows the constraint is the
 branch, not the basis: the Fourier trunk's bound is +0.96 to +1.00 on both PDEs at every
@@ -477,6 +478,34 @@ which is what linear interpolation over a coarse grid implies at the far end of 
 This is a parameter ladder on one operator, so it shows the rule tracks a physical parameter;
 it does not by itself show the rule transfers to a new operator class.
 
+### 5.6.4 A steady elliptic operator, and what it says about the mean baseline
+
+PDEBench 2D Darcy is steady, elliptic and two-dimensional: `nu (10000,128,128)` is a
+coefficient field and `tensor (10000,1,128,128)` the solution, subsampled with stride 2 to
+64x64. It differs from every other family in three independent ways, and its protocol and
+prediction were committed before any run
+([DARCY_ELLIPTIC_V1.md](../docs/DARCY_ELLIPTIC_V1.md)). Two new files supply the 2D
+machinery (`src/fno2d.py`, `scripts/run_darcy_benchmark.py`); `src/fno.py` was not edited
+because it is hashed into every existing run identity.
+
+| Model | test relL2 | **R^2 per sample** | R^2 energy-weighted |
+|---|---:|---:|---:|
+| MLP DeepONet | 0.26353 | +0.7614 ± 0.0160 | +0.8081 |
+| Fourier DeepONet | 0.16450 | +0.9153 ± 0.0079 | +0.9333 |
+| FNO | 0.08330 | +0.9790 ± 0.0009 | +0.9731 |
+
+The a-priori fluctuation energy is 0.4964, above every threshold, so positive skill was
+predicted for all three: **3 of 3 correct**. The rule therefore transfers from 1D evolution
+problems to a steady elliptic operator with the thresholds unchanged.
+
+**This family also settles what the mean baseline means.** The input-output mean correlation
+is **-0.873**, so no conservation law links them, and the input-spatial-mean predictor gives
+a test relative L2 of **3.6843** — far worse than useless. On Burgers the identical
+construction was a genuine conservation-law predictor at 0.37577. The comparison shows that
+the standing of the mean baseline is a property of the operator's physics, not of the metric
+or of the architecture. The zero-fluctuation reference, by contrast, needs no physics: it is
+well defined for any field, which is why the skill measure carries over unchanged.
+
 ### 5.7 The binding constraint is the branch, not the trunk
 
 Section 3.3 gives an exact upper bound on fluctuation skill that depends only on the trunk
@@ -542,10 +571,12 @@ are interpolated from Burgers Nu0.001 and advection only — about 0.248 for MLP
 * the six held-out diffusion-sorption settings: 6/6 correct for each architecture;
 * the 21 held-out Burgers Nu=0.01 settings: 21/21 correct (7/7 per architecture), with
   predicted skill horizons 0.740 / 0.860 / 1.650 against measured 0.735 / 0.924 / 1.839
-  (section 5.6.3).
+  (section 5.6.3);
+* the 3 held-out steady elliptic Darcy settings: 3/3 correct (section 5.6.4).
 
-The second test is the stronger one because its settings straddle the thresholds rather than
-lying far from them.
+The viscosity ladder is the strongest of the three because its settings straddle the
+thresholds rather than lying far from them; Darcy is the only test on a non-evolution
+operator.
 
 Three qualifications still limit the claim:
 
@@ -557,10 +588,11 @@ Three qualifications still limit the claim:
    [THIRD_PDE_DIFFSORP_V1.md](../docs/THIRD_PDE_DIFFSORP_V1.md), every model scores
    essentially 1.000 on diffusion-sorption, so those settings do not discriminate. They
    confirm the rule where it is easy and do not probe it where it is hard.
-3. **What remains untested.** The viscosity ladder straddles the thresholds but stays on the
-   same operator, solver and initial-condition generator. Whether the thresholds transfer to
-   a genuinely different operator class — in particular a steady elliptic one — is still
-   open, and no refitting was done to make them appear to.
+3. **What remains untested.** The rule now has three out-of-sample confirmations, but only
+   the viscosity ladder probes its boundary, and no held-out setting on the non-evolution
+   operator lies near a threshold. Whether the specific numeric thresholds transfer to a
+   steady operator at its boundary is therefore still open, and no refitting was done to
+   make them appear to.
 
 One hypothesis was tested and failed: the input-to-target subspace distance was expected to
 grow with horizon where the fluctuation spectrum evolves. It does the opposite on Burgers
@@ -651,15 +683,16 @@ superior; at t=2.00 FNO is below zero as well.
 
 Limitations:
 
-- Three PDEs, one parameter set each, one split each. Advection is linear transport,
-  Burgers nonlinear convection-diffusion and diffusion-sorption dissipative parabolic, so
-  the triple separates transport from dissipation from steepening, but all three are 1D
-  scalar evolution problems; a steady elliptic operator or a system of equations is still
-  missing, and the cross-PDE gap identified in
-  [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is narrowed, not closed.
-  The diffusion-sorption contribution is additionally weak: its target fluctuation lies in
-  one spatial mode and every model saturates, and its stored initial state is spatially
-  constant, so it is used from layer 20 onward.
+- Four operators, one parameter set each, one split each: linear transport, nonlinear
+  convection-diffusion at two viscosities, dissipative parabolic, and one steady elliptic
+  two-dimensional problem. A system of equations is still missing, and the cross-PDE gap
+  identified in [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is narrowed,
+  not closed.
+- Two families are weak in the specific sense that every model saturates far from the
+  thresholds: diffusion-sorption, whose target fluctuation lies in one spatial mode and
+  whose stored initial state is spatially constant (so it is used from layer 20 onward),
+  and Darcy, whose only setting is far above every threshold. The quantitative boundary
+  evidence rests on the viscosity ladder alone.
 - **Compute is not FLOP-matched.** Parameter counts are within 18% and FNO costs about
   2.2x more wall-clock per update, so the gap is not explained by DeepONet having less of
   either (section 5.6). No FLOP-level accounting or FLOP-matched control was run, and the
