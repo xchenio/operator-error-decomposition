@@ -1040,7 +1040,7 @@ Limitations:
   600/200/200. No shallow-water data exists in the deposit used.
 - **Benchmark age and data version.** The PDEBench *paper* is 2022 [4], but the *data* is a
   separately versioned deposit: we use DaRUS `doi:10.18419/darus-2986` **version 8, released
-  2024-02-13**, queried 2026-10-08. The files were downloaded between 2026-09-22 and
+  2024-02-13, the latest released version as of 2026-10-08**. The files were downloaded between 2026-09-22 and
   2026-10-08, so they are the current upstream content rather than an archived 2022
   snapshot. Maintenance of the *code* repository is a separate matter and does not by itself
   change any data byte: the Burgers file is fetched from the HuggingFace `pdebench/Burgers`
@@ -1052,10 +1052,10 @@ Limitations:
   (for example PDEArena). Because our claim is a *diagnostic decomposition* and not a
   state-of-the-art accuracy result, the conclusion does not depend on the benchmark being
   current; a reader should nevertheless read the absolute error levels as 2024-generation
-  baselines rather than as a comparison against the newest architectures. What is **not**
-  established is whether the content of our eight files changed between version 1 and
-  version 8 of the deposit; the identifiers are stable, but we did not diff the versions.
-  Nothing here is claimed to transfer to foundation-model-scale operator training.
+  baselines rather than as a comparison against the newest architectures. Nothing here is
+  claimed to transfer to foundation-model-scale operator training. A version history of the
+  deposit is kept outside the manuscript in
+  [docs/PDEBENCH_DATA_VERSIONS_V1.md](../docs/PDEBENCH_DATA_VERSIONS_V1.md).
 - **The threshold rule holds on every scalar family tested and on 2D reaction-diffusion, and
   fails on 1D compressible CFD** (sections 5.13 and 5.14), with the thresholds unrefitted
   throughout. Why CFD fails is not established, and any use of the rule on a compressible
@@ -1139,9 +1139,10 @@ Entries 1-9 keep their original numbering so that in-text citations do not shift
    https://arxiv.org/abs/2210.07182
    Data deposit: DaRUS (University of Stuttgart), https://doi.org/10.18419/darus-2986 .
    **The paper is 2022 but the data deposit is versioned separately: this study uses
-   version 8, RELEASED, with release and last-update timestamps of 2024-02-13** (queried
-   2026-10-08 through the Dataverse API). All eight datafile identifiers used here are
-   present in that version. See section 6, "Benchmark age and data version".
+   version 8, RELEASED, with release and last-update timestamps of 2024-02-13** (the latest
+   released version, queried 2026-10-08 through the Dataverse API). All datafile
+   identifiers used here are present in that version, and every file is byte-pinned.
+   See section 6, "Benchmark age and data version".
 5. Thomas Bachlechner, Bodhisattwa Prasad Majumder, Huanru Henry Mao, Garrison W. Cottrell
    and Julian McAuley. *ReZero is all you need: fast convergence at large depth*. UAI /
    PMLR 161, 2021. https://proceedings.mlr.press/v161/bachlechner21a.html ;

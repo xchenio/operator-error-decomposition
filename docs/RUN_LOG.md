@@ -1024,6 +1024,37 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   diffed. This does not affect reproducibility, since every file is byte-pinned.
 - Full discovery: 78 tests passed.
 
+### Full version history pulled; new analysis file created outside the manuscript
+
+- Pulled all eight versions from the Dataverse API
+  (`/versions` and `/versions/{n}/files`) and saved the raw per-version inventories to
+  `results/darus_version_files.json`. Wrote the analysis to
+  **docs/PDEBENCH_DATA_VERSIONS_V1.md**, which is deliberately *not* part of the
+  manuscript; the paper now states only that the current release is used.
+- Timeline: v1 2022-07-26 (373 files), v2 2022-10-14 (373), v3 2023-04-18 (584), v4
+  2023-08-30 (578), v5 2023-09-05 (584), v6 2023-10-09 (586), v7 2023-11-30 (594),
+  **v8 2024-02-13 (336)**. v8 removed 262 files. All versions are RELEASED; no draft and no
+  version 9.
+- **No file identifier ever changed its MD5 in place.** Revisions remove an id and add a new
+  one with the same name, so an id's MD5 is a reliable content fingerprint.
+- **Five of our seven DaRUS files are byte-identical to the initial v1 release of
+  2022-07-26** (133017, 133020, 133217, 133219, 133220). Two were revised: the CFD file
+  (new id 164672) in v2, replacing md5 `d8d71c22...` with `2fdd00138f...`; and
+  `1D_Burgers_Sols_Nu0.01.hdf5` (new id 281363) in v8, replacing `0a49257a...` with
+  `e6d9a4f6...`. Both revisions predate our downloads, so we hold the revised content.
+  What changed inside those files is not published and is not claimed.
+- **HuggingFace check**: `pdebench/Burgers` and `pdebench/Advection` report current `sha`
+  values exactly equal to the revisions pinned in `scripts/` (`97bf5bb5315b`,
+  `33d90a245d98b`), last modified 2024-02-15 and 2024-02-14 — one to two days after the
+  DaRUS v8 release, consistent with a coordinated re-release.
+- **Conclusion: the data is current on every channel** as of 2026-10-08, and upstream has
+  been static since 2024-02-15. The earlier "four years old" framing was overstated: the
+  data is about 2.7 years old and is the newest release, not a stale snapshot.
+- Manuscript touched only to keep it truthful and minimal: reference [4] and section 6 now
+  say version 8 is the latest released version, and the sentence claiming the versions were
+  not diffed was replaced by a pointer to the analysis document.
+- Full discovery: 78 tests passed.
+
 ## 2026-10-08 — synthesis of the held-out record, FNO on the 2D system, physics on advection
 
 ### Held-out synthesis (pure analysis, no new data)
