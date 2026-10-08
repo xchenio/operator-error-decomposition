@@ -11,7 +11,12 @@
       "fft_ops_counted": [],
       "n_ops_counted": 14,
       "parameters": 115713,
-      "fno_to_this_ratio": 3.423785594639866
+      "estimated_fft_flops": 0,
+      "detail": "no spectral layer",
+      "total_with_estimated_fft": 78249984,
+      "fno_to_this_ratio_measured": 3.423785594639866,
+      "fno_to_this_ratio_with_fft": 4.4958123953098825,
+      "matched_updates_for_fno_1500": 6744
     },
     "deeponet_fourier": {
       "total_flops": 94928896,
@@ -20,7 +25,12 @@
       "fft_ops_counted": [],
       "n_ops_counted": 16,
       "parameters": 131969,
-      "fno_to_this_ratio": 2.822229892992751
+      "estimated_fft_flops": 0,
+      "detail": "no spectral layer",
+      "total_with_estimated_fft": 94928896,
+      "fno_to_this_ratio_measured": 2.822229892992751,
+      "fno_to_this_ratio_with_fft": 3.7059026579219885,
+      "matched_updates_for_fno_1500": 5559
     },
     "fno": {
       "total_flops": 267911168,
@@ -28,7 +38,10 @@
       "per_sample_flops": 8372224.0,
       "fft_ops_counted": [],
       "n_ops_counted": 14,
-      "parameters": 136481
+      "parameters": 136481,
+      "estimated_fft_flops": 83886080,
+      "detail": "4 spectral layers, factor 4 for forward and backward",
+      "total_with_estimated_fft": 351797248
     }
   }
 }

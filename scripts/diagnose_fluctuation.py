@@ -53,6 +53,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.fno import FNO1d                      # noqa: E402
+from src.fno1d_multi import FNO1dMulti         # noqa: E402
 from src.fno2d import FNO2d                    # noqa: E402
 from src.models import DeepONet, MLP           # noqa: E402
 from src.public_benchmark import atomic_json, file_hash   # noqa: E402
@@ -152,9 +153,14 @@ def _end_to_end_prediction(cfg, ck, arrays, protocol, device, split, eval_time=N
     trunk_in = int(cfg.get("trunk_in", 1 if grid.ndim == 1 else grid.shape[1]))
     x = torch.tensor((arrays[split + "_x"] - n["input_mean"]) / max(n["input_std"], 1e-6), device=device)
     if cfg["architecture"] == "fno":
+        components = protocol.get("input_components")
         if protocol.get("fno") == "fno2d":
             model = FNO2d(grid_shape=tuple(protocol["grid_shape"]), width=32, modes=12,
                           layers=4).to(device)
+        elif components:
+            # multi-channel initial state, e.g. the CFD system
+            model = FNO1dMulti(grid_size=int(protocol["grid_size"]), channels=len(components),
+                               width=32, modes=16, layers=4).to(device)
         else:
             model = FNO1d(width=32, modes=16, layers=4).to(device)
     else:

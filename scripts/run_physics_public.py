@@ -45,7 +45,7 @@ from src.utils import env_fingerprint, set_seed  # noqa: E402
 
 DATA = "external_data/pdebench/burgers_nu001/fixed_t100_v1"
 NU = 3.083e-3          # preregistered pooled least-squares fit, see docs/PHYSICS_INFORMED_V1.md
-TIME_MAX = 1.0         # target time of the evaluation cache
+TIME_MAX = 1.0         # default target time; override with --time-max to match the cache
 
 
 def source_hash() -> str:
@@ -161,11 +161,11 @@ def train_one(cfg, arrays, protocol, folder, device):
         # initial condition at t = 0 on the sensor grid
         c_ic = np.column_stack([np.zeros(n_ic), grid])
         # collocation in the interior
-        t_col = rng.uniform(1e-4, TIME_MAX, size=cfg["collocation"])
+        t_col = rng.uniform(1e-4, cfg["time_max"], size=cfg["collocation"])
         x_col = rng.uniform(0.0, 1.0, size=cfg["collocation"])
         c_col = np.column_stack([t_col, x_col])
         # periodicity: same time, both endpoints
-        t_bc = rng.uniform(0.0, TIME_MAX, size=cfg["boundary_points"])
+        t_bc = rng.uniform(0.0, cfg["time_max"], size=cfg["boundary_points"])
         c_bc = np.column_stack([np.repeat(t_bc, 2),
                                 np.tile(np.array([0.0, 1.0]), cfg["boundary_points"])])
 
@@ -202,7 +202,7 @@ def train_one(cfg, arrays, protocol, folder, device):
         step += 1
 
         if step % cfg["eval_every"] == 0 or step == cfg["steps"]:
-            pred = predict_at("val", TIME_MAX)
+            pred = predict_at("val", cfg["time_max"])
             val = metrics(pred, arrays["val_y"])
             row = dict(step=step, loss=float(loss.detach()),
                        loss_ic=float(loss_ic.detach()), loss_pde=float(loss_pde.detach()),
@@ -218,7 +218,7 @@ def train_one(cfg, arrays, protocol, folder, device):
 
     scores = {}
     for split in ("train", "val", "test"):
-        scores[split] = metrics(predict_at(split, TIME_MAX), arrays[split + "_y"])
+        scores[split] = metrics(predict_at(split, cfg["time_max"]), arrays[split + "_y"])
     parameters = sum(p.numel() * (2 if p.is_complex() else 1) for p in model.parameters())
     result = dict(identity=identity, git_commit=git_commit, metrics=scores, history=history,
                   train_seconds=train_seconds, real_parameter_count=parameters,
@@ -244,6 +244,8 @@ def main() -> None:
     ap.add_argument("--collocation", type=int, default=256)
     ap.add_argument("--boundary-points", type=int, default=32)
     ap.add_argument("--nu", type=float, default=NU)
+    ap.add_argument("--time-max", type=float, default=TIME_MAX,
+                    help="target time; has to match the evaluation cache")
     ap.add_argument("--device", default="cuda")
     args = ap.parse_args()
 
@@ -256,7 +258,7 @@ def main() -> None:
     out = ROOT / args.out
     out.mkdir(parents=True, exist_ok=True)
     atomic_json(out / "protocol.json",
-                dict(protocol, physics=dict(nu=args.nu, time_max=TIME_MAX,
+                dict(protocol, physics=dict(nu=args.nu, time_max=args.time_max,
                                             losses="initial condition + PDE residual + "
                                                    "periodicity, all weight 1")))
     device = torch.device(args.device)
@@ -267,7 +269,8 @@ def main() -> None:
             cfg = dict(architecture=architecture, seed=seed, steps=args.steps, lr=1e-3,
                        batch_size=args.batch_size, trunk_in=2,
                        collocation=args.collocation, boundary_points=args.boundary_points,
-                       nu=args.nu, checkpoint_every=50, eval_every=250)
+                       nu=args.nu, time_max=args.time_max,
+                       checkpoint_every=50, eval_every=250)
             train_one(cfg, arrays, protocol, out / f"{architecture}_s{seed}", device)
 
 

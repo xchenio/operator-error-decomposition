@@ -69,6 +69,20 @@ R^2 (say above +0.2) where supervised training is negative, the branch-bottlenec
 section 5.7 is contradicted and must be revisited. That outcome would be reported as such,
 not reconciled by reweighting the losses.
 
+## 4b. Extension to a shorter horizon, preregistered before the runs
+
+The arm above exists at one horizon, which makes it narrow. It is extended to `T = 0.5` on the
+same operator, viscosity, coefficient, budget, seeds and loss weights, using the existing
+Nu=0.01 `t = 0.5` cache so the comparison stays paired.
+
+This horizon is chosen because it is one where **supervised training succeeds**: supervised
+MLP DeepONet scores +0.1500 and supervised Fourier +0.1878 there. So the question is sharper
+than at `T = 1.0`, where nothing succeeds.
+
+**Prediction, from the same mechanism:** physics-informed training will not reach positive
+per-sample fluctuation skill even where supervised training does, so its R^2 is predicted to
+be at or below zero and below the supervised values at this horizon.
+
 ## 5. Secondary reporting
 
 Relative L2 at `T = 1.0` and the mean/fluctuation split are reported alongside the supervised

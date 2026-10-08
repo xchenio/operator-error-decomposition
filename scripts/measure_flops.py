@@ -51,6 +51,31 @@ def build(architecture, protocol, device):
                     trunk_type="fourier" if architecture == "deeponet_fourier" else "mlp")
 
 
+def analytic_fft_flops(architecture, protocol, batch: int, coords_shape) -> dict:
+    """Estimate the FFT work that FlopCounterMode does not register.
+
+    Standard estimates: a complex FFT of length n costs about 5 n log2(n) flops and a real
+    FFT about half that. A forward-plus-backward pass needs the transform and its inverse in
+    the forward, and roughly the same work again in the backward, so the factor used below is
+    4 transforms worth per spectral layer. This is an estimate, reported separately from the
+    measured dense count so a reader can use either.
+    """
+    n = int(coords_shape[0])
+    if architecture != "fno":
+        return dict(estimated_fft_flops=0, detail="no spectral layer")
+    layers = 4
+    if protocol.get("fno") == "fno2d":
+        h, w = tuple(protocol["grid_shape"])
+        per_point = 2.5 * np.log2(max(h * w, 2))
+        per_transform = batch * 32 * h * w * per_point
+    else:
+        per_point = 2.5 * np.log2(max(n, 2))
+        per_transform = batch * 32 * n * per_point
+    total = int(4 * layers * per_transform)
+    return dict(estimated_fft_flops=total,
+                detail=f"{layers} spectral layers, factor 4 for forward and backward")
+
+
 def measure(model, inputs, coords, device, batch: int) -> dict:
     model = model.to(device).train()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
@@ -102,18 +127,28 @@ def main() -> None:
         params = sum(p.numel() * (2 if p.is_complex() else 1) for p in model.parameters())
         res = measure(model, inputs, coords, device, args.batch)
         res["parameters"] = int(params)
+        res.update(analytic_fft_flops(architecture, protocol, args.batch, coords.shape))
+        res["total_with_estimated_fft"] = int(res["total_flops"] + res["estimated_fft_flops"])
         report["measurements"][architecture] = res
-        print(f"{architecture:18s} params={params:8d}  flops/step={res['total_flops']:,}  "
-              f"fft_ops_counted={res['fft_ops_counted']}", flush=True)
+        print(f"{architecture:18s} params={params:8d}  measured={res['total_flops']:,}  "
+              f"est_fft={res['estimated_fft_flops']:,}  "
+              f"total={res['total_with_estimated_fft']:,}", flush=True)
 
     base = report["measurements"].get("fno")
     if base:
         for name, res in report["measurements"].items():
             if name == "fno":
                 continue
-            ratio = base["total_flops"] / max(res["total_flops"], 1)
-            res["fno_to_this_ratio"] = float(ratio)
-            print(f"  FNO / {name} = {ratio:.3f}", flush=True)
+            res["fno_to_this_ratio_measured"] = float(
+                base["total_flops"] / max(res["total_flops"], 1))
+            res["fno_to_this_ratio_with_fft"] = float(
+                base["total_with_estimated_fft"] / max(res["total_with_estimated_fft"], 1))
+            res["matched_updates_for_fno_1500"] = int(
+                round(1500 * base["total_with_estimated_fft"]
+                      / max(res["total_with_estimated_fft"], 1)))
+            print(f"  FNO/{name}: measured {res['fno_to_this_ratio_measured']:.3f}, "
+                  f"with FFT {res['fno_to_this_ratio_with_fft']:.3f}, "
+                  f"matched updates {res['matched_updates_for_fno_1500']}", flush=True)
 
     out = ROOT / args.out
     out.mkdir(parents=True, exist_ok=True)

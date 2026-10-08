@@ -31,6 +31,7 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src.fno1d_multi import FNO1dMulti  # noqa: E402
 from src.fno2d import FNO2d  # noqa: E402
 from src.models import DeepONet  # noqa: E402
 from src.public_benchmark import atomic_json, file_hash  # noqa: E402
@@ -40,7 +41,8 @@ from src.utils import env_fingerprint, set_seed  # noqa: E402
 
 def source_hash() -> str:
     files = [Path(__file__), ROOT / "src/fno2d.py", ROOT / "src/models.py",
-             ROOT / "src/resume.py", ROOT / "src/public_benchmark.py",
+             ROOT / "src/fno1d_multi.py", ROOT / "src/resume.py",
+             ROOT / "src/public_benchmark.py",
              ROOT / "src/utils.py", ROOT / "src/derivatives.py"]
     h = hashlib.sha256()
     for path in files:
@@ -60,9 +62,17 @@ def metrics(pred, true):
 
 
 def build(architecture, protocol, device):
-    shape = tuple(protocol["grid_shape"])
     if architecture == "fno":
-        return FNO2d(grid_shape=shape, width=32, modes=12, layers=4).to(device)
+        if protocol.get("fno") == "fno2d":
+            return FNO2d(grid_shape=tuple(protocol["grid_shape"]), width=32, modes=12,
+                         layers=4).to(device)
+        components = protocol.get("input_components")
+        if components:
+            # multi-channel initial state, e.g. the CFD system; FNO1d cannot take it because
+            # it requires the input and the coordinate to have equal length
+            return FNO1dMulti(grid_size=int(protocol["grid_size"]), channels=len(components),
+                              width=32, modes=16, layers=4).to(device)
+        raise ValueError("cache declares no FNO variant: add fno2d or input_components")
     return DeepONet(branch_in=int(protocol["branch_in"]), trunk_in=int(protocol["trunk_in"]),
                     width=64, branch_hidden=128, trunk_hidden=128, branch_layers=3,
                     trunk_layers=3,
@@ -78,8 +88,9 @@ def train_one(cfg, arrays, protocol, folder, device, stop_after=None):
     torch.backends.cudnn.benchmark = False
     torch.backends.cuda.matmul.allow_tf32 = False
     identity = dict(configuration=cfg, source_sha256=source_hash(),
-                    data_protocol={k: protocol[k] for k in
-                                   ("cache_sha256", "grid_shape", "branch_in", "trunk_in")},
+                    data_protocol={k: protocol.get(k) for k in
+                                   ("cache_sha256", "grid_shape", "grid_size", "branch_in",
+                                    "trunk_in", "input_components")},
                     environment=env_fingerprint(device))
     result_path = folder / "result.json"
     if result_path.exists():
