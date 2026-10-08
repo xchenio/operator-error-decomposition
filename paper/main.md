@@ -63,9 +63,14 @@ branch, not the basis: the Fourier trunk's bound is +0.96 to +1.00 on both PDEs 
 horizon, including t = 2.00 where the achieved value is -0.3774, so the reachable set does
 not shrink with horizon while the map onto it does.
 
+Physics-informed
+training, which uses no supervision at the target time, also fails to produce positive
+fluctuation skill (-0.0003 and -0.2240), and the split shows it is not worse at the
+fluctuation but at the conserved mean (mean share 0.1246 against 0.0334 supervised).
+
 We claim a diagnostic decomposition and a reproducible negative result, not a new
-architecture or optimizer. Two public PDEs, one split each and one viscosity are studied;
-FLOP-level matching and a third operator class remain open.
+architecture or optimizer. Four operators at one parameter setting each, one physics-informed
+arm, and one split per family are studied; a system of equations remains open.
 
 ## 1. Research question and contribution
 
@@ -679,7 +684,50 @@ the conserved mean, while the fluctuation component remains unexplained.
 Full-batch trials process four times as many examples at equal updates. Recorded update
 times exclude evaluation and checkpointing; equal update counts are not equal compute.
 
-### 5.11 Zero initialization helps, but fitting and generalization remain distinct
+### 5.11 A physics-informed arm, and where it fails
+
+Every result above is supervised. This arm repeats the decomposition on genuinely
+physics-informed training: the loss is the initial condition, the PDE residual
+`u_t + u u_x - nu u_xx`, and periodicity, with **no supervision at the target time**
+([PHYSICS_INFORMED_V1.md](../docs/PHYSICS_INFORMED_V1.md)). The trunk therefore takes
+`(t, x)` rather than `x`.
+
+A residual can only be written once the data is known to satisfy the equation, so the
+coefficient was measured first (`scripts/estimate_burgers_nu.py`): on Nu = 0.01 the fitted
+convection coefficient is 0.995 and the fitted diffusion is 3.140e-3 against
+`nu_file / pi` = 3.183e-3, with R^2 = 0.9999, whereas Nu = 0.001 fits poorly (R^2 = 0.79)
+because its shocks are under-resolved. Only Nu = 0.01 is used, with `nu = 3.083e-3`
+preregistered and not tuned on any model output.
+
+| Model | relL2 | mean share | fluctuation share | **R^2 per sample** |
+|---|---:|---:|---:|---:|
+| oracle (exact mean, zero fluctuation) | 0.32623 | 0.0000 | 0.1875 | 0.0000 |
+| supervised MLP DeepONet | 0.36238 | 0.0334 | 0.1926 | -0.0273 ± 0.0159 |
+| **physics-informed MLP DeepONet** | 0.43613 | **0.1246** | 0.1875 | **-0.0003 ± 0.0100** |
+| supervised Fourier DeepONet | 0.38921 | 0.0510 | 0.2333 | -0.2443 ± 0.1387 |
+| **physics-informed Fourier DeepONet** | 0.48460 | **0.1736** | 0.2295 | **-0.2240 ± 0.0849** |
+
+The PDE loss fell from about 1e-1 to 6e-5, so this is a converged residual and not an
+unconverged run.
+
+**Physics-informed training does not produce positive fluctuation skill**, which is what
+section 5.7 predicts: the residual changes what the branch is asked to fit, not its ability
+to represent the input-to-coefficient map. The branch-bottleneck claim survives untouched.
+
+The decomposition says something more precise than "physics does not help". For the MLP
+trunk, physics-informed training reaches a fluctuation share of 0.1875 — **exactly** the
+oracle's — giving R^2 = -0.0003, marginally better than supervised training's -0.0273. Its
+total error is nevertheless much worse, and the split localises why: the **mean share rises
+from 0.0334 to 0.1246**. With no target-time supervision the conserved mean has to emerge
+from the residual and the initial condition alone, and it does not. Physics-informed training
+here is not worse at the fluctuation; it is worse at the conservation law.
+
+Caveats: no physics-informed FNO control was run, because the 1D FNO maps a field to a field
+at one fixed time and has no time coordinate to differentiate; FNO appears only as the
+supervised reference. This arm also uses a different batch and collocation size, so its work
+per update is not matched to the supervised runs.
+
+### 5.12 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,

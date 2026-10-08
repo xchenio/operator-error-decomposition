@@ -84,6 +84,18 @@ class ReportTest(unittest.TestCase):
         for arch in ("deeponet_mlp", "deeponet_fourier", "fno"):
             self.assertEqual(info[arch + "_rule_held_out"], "6/6")
 
+    def test_physics_arm_never_produces_positive_fluctuation_skill(self):
+        """The preregistered prediction was that physics-informed training would NOT give
+        positive skill; if this ever fails, section 5.7's branch-bottleneck claim is
+        contradicted and the manuscript must change rather than the test."""
+        path = ROOT / "results/fluctuation_physics_v1/physics_nu001_t100_v1.json"
+        if not path.exists():
+            self.skipTest("physics artifacts absent")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(payload["faithfulness_failures"], [])
+        for run in payload["runs"]:
+            self.assertLessEqual(run["splits"]["test"]["fluctuation_r2_per_sample"], 0.5)
+
     def test_advection_fluctuation_energy_is_horizon_independent(self):
         """Pure transport must leave the fluctuation energy unchanged; this is the check that
         the advection preparation extracted a translation and not something else."""

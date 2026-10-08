@@ -137,14 +137,19 @@ def conservation_check(arrays: dict, split: str) -> dict:
     )
 
 
-def _end_to_end_prediction(cfg, ck, arrays, protocol, device, split):
+def _end_to_end_prediction(cfg, ck, arrays, protocol, device, split, eval_time=None):
     n = protocol["normalization"]
     grid = arrays["x"]
     # 1D caches store a (N,) coordinate vector; 2D caches store (N, 2) pairs. Everything
     # downstream is driven from the cache so no size is hard-coded.
-    coords = torch.tensor(grid[:, None] if grid.ndim == 1 else grid,
-                          device=device, dtype=torch.float32)
-    trunk_in = 1 if grid.ndim == 1 else grid.shape[1]
+    grid_1d = grid if grid.ndim == 1 else grid[:, 0]
+    if eval_time is not None:
+        # physics-informed trunks take (t, x); evaluate at the preregistered target time
+        coords_np = np.column_stack([np.full(len(grid_1d), float(eval_time)), grid_1d])
+    else:
+        coords_np = grid[:, None] if grid.ndim == 1 else grid
+    coords = torch.tensor(coords_np, device=device, dtype=torch.float32)
+    trunk_in = int(cfg.get("trunk_in", 1 if grid.ndim == 1 else grid.shape[1]))
     x = torch.tensor((arrays[split + "_x"] - n["input_mean"]) / max(n["input_std"], 1e-6), device=device)
     if cfg["architecture"] == "fno":
         if protocol.get("fno") == "fno2d":
@@ -219,7 +224,8 @@ def run_family(family: str, kind: str, splits, arrays: dict, protocol: dict, dev
         per_split = {}
         for split in splits:
             if kind == "endtoend":
-                pred = _end_to_end_prediction(cfg, ck, arrays, protocol, device, split)
+                pred = _end_to_end_prediction(cfg, ck, arrays, protocol, device, split,
+                                              eval_time=EVAL_TIME)
             else:
                 mean_lift = bool(cfg.get("mean_lift", True))
                 pred = _branch_prediction(ck, arrays, protocol, device, split, mean_lift)
@@ -261,7 +267,11 @@ def run_family(family: str, kind: str, splits, arrays: dict, protocol: dict, dev
     return payload
 
 
+EVAL_TIME: float | None = None  # set from --eval-time, used by the end-to-end rebuild
+
+
 def main() -> None:
+    global EVAL_TIME
     ap = argparse.ArgumentParser()
     ap.add_argument("--families", default=";".join(list(END_TO_END) + list(BRANCH_FAMILIES)),
                     help="';'-separated; each item is `name` or `name=<endtoend|branch>:split[,split]`")
@@ -269,8 +279,11 @@ def main() -> None:
     ap.add_argument("--out", default="results/fluctuation_v1")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--tolerance", type=float, default=2e-5)
+    ap.add_argument("--eval-time", type=float, default=None,
+                    help="for physics-informed trunks taking (t, x): the time to evaluate at")
     ap.add_argument("--limit", type=int, default=None)
     args = ap.parse_args()
+    EVAL_TIME = args.eval_time
 
     data = Path(args.data)
     protocol = json.loads((data / "protocol.json").read_text(encoding="utf-8"))

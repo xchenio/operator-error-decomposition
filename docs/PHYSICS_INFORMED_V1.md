@@ -85,6 +85,52 @@ python scripts/diagnose_fluctuation.py \
     --out results/fluctuation_physics_v1 --device cuda
 ```
 
-## 7. Result
+## 7. Result (measured after the protocol was committed)
 
-Filled in after the runs; see also `docs/RUN_LOG.md`.
+Test split, 5 seeds, 1500 updates. The supervised column is the same setting, same split,
+same budget, from `burgers_nu001_t100_v1`.
+
+| Model | relL2 | mean share | fluctuation share | **R^2 per sample** |
+|---|---:|---:|---:|---:|
+| oracle (exact mean, zero fluctuation) | 0.32623 | 0.0000 | 0.1875 | 0.0000 |
+| supervised MLP DeepONet | 0.36238 | 0.0334 | 0.1926 | -0.0273 ± 0.0159 |
+| **physics-informed MLP DeepONet** | 0.43613 | **0.1246** | 0.1875 | **-0.0003 ± 0.0100** |
+| supervised Fourier DeepONet | 0.38921 | 0.0510 | 0.2333 | -0.2443 ± 0.1387 |
+| **physics-informed Fourier DeepONet** | 0.48460 | **0.1736** | 0.2295 | **-0.2240 ± 0.0849** |
+
+All recomputations reproduce their stored metrics to 5.2e-08. The PDE loss fell from about
+1e-1 to 6e-5 for the MLP trunk, so the residual was genuinely driven down and this is not an
+unconverged run.
+
+### The prediction is confirmed
+
+**Physics-informed training does not produce positive per-sample fluctuation skill**
+(-0.0003 and -0.2240). Neither value is above the zero-fluctuation reference, so the
+branch-bottleneck claim in section 5.7 is not contradicted and needs no revisiting.
+
+### The decomposition says something sharper than "physics does not help"
+
+For the MLP trunk, physics-informed training reaches a fluctuation share of **0.1875**, which
+is *exactly* the oracle's fluctuation share, giving R^2 = -0.0003. In other words it matches
+the zero-fluctuation reference almost perfectly on the fluctuation component — marginally
+better than supervised training's -0.0273.
+
+Its total relative L2 is nevertheless markedly worse (0.43613 against 0.36238), and the
+decomposition localises why: the **mean share rises from 0.0334 to 0.1246**. With no
+supervision at the target time the conserved mean has to emerge from the residual and the
+initial condition alone, and it does not. Physics-informed training here is not worse at the
+fluctuation; it is worse at the conservation law.
+
+That is a useful negative result in itself, and it is consistent with the manuscript's
+framing: the fluctuation component is where every method fails, and the mean component is
+where supervision pays off.
+
+### Caveats
+
+* A physics-informed FNO control was not run: the 1D FNO maps a field to a field at one
+  fixed time and has no time coordinate to differentiate, so its residual is not defined
+  without a different architecture. FNO appears only as the supervised reference.
+* The physics-informed runs use batch 4 and 256 collocation points per function, so the work
+  per update differs from the supervised runs; no FLOP matching was done for this arm.
+* Only Nu = 0.01 admits a trustworthy residual (section 2), so this arm exists on one
+  operator at one viscosity.
