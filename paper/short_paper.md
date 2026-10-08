@@ -57,8 +57,9 @@ input-mean baseline is a **conservation-law predictor** rather than a strawman.
 
 ## 3. Limits
 
-All six settings come from the 2022 PDEBench release, four years old at writing; the claim is
-a diagnostic decomposition, not state-of-the-art accuracy. Compute is not FLOP-matched and
+All six settings come from PDEBench: paper 2022, data deposit `doi:10.18419/darus-2986`
+version 8 released 2024-02-13, files downloaded 2026-09 to 2026-10 and byte-pinned. The
+claim is a diagnostic decomposition, not state-of-the-art accuracy. Compute is not FLOP-matched and
 the FFT portion of the estimate is analytic. The test split was exposed during exploratory
 development, so these numbers are descriptive. Five seeds share one split. The
 physics-informed arm covers two operators and three horizons. The threshold rule is valid for

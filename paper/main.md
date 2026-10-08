@@ -226,6 +226,25 @@ conservation-law predictor, and matching it is a real, nontrivial requirement.
 We use PDEBench's 1D Burgers Nu0.001 file, verified by SHA-256, with 10000 trajectories,
 201 stored time layers and 1024 cell-centered spatial points. The primary task maps t=0 to
 t=1.0 (index 100), with stride-four point sampling to 256 points and no anti-alias filter.
+
+Every input file is pinned to a publisher-checked digest, recorded in each family's
+`protocol.json`, and `src/public_benchmark.py` refuses to proceed if the file changes:
+
+| File | Source | Identifier | Digest |
+|---|---|---|---|
+| `1D_Burgers_Sols_Nu0.001.hdf5` | HuggingFace `pdebench/Burgers` | git rev `97bf5bb5315b` | SHA-256 `afeeed1c40ce01d2...` |
+| `1D_Advection_Sols_beta0.4.hdf5` | HuggingFace `pdebench/Advection` | git rev `33d90a245d98b` | SHA-256 `d973ff2bb3c2a5ed...` |
+| `1D_Burgers_Sols_Nu0.01.hdf5` | DaRUS `darus-2986` v8 | datafile 281363 | MD5 `e6d9a4f62baf9a29...` |
+| `1D_diff-sorp_NA_NA.h5` | DaRUS `darus-2986` v8 | datafile 133020 | MD5 `9d466d1213065619...` |
+| `2D_DarcyFlow_beta1.0_Train.hdf5` | DaRUS `darus-2986` v8 | datafile 133219 | MD5 `81694ed31306ff2e...` |
+| `2D_DarcyFlow_beta0.01_Train.hdf5` | DaRUS `darus-2986` v8 | datafile 133217 | MD5 `d05c287d4c0b7d31...` |
+| `2D_DarcyFlow_beta10.0_Train.hdf5` | DaRUS `darus-2986` v8 | datafile 133220 | MD5 `a7f23cf8011fc211...` |
+| `1D_CFD_Rand_Eta0.01_Zeta0.01_periodic_Train.hdf5` | DaRUS `darus-2986` v8 | datafile 164672 | MD5 `2fdd00138f1d7abc...` |
+| `2D_diff-react_NA_NA.h5` | DaRUS `darus-2986` v8 | datafile 133017 | MD5 `b8d0b86064193195...` |
+
+The Burgers SHA-256 was re-verified against the local file on 2026-10-08 and matches
+exactly. Digests are truncated here for layout; full values are in `protocol.json` and in
+`scripts/download_darus.py` and `scripts/download_pdebench.py`.
 The generator uses epsilon/pi as the diffusion coefficient.
 
 The initial split is 1000 training, 200 validation and 200 test trajectories, sampled with
@@ -1019,15 +1038,24 @@ Limitations:
   three-field compressible system, and a two-field two-dimensional system. Splits are
   1000/200/200 except the reaction-diffusion file, which holds only 1000 samples and uses
   600/200/200. No shallow-water data exists in the deposit used.
-- **Benchmark age.** All six settings come from PDEBench [4], published 2022, so the suite is
-  four years old at the time of writing. PDEBench remains the most widely used public
-  benchmark for time-dependent operator learning with ground-truth trajectories, and the
-  repository is still maintained, but newer surrogate-benchmark frameworks exist (for
-  example PDEArena). Because our claim is a *diagnostic decomposition* and not a
+- **Benchmark age and data version.** The PDEBench *paper* is 2022 [4], but the *data* is a
+  separately versioned deposit: we use DaRUS `doi:10.18419/darus-2986` **version 8, released
+  2024-02-13**, queried 2026-10-08. The files were downloaded between 2026-09-22 and
+  2026-10-08, so they are the current upstream content rather than an archived 2022
+  snapshot. Maintenance of the *code* repository is a separate matter and does not by itself
+  change any data byte: the Burgers file is fetched from the HuggingFace `pdebench/Burgers`
+  dataset pinned to git revision `97bf5bb5315b9a083b4f9fc03e5c84d35286d52c`, and the other
+  seven files from DaRUS. Every file is byte-pinned (section 4), so the results are
+  reproducible on the exact bytes used regardless of any future upstream revision.
+  PDEBench remains the most widely used public benchmark for time-dependent operator
+  learning with ground-truth trajectories, but newer surrogate-benchmark frameworks exist
+  (for example PDEArena). Because our claim is a *diagnostic decomposition* and not a
   state-of-the-art accuracy result, the conclusion does not depend on the benchmark being
-  current; a reader should nevertheless read the absolute error levels as 2022-generation
-  baselines rather than as a comparison against the newest architectures. Nothing here is
-  claimed to transfer to foundation-model-scale operator training.
+  current; a reader should nevertheless read the absolute error levels as 2024-generation
+  baselines rather than as a comparison against the newest architectures. What is **not**
+  established is whether the content of our eight files changed between version 1 and
+  version 8 of the deposit; the identifiers are stable, but we did not diff the versions.
+  Nothing here is claimed to transfer to foundation-model-scale operator training.
 - **The threshold rule holds on every scalar family tested and on 2D reaction-diffusion, and
   fails on 1D compressible CFD** (sections 5.13 and 5.14), with the thresholds unrefitted
   throughout. Why CFD fails is not established, and any use of the rule on a compressible
@@ -1109,8 +1137,11 @@ Entries 1-9 keep their original numbering so that in-text citations do not shift
    Alesiani, Dirk Pflüger and Mathias Niepert. *PDEBench: An Extensive Benchmark for
    Scientific Machine Learning*. NeurIPS Datasets and Benchmarks, 2022.
    https://arxiv.org/abs/2210.07182
-   Data deposit: DaRUS, https://doi.org/10.18419/darus-2986 . This study uses the 2022
-   release; see section 6 on the age of the benchmark.
+   Data deposit: DaRUS (University of Stuttgart), https://doi.org/10.18419/darus-2986 .
+   **The paper is 2022 but the data deposit is versioned separately: this study uses
+   version 8, RELEASED, with release and last-update timestamps of 2024-02-13** (queried
+   2026-10-08 through the Dataverse API). All eight datafile identifiers used here are
+   present in that version. See section 6, "Benchmark age and data version".
 5. Thomas Bachlechner, Bodhisattwa Prasad Majumder, Huanru Henry Mao, Garrison W. Cottrell
    and Julian McAuley. *ReZero is all you need: fast convergence at large depth*. UAI /
    PMLR 161, 2021. https://proceedings.mlr.press/v161/bachlechner21a.html ;

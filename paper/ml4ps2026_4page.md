@@ -81,7 +81,8 @@ achieved value is -0.3774, so the branch is the binding constraint.
 
 ## 4. Limits and conclusion
 
-All six settings come from the 2022 PDEBench release [4], four years old at writing; the
+All six settings come from PDEBench [4]: paper 2022, data deposit `doi:10.18419/darus-2986`
+version 8 released 2024-02-13, files downloaded 2026-09 to 2026-10 and byte-pinned. The
 claim is a diagnostic decomposition, not state-of-the-art accuracy. Compute is not
 FLOP-matched and the FFT portion of the FLOP estimate is analytic. The test split was exposed
 during exploratory development. Five seeds share one split, so seed deviations do not measure

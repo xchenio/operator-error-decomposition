@@ -999,6 +999,29 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   decomposition rather than state-of-the-art accuracy, the conclusion does not depend on
   benchmark currency, but the absolute error levels should be read as 2022-generation
   baselines. This is now a stated limitation (section 6) and a note in reference [4].
+
+### Data version: the "2022 release" statement was wrong and is corrected
+
+- Question raised: the PDEBench GitHub repository shows activity in 2026-03, so could the
+  data we use have been revised?
+- **GitHub is code, not data, and the two are versioned separately.** Burgers and Advection
+  come from HuggingFace `pdebench/Burgers` and `pdebench/Advection` pinned to git revisions
+  `97bf5bb5315b` and `33d90a245d98b`; the other seven files come from the DaRUS deposit
+  `doi:10.18419/darus-2986`. A commit to the code repository cannot change any data byte.
+- **But the data deposit is itself versioned, and it is newer than the paper.** Queried the
+  Dataverse API on 2026-10-08: `darus-2986` is **version 8, RELEASED, release and last-update
+  timestamps 2024-02-13, 336 files**. All eight datafile identifiers we use (133017, 133020,
+  133217, 133219, 133220, 164672, 281363) are present in that version.
+- The earlier manuscript text said "this study uses the 2022 release", which conflated the
+  paper year with the data version. Corrected in reference [4], in the section 6 limitation
+  ("Benchmark age and data version") and in both short drafts. The data is therefore about
+  2.7 years old, not 4.
+- Re-verified the local Burgers SHA-256 on 2026-10-08: `afeeed1c40ce01d2...` matches the
+  `protocol.json` record exactly. Added a file-level provenance table to section 4 listing
+  source, identifier and digest for all nine input files.
+- **Stated as not established**: whether the content of our eight files changed between
+  version 1 and version 8 of the deposit. Identifiers are stable but the versions were not
+  diffed. This does not affect reproducibility, since every file is byte-pinned.
 - Full discovery: 78 tests passed.
 
 ## 2026-10-08 — synthesis of the held-out record, FNO on the 2D system, physics on advection
