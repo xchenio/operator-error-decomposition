@@ -115,6 +115,9 @@ claimed as a new method.
 
 ## 2. Related work and overlap
 
+The architectures compared here are DeepONet [10] and the Fourier neural operator [11].
+Neither is ours; the contribution is a decomposition applied to both.
+
 Lee and Shin introduce two-step DeepONet training with trunk-first learning followed by
 branch learning and orthonormalization [1]. Fixed-trunk training and basis
 orthogonalization are therefore comparison points, not original contributions.
@@ -138,7 +141,9 @@ study, for example ReZero [5]; our zero final readout around an input-mean basel
 identical to ReZero's residual gates and no dynamical-isometry claim is made. Cosine
 scheduling [6] and large-batch generalization studies [7] are established; we do not present
 convergence-versus-generalization as a new general discovery, and no sharpness mechanism is
-claimed.
+claimed. Khodakarami et al. analyse spectral bias in physics-informed and operator learning
+and report that it is architecture dependent [12], which is consistent with, and independent
+support for, the horizon-dependent trunk result in section 5.5.
 
 ## 3. Mean/fluctuation decomposition
 
@@ -1014,6 +1019,15 @@ Limitations:
   three-field compressible system, and a two-field two-dimensional system. Splits are
   1000/200/200 except the reaction-diffusion file, which holds only 1000 samples and uses
   600/200/200. No shallow-water data exists in the deposit used.
+- **Benchmark age.** All six settings come from PDEBench [4], published 2022, so the suite is
+  four years old at the time of writing. PDEBench remains the most widely used public
+  benchmark for time-dependent operator learning with ground-truth trajectories, and the
+  repository is still maintained, but newer surrogate-benchmark frameworks exist (for
+  example PDEArena). Because our claim is a *diagnostic decomposition* and not a
+  state-of-the-art accuracy result, the conclusion does not depend on the benchmark being
+  current; a reader should nevertheless read the absolute error levels as 2022-generation
+  baselines rather than as a comparison against the newest architectures. Nothing here is
+  claimed to transfer to foundation-model-scale operator training.
 - **The threshold rule holds on every scalar family tested and on 2D reaction-diffusion, and
   fails on 1D compressible CFD** (sections 5.13 and 5.14), with the thresholds unrefitted
   throughout. Why CFD fails is not established, and any use of the rule on a compressible
@@ -1071,28 +1085,62 @@ objective, which this study does not cover.
 
 ## References
 
-Primary sources checked 2026-09-24 unless noted; versions are given without guessing later
-journal metadata.
+Sources re-checked 2026-10-08. arXiv identifiers were resolved against the arXiv abstract
+pages, and where a journal version exists the journal record is given. Two entries
+(SGDR, large-batch training) are standard references whose venues were taken from their
+arXiv records and were not re-resolved online during this check.
+
+Entries 1-9 keep their original numbering so that in-text citations do not shift; entries
+10-12 were added during the 2026-10-08 check.
 
 1. Sanghyun Lee and Yeonjong Shin. *On the training and generalization of deep operator
-   networks*. 2023. https://arxiv.org/abs/2309.01020
+   networks*. SIAM Journal on Scientific Computing, 2024.
+   https://doi.org/10.1137/23M1598751 ; https://arxiv.org/abs/2309.01020
 2. Emily Williams, Amanda Howard, Brek Meuris and Panos Stinis. *What do physics-informed
    DeepONets learn? Understanding and improving training for scientific computing
-   applications*. 2024. https://arxiv.org/abs/2411.18459
-3. Lu Lu et al. *A comprehensive and fair comparison of two neural operators (with
-   practical extensions) based on FAIR data*. 2021 preprint; journal DOI
+   applications*. Journal of Computational Physics, 2026.
+   https://doi.org/10.1016/j.jcp.2026.114851 ; https://arxiv.org/abs/2411.18459
+3. Lu Lu, Xuhui Meng, Shengze Cai, Zhiping Mao, Somdatta Goswami, Zhongqiang Zhang and
+   George Em Karniadakis. *A comprehensive and fair comparison of two neural operators
+   (with practical extensions) based on FAIR data*. Computer Methods in Applied Mechanics
+   and Engineering 393, 114778, 2022.
    https://doi.org/10.1016/j.cma.2022.114778 ; https://arxiv.org/abs/2111.05512
-4. Makoto Takamoto et al. *PDEBench: An Extensive Benchmark for Scientific Machine
-   Learning*. NeurIPS Datasets and Benchmarks, 2022. https://arxiv.org/abs/2210.07182
-5. Thomas Bachlechner et al. *ReZero is all you need: fast convergence at large depth*.
-   UAI / PMLR 161, 2021. https://proceedings.mlr.press/v161/bachlechner21a.html
+4. Makoto Takamoto, Timothy Praditia, Raphael Leiteritz, Daniel MacKinlay, Francesco
+   Alesiani, Dirk Pflüger and Mathias Niepert. *PDEBench: An Extensive Benchmark for
+   Scientific Machine Learning*. NeurIPS Datasets and Benchmarks, 2022.
+   https://arxiv.org/abs/2210.07182
+   Data deposit: DaRUS, https://doi.org/10.18419/darus-2986 . This study uses the 2022
+   release; see section 6 on the age of the benchmark.
+5. Thomas Bachlechner, Bodhisattwa Prasad Majumder, Huanru Henry Mao, Garrison W. Cottrell
+   and Julian McAuley. *ReZero is all you need: fast convergence at large depth*. UAI /
+   PMLR 161, 2021. https://proceedings.mlr.press/v161/bachlechner21a.html ;
+   https://arxiv.org/abs/2003.04887
 6. Ilya Loshchilov and Frank Hutter. *SGDR: Stochastic Gradient Descent with Warm Restarts*.
    ICLR 2017. https://arxiv.org/abs/1608.03983
-7. Nitish Shirish Keskar et al. *On Large-Batch Training for Deep Learning:
-   Generalization Gap and Sharp Minima*. ICLR 2017. https://arxiv.org/abs/1609.04836
-8. Niccolo Demo, Marco Tezzele and Gianluigi Rozza. *A DeepONet multi-fidelity approach for
-   residual learning in reduced order modeling*. 2023. https://arxiv.org/abs/2302.12682
-   (checked 2026-09-28)
-9. Koike et al. *POD mode selection for sparse neural networks*. 2026.
-   https://arxiv.org/abs/2605.27756 (checked 2026-09-28; targets and implementation differ
-   from the closed modal-shrinkage line and do not establish priority for it)
+7. Nitish Shirish Keskar et al. *On Large-Batch Training for Deep Learning: Generalization
+   Gap and Sharp Minima*. ICLR 2017. https://arxiv.org/abs/1609.04836
+8. Nicola Demo, Marco Tezzele and Gianluigi Rozza. *A DeepONet multi-fidelity approach for
+   residual learning in reduced order modeling*. Advanced Modeling and Simulation in
+   Engineering Sciences, 2023. https://doi.org/10.1186/s40323-023-00249-9 ;
+   https://arxiv.org/abs/2302.12682
+   (corrected 2026-10-08: the first author is Nicola Demo, not Niccolo Demo)
+9. Koike et al. *Sparse POD Mode Selection and Manifold Dimensionality Reduction with
+   Neural Networks* (SparseModesNet). 2026. https://arxiv.org/abs/2605.27756
+   (checked 2026-10-08; targets and implementation differ from the closed modal-shrinkage
+   line and do not establish priority for it)
+10. Lu Lu, Pengzhan Jin, Guofei Pang, Zhongqiang Zhang and George Em Karniadakis. *Learning
+    nonlinear operators via DeepONet based on the universal approximation theorem of
+    operators*. Nature Machine Intelligence 3, 218-229, 2021.
+    https://doi.org/10.1038/s42256-021-00302-5 ; https://arxiv.org/abs/1910.03193
+    (added 2026-10-08; the architecture under study was previously uncited)
+11. Zongyi Li, Nikola Kovachki, Kamyar Azizzadenesheli, Burigede Liu, Kaushik Bhattacharya,
+    Andrew Stuart and Anima Anandkumar. *Fourier Neural Operator for Parametric Partial
+    Differential Equations*. ICLR 2021. https://arxiv.org/abs/2010.08895
+    (added 2026-10-08; the comparison architecture was previously uncited)
+12. Siavash Khodakarami, Vivek Oommen, Nazanin Ahmadi Daryakenari et al. *Spectral bias in
+    physics-informed and operator learning: Analysis and mitigation guidelines*. Computer
+    Methods in Applied Mechanics and Engineering, 2026.
+    https://www.sciencedirect.com/science/article/pii/S0045782526004299 ;
+    https://arxiv.org/abs/2602.19265
+    (added 2026-10-08; reports that spectral bias in neural operators is architecture
+    dependent, consistent with the horizon-dependent trunk result in section 5.5)
