@@ -93,6 +93,64 @@ for c in density Vx pressure; do
 done
 ```
 
-## 8. Result
+## 8. Result (measured after the protocol was committed)
 
-Filled in after the runs; see also `docs/RUN_LOG.md`.
+| component | measured fluctE | MLP DeepONet | Fourier DeepONet | predicted | verdict |
+|---|---:|---:|---:|---:|---|
+| density | 0.2651 | -0.0237 ± 0.0150 | -0.1132 ± 0.0481 | + / - | **WRONG / OK** |
+| Vx | 0.4659 | -0.0160 ± 0.0201 | -0.2356 ± 0.0813 | + / + | **WRONG / WRONG** |
+| pressure | 0.0744 | -0.0448 ± 0.0759 | -0.1967 ± 0.0857 | - / - | OK / OK |
+
+**Sign accuracy 3 of 6. The rule is falsified on this system for every prediction of positive
+skill.** Per the preregistered criterion, a wrong sign falsifies the rule for that trunk on
+this operator class, and the thresholds are **not** refitted on this data.
+
+### Not a convergence artifact
+
+Validation curves plateau: density 0.30 -> 0.28, pressure 0.13 -> 0.096, Vx 1.06 -> 1.10.
+Unlike Darcy beta 0.01, these runs converged, so the negative skills are measurements and not
+failed optimisations. All recomputations reproduce stored metrics exactly.
+
+### All three components are negative, whatever their a-priori energy
+
+A-priori fluctuation energy spans 0.074 to 0.542 across the components — a range that, on
+scalar problems, spans both sides of every threshold — yet **every** measured per-sample
+fluctuation R^2 is negative. So on this system the target fluctuation energy does not separate
+success from failure.
+
+The split localises where the failure sits:
+
+| component | model relL2 | mean share | fluctuation share | oracle fluctuation share |
+|---|---:|---:|---:|---:|
+| density | 0.2766 | 0.0107 | 0.0829 | 0.0809 |
+| Vx | 1.0382 | **0.5984** | 0.5241 | 0.5159 |
+| pressure | 0.0843 | 0.0007 | 0.0086 | 0.0083 |
+
+Pressure is predicted well in total (relL2 0.084) but its fluctuation share still slightly
+exceeds the zero-fluctuation reference, so its R^2 is negative: the fluctuation is simply too
+small to matter for the total. Vx fails on both parts. Density fails on the fluctuation while
+getting the (conserved) mean essentially right.
+
+### The most likely confound, stated without refitting
+
+The branch input here is three coupled fields (768 values) rather than a single field (256).
+The thresholds were fitted on problems where the branch encodes one field, so the failure is
+consistent with the rule being a statement about single-field inputs that does not survive a
+threefold increase in input complexity. This is offered as an observation, not as a repaired
+model: no threshold was adjusted and no new fit was performed.
+
+### A caveat discovered in the diagnostic, recorded rather than hidden
+
+For a multi-channel input the diagnostic's "oracle input mean" predictor is **not** meaningful:
+it averages over all three concatenated channels, mixing quantities whose scales differ by
+orders of magnitude (density ~5.9, Vx ~0.26, pressure ~59). It therefore reports an
+absurd relative L2 of 3.87 for density even though the *component* mean is conserved to
+8e-6 (section 4). The skill measures do not depend on that oracle and remain valid; the
+oracle row is flagged as uninterpretable for this family and the component-wise conservation
+check in section 4 is the valid statement.
+
+### Net effect
+
+The threshold rule now has a **known boundary of validity**: it holds across four scalar
+operators including a boundary test on the viscosity ladder, and it **fails on a system of
+coupled fields**. The manuscript's claim is narrowed accordingly rather than defended.

@@ -96,6 +96,33 @@ class ReportTest(unittest.TestCase):
         for run in payload["runs"]:
             self.assertLessEqual(run["splits"]["test"]["fluctuation_r2_per_sample"], 0.5)
 
+    def test_cfd_system_falsifies_the_positive_predictions(self):
+        """The preregistered falsification criterion: on the three-field system the rule
+        predicted positive skill for density (MLP) and for both trunks on Vx, and it was
+        wrong. If a future refit makes these pass, this test records that the claim changed
+        rather than the evidence."""
+        predicted = {"density": {"deeponet_mlp": True, "deeponet_fourier": False},
+                     "Vx": {"deeponet_mlp": True, "deeponet_fourier": True},
+                     "pressure": {"deeponet_mlp": False, "deeponet_fourier": False}}
+        wrong = 0
+        checked = 0
+        for comp, per_arch in predicted.items():
+            path = ROOT / f"results/fluctuation_cfd_v1/{comp}/cfd_{comp}_v1.json"
+            if not path.exists():
+                continue
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["faithfulness_failures"], [])
+            for arch, positive in per_arch.items():
+                values = [r["splits"]["test"]["fluctuation_r2_per_sample"]
+                          for r in payload["runs"]
+                          if r["configuration"]["architecture"] == arch]
+                if not values:
+                    continue
+                checked += 1
+                wrong += int((float(np.mean(values)) > 0) != positive)
+        self.assertEqual(checked, 6)
+        self.assertEqual(wrong, 3)
+
     def test_advection_fluctuation_energy_is_horizon_independent(self):
         """Pure transport must leave the fluctuation energy unchanged; this is the check that
         the advection preparation extracted a translation and not something else."""

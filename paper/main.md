@@ -57,6 +57,8 @@ both held-out families: 6 of 6 diffusion-sorption settings and 21 of 21 Burgers 
 settings, including every threshold crossing, with predicted skill horizons 0.740 / 0.860 /
 1.650 against measured 0.735 / 0.924 / 1.839, and 3 of 3 on a steady elliptic operator where
 the input-output mean correlation is -0.873 and the mean baseline is consequently worthless.
+The rule then **fails on a system of three coupled fields** (3 of 6, every positive prediction
+wrong, thresholds not refitted), so its validity is stated as scalar operators only.
 
 An exact bound depending only on the trunk span (section 3.3) shows the constraint is the
 branch, not the basis: the Fourier trunk's bound is +0.96 to +1.00 on both PDEs at every
@@ -583,6 +585,14 @@ The viscosity ladder is the strongest of the three because its settings straddle
 thresholds rather than lying far from them; Darcy is the only test on a non-evolution
 operator.
 
+**The rule then fails on a system.** On the three coupled fields of 1D compressible CFD the
+sign accuracy is 3 of 6, with every prediction of positive skill wrong, even though the
+a-priori fluctuation energy spans 0.074 to 0.542 and every component satisfies the scope
+condition (section 5.13). The thresholds were not refitted. The rule therefore has a stated
+boundary of validity: **scalar operators, not systems of coupled fields.** Its most likely
+reason, offered as an observation rather than a repaired model, is that the branch encodes one
+field in every setting where the rule was fitted and three in the setting where it fails.
+
 Three qualifications still limit the claim:
 
 1. **The pooled correlations are inflated by clustering.** Within advection the fluctuation
@@ -749,7 +759,58 @@ The same search also showed that the steady operator has **no boundary setting**
 0.564, always far above every threshold. The threshold boundary therefore remains tested on
 evolution problems only.
 
-### 5.13 Zero initialization helps, but fitting and generalization remain distinct
+### 5.13 A system of equations, and where the rule stops holding
+
+The four operators above are scalar. PDEBench 1D compressible CFD supplies three coupled
+fields (`density`, `Vx`, `pressure`), each `(10000, 101, 1024)`, and is the first system in
+the study. Its protocol and six predeclared sign predictions were committed before any run
+([CFD_SYSTEM_V1.md](../docs/CFD_SYSTEM_V1.md)).
+
+The branch receives all three components at the initial time and predicts one component at
+`t = 1.0`; one cache is written per output component so that every downstream script applies
+unchanged. **FNO is not run here**: `FNO1d` requires the input and the coordinate to have
+equal length, which a three-channel input violates, and `src/fno.py` is hashed into every
+existing run identity.
+
+The conservation structure differs **within** the system, which is measured rather than
+assumed: mass `mean(rho)` and momentum `mean(rho*Vx)` have input-output mean correlations of
+1.000000, whereas the spatial mean of `Vx` alone does not (0.9874, a 12% mean difference).
+So the input-spatial-mean predictor is a conservation-law predictor for density,
+approximately one for pressure, and not one for Vx — the Darcy lesson reproduced inside a
+single operator.
+
+| component | measured fluctE | MLP DeepONet | Fourier DeepONet | predicted | verdict |
+|---|---:|---:|---:|---:|---|
+| density | 0.2651 | -0.0237 ± 0.0150 | -0.1132 ± 0.0481 | + / - | **wrong / ok** |
+| Vx | 0.4659 | -0.0160 ± 0.0201 | -0.2356 ± 0.0813 | + / + | **wrong / wrong** |
+| pressure | 0.0744 | -0.0448 ± 0.0759 | -0.1967 ± 0.0857 | - / - | ok / ok |
+
+**Sign accuracy 3 of 6: the rule is falsified on this system for every prediction of positive
+skill.** In line with the preregistered criterion the thresholds were not refitted. The runs
+converged — validation curves plateau at 0.28, 1.10 and 0.096 — so these are measurements and
+not failed optimisations, unlike the excluded Darcy beta 0.01 setting.
+
+A-priori fluctuation energy spans 0.074 to 0.542 across the three components, a range that on
+scalar problems straddles every threshold, and **every** measured skill is negative. The split
+shows pressure is predicted well in total (relL2 0.084) while its fluctuation share still
+exceeds the zero-fluctuation reference, so its negative R^2 reflects a fluctuation too small
+to matter rather than a poor model; Vx fails on both components of the error.
+
+The most likely confound is the input, stated without refitting: the branch here encodes three
+coupled fields (768 values) rather than one (256), and the thresholds were fitted on
+single-field inputs. The observation is that the rule does not survive a threefold increase in
+input complexity. No threshold was adjusted.
+
+**Consequence for the claims.** The threshold rule has a known boundary of validity: it holds
+across four scalar operators, including a boundary test on the viscosity ladder, and it fails
+on a system of coupled fields. This is reported as a boundary rather than defended.
+
+For a multi-channel input the diagnostic's "oracle input mean" row is not interpretable — it
+averages over channels whose scales differ by orders of magnitude — so the component-wise
+conservation check above is the valid statement, and the skill measures, which do not use that
+oracle, are unaffected.
+
+### 5.14 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
@@ -781,11 +842,16 @@ superior; at t=2.00 FNO is below zero as well.
 
 Limitations:
 
-- Four operators, one parameter set each, one split each: linear transport, nonlinear
-  convection-diffusion at two viscosities, dissipative parabolic, and one steady elliptic
-  two-dimensional problem. A system of equations is still missing, and the cross-PDE gap
-  identified in [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is narrowed,
-  not closed.
+- Five settings, one parameter set each, one split each: linear transport, nonlinear
+  convection-diffusion at two viscosities, dissipative parabolic, one steady elliptic
+  two-dimensional problem, and one three-field system. The cross-operator gap identified in
+  [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is narrowed but not closed:
+  there is no shallow-water or multi-dimensional system, and the threshold rule is known to
+  fail on the one system tested.
+- **The threshold rule is valid for scalar operators only.** It holds on four scalar
+  operators with three held-out confirmations and fails on a coupled three-field system
+  (section 5.13), with the thresholds unrefitted. Any use of it beyond scalar operators is
+  unsupported by this study.
 - Two families are weak in the specific sense that every model saturates far from the
   thresholds: diffusion-sorption, whose target fluctuation lies in one spatial mode and
   whose stored initial state is spatially constant (so it is used from layer 20 onward),
