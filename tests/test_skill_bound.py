@@ -96,6 +96,29 @@ class ReportTest(unittest.TestCase):
         for run in payload["runs"]:
             self.assertLessEqual(run["splits"]["test"]["fluctuation_r2_per_sample"], 0.5)
 
+    def test_rule_holds_on_the_2d_reaction_diffusion_system(self):
+        """The claim was narrowed to 'scalar operators only' after CFD failed. This second,
+        two-dimensional system shows that narrowing was too strong; the test keeps the
+        correction honest if the numbers are ever regenerated."""
+        ok = 0
+        checked = 0
+        for comp in ("0", "1"):
+            path = ROOT / f"results/fluctuation_diffreact2d_v1/c{comp}/diffreact2d_c{comp}_v1.json"
+            if not path.exists():
+                continue
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["faithfulness_failures"], [])
+            for arch in ("deeponet_mlp", "deeponet_fourier"):
+                values = [r["splits"]["test"]["fluctuation_r2_per_sample"]
+                          for r in payload["runs"]
+                          if r["configuration"]["architecture"] == arch]
+                if not values:
+                    continue
+                checked += 1
+                ok += int(float(np.mean(values)) > 0)
+        self.assertEqual(checked, 4)
+        self.assertEqual(ok, 4)
+
     def test_physics_arm_at_the_short_horizon_falsified_the_strict_prediction(self):
         """The preregistered prediction was that physics-informed training would NOT reach
         positive skill at T=0.5. It did (+0.0088, +0.0516), so the test asserts the corrected

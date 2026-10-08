@@ -69,8 +69,10 @@ both held-out families: 6 of 6 diffusion-sorption settings and 21 of 21 Burgers 
 settings, including every threshold crossing, with predicted skill horizons 0.740 / 0.860 /
 1.650 against measured 0.735 / 0.924 / 1.839, and 3 of 3 on a steady elliptic operator where
 the input-output mean correlation is -0.873 and the mean baseline is consequently worthless.
-The rule then **fails on a system of three coupled fields** (3 of 6, every positive prediction
-wrong, thresholds not refitted), so its validity is stated as scalar operators only.
+The rule then fails on the three coupled fields of 1D compressible CFD (3 of 6, every positive
+prediction wrong, thresholds not refitted) but holds on the two coupled fields of 2D
+reaction-diffusion (4 of 4), so the failure is specific to that operator rather than to
+coupling, and why it fails is left open.
 
 An exact bound depending only on the trunk span (section 3.3) shows the constraint is the
 branch, not the basis: the Fourier trunk's bound is +0.96 to +1.00 on both PDEs at every
@@ -597,13 +599,13 @@ The viscosity ladder is the strongest of the three because its settings straddle
 thresholds rather than lying far from them; Darcy is the only test on a non-evolution
 operator.
 
-**The rule then fails on a system.** On the three coupled fields of 1D compressible CFD the
-sign accuracy is 3 of 6, with every prediction of positive skill wrong, even though the
-a-priori fluctuation energy spans 0.074 to 0.542 and every component satisfies the scope
-condition (section 5.13). The thresholds were not refitted. The rule therefore has a stated
-boundary of validity: **scalar operators, not systems of coupled fields.** Its most likely
-reason, offered as an observation rather than a repaired model, is that the branch encodes one
-field in every setting where the rule was fitted and three in the setting where it fails.
+**The rule then fails on one system and holds on another.** On the three coupled fields of 1D
+compressible CFD the sign accuracy is 3 of 6, with every prediction of positive skill wrong
+(section 5.13). On the two coupled fields of 2D reaction-diffusion it is 4 of 4 (section
+5.14). The thresholds were not refitted in either case. The failure is therefore **specific to
+compressible flow** rather than to coupling, and the rule is stated as holding on every
+scalar family tested plus 2D reaction-diffusion. Why CFD fails is not established: the two
+systems differ simultaneously in PDE type, fluctuation energy and component count.
 
 Three qualifications still limit the claim:
 
@@ -863,16 +865,51 @@ coupled fields (768 values) rather than one (256), and the thresholds were fitte
 single-field inputs. The observation is that the rule does not survive a threefold increase in
 input complexity. No threshold was adjusted.
 
-**Consequence for the claims.** The threshold rule has a known boundary of validity: it holds
-across four scalar operators, including a boundary test on the viscosity ladder, and it fails
-on a system of coupled fields. This is reported as a boundary rather than defended.
+**Consequence for the claims.** The threshold rule fails on this system, but section 5.14
+shows it does **not** fail on systems as a class, so the failure is specific to compressible
+flow rather than to coupling. This is reported rather than defended.
 
 For a multi-channel input the diagnostic's "oracle input mean" row is not interpretable — it
 averages over channels whose scales differ by orders of magnitude — so the component-wise
 conservation check above is the valid statement, and the skill measures, which do not use that
 oracle, are unaffected.
 
-### 5.14 Zero initialization helps, but fitting and generalization remain distinct
+### 5.14 A second system, two-dimensional: the rule recovers
+
+The failure above could have been a property of coupled fields in general. PDEBench 2D
+reaction-diffusion supplies a **second system**, and a two-dimensional one, so it separates
+"systems" from "compressible flow". Its protocol and four predictions were committed before
+any run ([DIFFREACT2D_SYSTEM_V1.md](../docs/DIFFREACT2D_SYSTEM_V1.md)).
+
+As with the 1D diffusion-sorption file, two properties were measured before writing any code:
+the stored initial layer is broadband noise (only 4.9% of its spectral energy inside
+r < 0.25 Nyquist), so it is not used, and the field smooths quickly (96.8% of the energy is
+smooth by layer 20), so the input is layer 20 and the target is layer 100. This file also
+holds only 1000 samples, so the split is 600/200/200 rather than the 1000/200/200 used
+elsewhere.
+
+| component | measured fluctE | MLP DeepONet | Fourier DeepONet | predicted |
+|---|---:|---:|---:|---|
+| 0 | 0.9110 | +0.0310 ± 0.0093 | +0.2377 ± 0.0060 | + / + |
+| 1 | 0.8282 | +0.0910 ± 0.0235 | +0.3734 ± 0.0019 | + / + |
+
+**4 of 4: the rule holds here.**
+
+This corrects a narrowing that was too strong. After section 5.13 the claim had been reduced
+to "valid for scalar operators only"; that is wrong. The corrected statement is that the rule
+holds on every scalar family tested, with three held-out confirmations, **and** on 2D
+reaction-diffusion, and fails on 1D compressible CFD. Its failure is therefore **specific to
+that operator**, not a property of coupled fields.
+
+What distinguishes the two systems is **not established** by this study. They differ in PDE
+type (parabolic reaction-diffusion against hyperbolic compressible flow), in fluctuation
+energy (0.83-0.91 against 0.07-0.47), and in the number of components, all at once. The most
+tempting reading is the middle row — that the positive branch fails in a middle range of
+fluctuation energy and holds when it is very high — but that is a hypothesis, not a finding.
+Both systems are predicted poorly in total terms (best relL2 0.66 to 1.10), so it is the
+fluctuation measure and not overall accuracy that separates them.
+
+### 5.15 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
@@ -904,16 +941,15 @@ superior; at t=2.00 FNO is below zero as well.
 
 Limitations:
 
-- Five settings, one parameter set each, one split each: linear transport, nonlinear
-  convection-diffusion at two viscosities, dissipative parabolic, one steady elliptic
-  two-dimensional problem, and one three-field system. The cross-operator gap identified in
-  [the publication assessment](../docs/PUBLICATION_ASSESSMENT.md) is narrowed but not closed:
-  there is no shallow-water or multi-dimensional system, and the threshold rule is known to
-  fail on the one system tested.
-- **The threshold rule is valid for scalar operators only.** It holds on four scalar
-  operators with three held-out confirmations and fails on a coupled three-field system
-  (section 5.13), with the thresholds unrefitted. Any use of it beyond scalar operators is
-  unsupported by this study.
+- Six settings, one parameter set each: linear transport, nonlinear convection-diffusion at
+  two viscosities, dissipative parabolic, one steady elliptic two-dimensional problem, a
+  three-field compressible system, and a two-field two-dimensional system. Splits are
+  1000/200/200 except the reaction-diffusion file, which holds only 1000 samples and uses
+  600/200/200. No shallow-water data exists in the deposit used.
+- **The threshold rule holds on every scalar family tested and on 2D reaction-diffusion, and
+  fails on 1D compressible CFD** (sections 5.13 and 5.14), with the thresholds unrefitted
+  throughout. Why CFD fails is not established, and any use of the rule on a compressible
+  hyperbolic system is unsupported by this study.
 - Two families are weak in the specific sense that every model saturates far from the
   thresholds: diffusion-sorption, whose target fluctuation lies in one spatial mode and
   whose stored initial state is spatially constant (so it is used from layer 20 onward),

@@ -80,6 +80,46 @@ for c in 0 1; do
 done
 ```
 
-## 7. Result
+## 7. Result (measured after the protocol was committed)
 
-Filled in after the runs; see also `docs/RUN_LOG.md`.
+| component | measured fluctE | MLP DeepONet | Fourier DeepONet | predicted | verdict |
+|---|---:|---:|---:|---:|---|
+| 0 | 0.9110 | +0.0310 ± 0.0093 | +0.2377 ± 0.0060 | + / + | ok / ok |
+| 1 | 0.8282 | +0.0910 ± 0.0235 | +0.3734 ± 0.0019 | + / + | ok / ok |
+
+**4 of 4. The rule holds on this system.** All recomputations reproduce stored metrics to
+within 7e-09.
+
+### This corrects the previous narrowing, which was too strong
+
+After the CFD system failed, the manuscript's claim was narrowed to "valid for scalar
+operators only". That is **wrong**, and this experiment is what shows it: a two-component,
+two-dimensional system supports the rule at 4 of 4.
+
+The corrected statement is:
+
+> The rule holds on every scalar family tested (three held-out confirmations) **and** on 2D
+> reaction-diffusion. It fails on 1D compressible CFD. The failure is therefore **specific to
+> that operator**, not a property of systems as a class.
+
+### What distinguishes the two systems is not yet established
+
+The two systems differ in several ways at once, and this study does not separate them:
+
+| | 1D CFD (failed) | 2D reaction-diffusion (held) |
+|---|---|---|
+| a-priori fluctuation energy | 0.074 – 0.466 | **0.828 – 0.911** |
+| PDE type | hyperbolic compressible flow | parabolic reaction-diffusion |
+| components | 3 | 2 |
+| input values | 768 | 2048 |
+| total relL2 of the best model | 0.084 – 1.10 | 0.66 – 0.90 |
+
+The most tempting reading is the first row: the rule's positive predictions held where the
+fluctuation energy is very high and failed in a middle range. But the two systems also differ
+in PDE type, so **this is a hypothesis, not a finding**, and it is recorded as such. Testing
+it would need a system at intermediate fluctuation energy, which none of the available files
+provides.
+
+Note also that both systems are predicted poorly in total terms (best relL2 0.66 to 1.10), so
+"the model is good" is not what separates them; the fluctuation skill measure is what
+separates them. That is precisely the point of the decomposition.
