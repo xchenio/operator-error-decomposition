@@ -289,5 +289,37 @@ class ManuscriptTableTest(unittest.TestCase):
             self.assertIn(f"| {label} | {rel:.5f} | {p:+.4f} ± {ps:.4f} |", text)
 
 
+    def test_reported_families_satisfy_the_per_sample_scope_condition(self):
+        """Every per-sample quantity divides by a sample's own norm, so families whose target
+        norms span orders of magnitude must not be reported. Darcy beta 0.01 (CV 2.43) is the
+        documented exclusion; excluding it must be justified by the number, not by taste."""
+        reported = {
+            "external_data/pdebench/fixed_t1_v1": "burgers_nu001_t100",
+            "external_data/pdebench/burgers_nu001/fixed_t100_v1": "burgers_nu01_t100",
+            "external_data/pdebench/advection/fixed_t100_v1": "advection_t100",
+            "external_data/pdebench/diffsorp/in020_t025_v1": "diffsorp_t125",
+            "external_data/pdebench/darcy": "darcy_beta1",
+            "external_data/pdebench/darcy_beta10.0": "darcy_beta10",
+        }
+        for data, label in reported.items():
+            path = ROOT / data / "pairs.npz"
+            if not path.exists():
+                continue
+            with np.load(path) as z:
+                norms = np.linalg.norm(z["test_y"].astype(np.float64), axis=1)
+            cv = float(norms.std() / norms.mean())
+            self.assertLess(cv, 1.0, f"{label}: CV {cv:.2f} violates the scope condition")
+            self.assertLess(norms.max() / norms.min(), 100.0, label)
+
+    def test_excluded_family_is_excluded_for_a_measured_reason(self):
+        path = ROOT / "external_data/pdebench/darcy_beta0.01/pairs.npz"
+        if not path.exists():
+            self.skipTest("darcy beta0.01 cache absent")
+        with np.load(path) as z:
+            norms = np.linalg.norm(z["test_y"].astype(np.float64), axis=1)
+        self.assertGreater(norms.std() / norms.mean(), 2.0)
+        self.assertGreater(norms.max() / norms.min(), 300.0)
+
+
 if __name__ == "__main__":
     unittest.main()

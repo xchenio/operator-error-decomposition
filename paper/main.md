@@ -727,7 +727,29 @@ at one fixed time and has no time coordinate to differentiate; FNO appears only 
 supervised reference. This arm also uses a different batch and collocation size, so its work
 per update is not matched to the supervised runs.
 
-### 5.12 Zero initialization helps, but fitting and generalization remain distinct
+### 5.12 A scope condition on the per-sample measures
+
+Every quantity above divides by each sample's own norm, so target norms spanning orders of
+magnitude make the per-sample numbers uninterpretable. Measured on the test split, the
+coefficient of variation of `||y_j||` is at most 0.66 in every reported family (Burgers at
+both viscosities 0.65 and 0.66, advection 0.45, Darcy beta 1.0 0.54 and beta 10.0 0.47,
+diffusion-sorption 0.06) and the spread is below 100-fold.
+
+A Darcy variant at beta = 0.01 has a coefficient of variation of **2.43** and a 343-fold
+spread. There every architecture produced relL2 of 0.70 to 3.80 and R^2 of -1.9 to -87, but
+its validation curves are non-monotone and some seeds end worse than they started, so the run
+did not converge either. That setting is **excluded**: it is neither a confirmation nor a
+falsification of the threshold rule, and reporting it as a falsification would mistake a
+metric artifact plus a failed run for a measurement. The scope condition is therefore stated
+explicitly: the decomposition applies where target norms are of comparable scale, roughly
+CV below 1 and spread below 100-fold.
+
+The same search also showed that the steady operator has **no boundary setting**: across a
+1000-fold change in Darcy `beta` the target fluctuation energy only moves between 0.492 and
+0.564, always far above every threshold. The threshold boundary therefore remains tested on
+evolution problems only.
+
+### 5.13 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
