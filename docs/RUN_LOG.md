@@ -964,6 +964,43 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Sections 5.13 and 5.14, the abstract and the limitations updated; a test pins the
   correction. Full discovery: 78 tests passed.
 
+## 2026-10-08 — reference audit, short-draft sync, and the benchmark-age question
+
+### Reference audit (all entries re-resolved on 2026-10-08)
+- Confirmed with journal records: Lee and Shin, SIAM J. Sci. Comput. 2024
+  (10.1137/23M1598751); Williams et al., J. Comput. Phys. 2026
+  (10.1016/j.jcp.2026.114851); Lu et al., CMAME 393:114778 (2022);
+  Takamoto et al., NeurIPS Datasets and Benchmarks 2022 with DaRUS deposit
+  10.18419/darus-2986; Demo et al., AMSES 2023 (10.1186/s40323-023-00249-9);
+  Koike et al., arXiv:2605.27756 = SparseModesNet (2026); ReZero, UAI/PMLR 161 (2021).
+- **Corrected an author error**: reference 8's first author is **Nicola** Demo, not Niccolo.
+- **Added three previously missing citations**, appended as 10-12 so in-text markers do not
+  shift: DeepONet (Nature Mach. Intell. 3, 218-229, 2021), FNO (ICLR 2021) and Khodakarami
+  et al. on architecture-dependent spectral bias (CMAME 2026, arXiv:2602.19265). **The two
+  architectures under study had been uncited in the body**, which was the most serious gap
+  found by the audit.
+- Two entries (SGDR, large-batch training) were not re-resolved online; their venues are
+  taken from the arXiv records and this is stated in the reference list rather than implied.
+- Before the audit the list was 9 entries with 2 from 2024 or later. After it, 12 entries
+  with 4 from 2024 or later. The foundational 2019-2022 entries were deliberately kept:
+  replacing them with newer surveys would misrepresent what the study builds on.
+
+### Short drafts
+- `ml4ps2026_4page.md` was at the 2026-09-29 state and was updated to the final evidence
+  base. `short_paper.md` was still carrying the **old title**
+  ("Better Projection and Stable Fitting...") and the 2026-09-24 numbers, so it was
+  rewritten rather than patched, with a pointer to the archived pre-rewrite text.
+
+### Benchmark age
+- All six settings come from the **2022** PDEBench release, about four years old at writing.
+  PDEBench remains the most widely used public benchmark for time-dependent operator learning
+  with ground-truth trajectories, and its repository is still maintained; newer
+  surrogate-benchmark frameworks exist (PDEArena). Because the claim is a diagnostic
+  decomposition rather than state-of-the-art accuracy, the conclusion does not depend on
+  benchmark currency, but the absolute error levels should be read as 2022-generation
+  baselines. This is now a stated limitation (section 6) and a note in reference [4].
+- Full discovery: 78 tests passed.
+
 ## 2026-10-08 — synthesis of the held-out record, FNO on the 2D system, physics on advection
 
 ### Held-out synthesis (pure analysis, no new data)
