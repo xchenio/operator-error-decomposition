@@ -909,7 +909,44 @@ fluctuation energy and holds when it is very high — but that is a hypothesis, 
 Both systems are predicted poorly in total terms (best relL2 0.66 to 1.10), so it is the
 fluctuation measure and not overall accuracy that separates them.
 
-### 5.15 Zero initialization helps, but fitting and generalization remain distinct
+### 5.15 Where the rule holds, and what the three misses share
+
+Across the six held-out evaluations the rule made **55 preregistered sign predictions and 52
+were correct**: 18 of 18 on diffusion-sorption, 21 of 21 on Burgers at Nu = 0.01, 3 of 3 on
+Darcy beta 1.0, 3 of 3 on Darcy beta 10, 4 of 4 on 2D reaction-diffusion, and 3 of 6 on 1D
+compressible CFD. The thresholds were never refitted on any held-out family. All three misses
+are on that single operator, so the question is what is distinctive about it.
+
+Three candidate explanations can be **eliminated with the data already collected**:
+
+| candidate | evidence that removes it |
+|---|---|
+| coupled fields in general | 2D reaction-diffusion is a two-component system and scores 4 of 4 |
+| a multi-field branch input | the same system has a two-field input and holds |
+| the level of fluctuation energy | Darcy beta 1.0 at 0.4964 holds while CFD Vx at 0.4659 fails; nearly equal energies, opposite outcomes |
+
+What the misses do share is shown below.
+
+| CFD component | R^2 per sample (MLP) | R^2 per sample (Fourier) | mean share (MLP) | spatial mean conserved? |
+|---|---:|---:|---:|---|
+| density | -0.0237 | -0.1132 | 0.011 | yes, 1.000000 |
+| Vx | -0.0160 | **-0.2356** | **0.598** | **no, 12% difference** |
+| pressure | -0.0448 | -0.1967 | 0.003 | approximately, 0.6% |
+
+Two of the three misses (density and Vx, MLP trunk) sit inside |R^2| < 0.03, a band where the
+measured skill is not distinguishable from the zero-fluctuation reference, so they are sign
+flips on an essentially flat quantity rather than substantive failures. The one miss with real
+magnitude is **Vx on the Fourier trunk at -0.2356**, and Vx is the only setting anywhere in
+this study with two properties at once: its **mean share dominates the error** (0.598 for the
+MLP trunk, 0.747 for Fourier, against at most 0.017 in every other reported family), and its
+**spatial mean is not conserved** — momentum is conserved but velocity is not (section 5.13).
+
+So the failure is localised rather than explained. The rule is right on 52 of 55 held-out
+predictions; every miss is on one operator; two of them are marginal; and the one substantial
+miss is on the only component whose error is dominated by a mean the input does not determine.
+We do not claim a cause, and we did not adjust anything in response.
+
+### 5.16 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
