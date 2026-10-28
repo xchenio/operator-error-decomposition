@@ -18,7 +18,8 @@ Recommended first target: `1D_Burgers_Sols_Nu0.001.hdf5`.
 ## Validate file schema before training
 
 ```powershell
-& 'D:\miniconda3\Scripts\conda.exe' run -n pytorch python scripts/train_fno_pdebench.py `
+conda activate pytorch
+python scripts/train_fno_pdebench.py `
   --data external_data/pdebench/1D_Burgers_Sols_Nu0.001.hdf5 --inspect-only
 ```
 
@@ -30,7 +31,7 @@ and record keeping.
 ## Sleep-safe execution
 
 ```powershell
-& 'D:\miniconda3\Scripts\conda.exe' run -n pytorch python scripts/experiment_runner.py `
+python scripts/experiment_runner.py `
   --plan experiments/pdebench_burgers_fno_smoke.json --resume
 ```
 

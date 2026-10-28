@@ -11,8 +11,8 @@ rem ⚠️ 注意：ExpCfg.tag() 不含 steps，所以不同步数的 run 必须
 rem    否则同名 JSON 会互相覆盖（与 README §6.5 同类的静默问题）。
 rem ============================================================
 set PYTHONIOENCODING=utf-8
-cd /d f:\Desktop\temp\pinode_align
-set PY=D:\miniconda3\envs\pytorch\python.exe
+cd /d "%~dp0.."
+if not defined PY set PY=python
 
 echo ########## A) data_only 监督上界 ##########
 rem 2D：纯监督能到多少？这是 2D 上"这个架构到底能不能学会这个算子"的答案

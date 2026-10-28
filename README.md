@@ -62,7 +62,8 @@ See `paper/main.md` §7 for the full withdrawal list.
 ## 3. Environment
 
 ```powershell
-& 'D:/miniconda3/envs/pytorch/python.exe' -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+conda activate pytorch
+python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 ```
 
 Validated: Python 3.11.16, torch 2.14.0+cu130, numpy 2.4.6, scipy 1.17.1, h5py 3.16.0.
@@ -148,9 +149,9 @@ results are reproducible from the exact bytes listed in `paper/main.md` §4.
 ### 6.1 Obtain the data
 
 ```powershell
-& 'D:/miniconda3/envs/pytorch/python.exe' scripts/download_pdebench.py   # 1D Burgers Nu0.001, 8.2 GB
-& 'D:/miniconda3/envs/pytorch/python.exe' scripts/download_advection.py
-& 'D:/miniconda3/envs/pytorch/python.exe' scripts/download_darus.py      # remaining families
+python scripts/download_pdebench.py   # 1D Burgers Nu0.001, 8.2 GB
+python scripts/download_advection.py
+python scripts/download_darus.py      # remaining families
 ```
 
 The downloaders resume partial bytes and verify the publisher digest before finishing. If you
@@ -160,7 +161,7 @@ the digest and refuse to proceed on a mismatch.
 ### 6.2 Prepare a family
 
 ```powershell
-& 'D:/miniconda3/envs/pytorch/python.exe' scripts/prepare_public_benchmark.py
+python scripts/prepare_public_benchmark.py
 ```
 
 writes `external_data/pdebench/fixed_t1_v1/` with `pairs.npz` and `protocol.json`
@@ -173,7 +174,7 @@ It refuses to overwrite an existing locked split. The other families have their 
 ### 6.3 Train
 
 ```powershell
-& 'D:/miniconda3/envs/pytorch/python.exe' scripts/run_public_benchmark.py `
+python scripts/run_public_benchmark.py `
     --data-dir external_data/pdebench/fixed_t1_v1 `
     --out results/public_fixed_t1_v1 `
     --steps 1500 --seeds 0,1,2,3,4 `
@@ -189,7 +190,7 @@ is refused rather than silently overwritten.
 ### 6.4 Diagnose
 
 ```powershell
-& 'D:/miniconda3/envs/pytorch/python.exe' scripts/diagnose_fluctuation.py --device cuda
+python scripts/diagnose_fluctuation.py --device cuda
 ```
 
 recomputes the decomposition from stored checkpoints into `results/fluctuation_v1/`. Every
@@ -201,7 +202,7 @@ recomputations in the study reproduce their stored metrics exactly
 ### 6.5 Test
 
 ```powershell
-& 'D:/miniconda3/envs/pytorch/python.exe' -m unittest discover -s tests -v
+python -m unittest discover -s tests -v
 ```
 
 No test requires CUDA. A handful read `results/` archives or git objects and skip when they

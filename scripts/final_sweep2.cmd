@@ -4,8 +4,8 @@ rem 续跑：final_sweep.cmd 的第 8/9/10 组未完成部分。
 rem --skip-existing 使重跑幂等，已完成的 run 会被跳过，不会浪费算力。
 rem ============================================================
 set PYTHONIOENCODING=utf-8
-cd /d f:\Desktop\temp\pinode_align
-set PY=D:\miniconda3\envs\pytorch\python.exe
+cd /d "%~dp0.."
+if not defined PY set PY=python
 set BASE=--pde burgers --methods pi_baseline,pi_align --n-data 0 --align-kind prior --align-weight 1.0 --steps 6000 --eval-every 1500 --diag-every 6000 --device cuda --steps-col 64 --bs 16 --skip-existing --out results/expV
 
 echo [8/10] w64 nu=0.01  seeds 0,1,2,3,4

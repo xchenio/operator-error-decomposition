@@ -25,8 +25,8 @@ rem 单 run 约 6.3 分钟（width 32，6000 步）；20 个 run 约 2.1 小时�
 rem --skip-existing 使重跑幂等，中断后直接再执行一次即可。
 rem ============================================================
 set PYTHONIOENCODING=utf-8
-cd /d f:\Desktop\temp\pinode_align
-set PY=D:\miniconda3\envs\pytorch\python.exe
+cd /d "%~dp0.."
+if not defined PY set PY=python
 set BASE=--pde burgers2d --n-data 0 --steps 6000 --eval-every 1500 --diag-every 6000 --device cuda --steps-col 64 --bs 16 --width 32 --seeds 0,1,2,3,4 --save-model --skip-existing --out results/expW
 
 echo [1/4] fourier trunk baseline  seeds 0-4

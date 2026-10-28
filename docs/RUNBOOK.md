@@ -19,11 +19,15 @@ dependent on a live terminal.
 ## Environment
 
 ```powershell
-& 'D:\miniconda3\Scripts\conda.exe' run -n pytorch python --version
+conda activate pytorch
+python --version
 ```
 
-The validated environment is documented in `environment.yml`. The current interpreter is
-`D:\miniconda3\envs\pytorch\python.exe` with CUDA-enabled PyTorch 2.14.0+cu130.
+The validated environment is documented in `environment.yml` (Python 3.11.16,
+CUDA-enabled PyTorch 2.14.0+cu130). Commands in this repository invoke plain `python` so they
+work on any machine once the environment is active; the `.cmd` sweep drivers take the
+interpreter from `set PY=python`, which can be overridden by defining `PY` beforehand.
+Historical log entries name an absolute interpreter path and are left unchanged.
 
 ## Required evidence per run family
 

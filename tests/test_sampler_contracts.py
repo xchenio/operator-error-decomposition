@@ -1,6 +1,7 @@
 """Fast regression tests for every sampler's per-sample pairing contract.
 
-Run with: `D:\\miniconda3\\Scripts\\conda.exe run -n pytorch python tests/test_sampler_contracts.py`
+Run with: `python tests/test_sampler_contracts.py` (from the repository root, with the
+`pytorch` conda environment active).
 """
 from __future__ import annotations
 
