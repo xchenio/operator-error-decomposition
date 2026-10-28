@@ -34,75 +34,29 @@ supervised operator learning, not a physics-informed training result.
 
 ## Abstract
 
-On periodic Burgers the spatial mean of the solution is conserved, so a model can appear
-competitive on relative L2 while predicting nothing beyond a conserved scalar. We separate
-prediction error into a conserved-mean part and a fluctuation part and measure skill on
-each, across six PDEBench operator families (linear advection, Burgers at two viscosities,
-diffusion-sorption, steady 2D Darcy, a three-field compressible system and a two-field
-reaction-diffusion system) and one physics-informed arm.
-On PDEBench 1D Burgers (Nu0.001), forecasting t=0 to t=1.0, the conserved mean
-carries 97.4% of the target energy and the fluctuation carries 23.7% of the per-sample
-squared norm; the exact input mean alone already achieves 0.37577 mean relative L2.
+On periodic Burgers the spatial mean is conserved, so relative L2 can hide that a model predicts
+nothing beyond a conserved scalar. We decompose squared prediction error exactly into a
+conserved-mean part and a fluctuation part and prove a hard upper bound on fluctuation skill
+that depends only on the trunk span.
 
-The mean baseline turns out to be a property of the operator, not of the metric: on Darcy the
-input-output mean correlation is -0.873 and the same construction gives 3.6843 instead of
-0.37577, while within the CFD system mass and momentum are conserved to 1e-6 and 4e-4 but the
-spatial mean of velocity alone is not (12%). The zero-fluctuation reference, by contrast,
-needs no physics and carries over unchanged.
+Against a defined zero-fluctuation reference on 1D Burgers (Nu = 0.001, t = 1.0), MLP DeepONet
+scores -0.0042 +- 0.0072 and Fourier DeepONet -0.0934 +- 0.0886 in per-sample fluctuation R^2,
+while FNO scores +0.6503 +- 0.0222 on identical data, split and budget.
 
-Against a zero-fluctuation reference, MLP DeepONet scores -0.0042 +- 0.0072 and Fourier
-DeepONet -0.0934 +- 0.0886 in per-sample fluctuation R^2, while FNO scores +0.6503 +-
-0.0222 on identical data, split and update budget. Across 175 reconstructed runs spanning
-trunk architecture, whitening, mean lifting, zero initialization, learning-rate schedule,
-batch size and training-subset size, no DeepONet configuration scores above zero. Raising
-the budget from 1500 to 50000 updates does not help: per-sample fluctuation R^2 moves
--0.0042 -> -0.0640 -> -0.2470 -> -0.4157 for MLP DeepONet and total relative L2 never
-improves (0.39357 / 0.39729 / 0.39311 / 0.42075), whereas FNO stays at +0.65 to +0.68 and
-0.222 to 0.228.
-The deficit is horizon-dependent and shared: over seven forecast horizons from t=0.10 to
-t=2.00 the per-sample fluctuation R^2 of every architecture decays monotonically, and FNO
-also falls below zero at t=2.00 (-0.0586 ± 0.2357). What differs is where each model
-crosses zero, giving an interpolated **skill horizon** of about 0.86 for the Fourier-trunk
-DeepONet, 0.98 for the MLP DeepONet and 1.94 for FNO. Parameter counts do not explain the
-gap (Fourier DeepONet 131,969 versus FNO 136,481), and a wall-clock-matched control does
-not either (DeepONet at 3500 updates, 14 s, scores -0.0057 against FNO's +0.6503 at
-1500 updates, 14 s).
+The deficit is horizon-dependent rather than absolute. Across seven horizons every architecture
+decays monotonically, giving an interpolated skill horizon near 0.98 (MLP), 0.86 (Fourier) and
+1.94 (FNO). The decay tracks nonlinear spectral evolution rather than elapsed time, and is
+absent on linear advection.
 
-On linear advection, the same seven horizons show constant fluctuation energy (0.6446) and
-**no** skill decay for any architecture (MLP +0.18 to +0.25, Fourier +0.92 to +0.95, FNO
-+0.9994), so the decay tracks nonlinear spectral evolution rather than elapsed forecast
-time. On diffusion-sorption, whose fluctuation energy decays from 0.7333 to 0.6506 without
-approaching any threshold, no architecture decays either (all +0.998 to +1.000), supporting
-the threshold form of the rule over "a longer forecast is harder". Empirically, a
-fluctuation-energy threshold fitted on the first two PDEs, and never refitted, predicts the
-sign of skill on both held-out families: 6 of 6 diffusion-sorption settings and 21 of 21 Burgers Nu=0.01
-settings, including every threshold crossing, with predicted skill horizons 0.740 / 0.860 /
-1.650 against measured 0.735 / 0.924 / 1.839, and 3 of 3 on a steady elliptic operator where
-the input-output mean correlation is -0.873 and the mean baseline is consequently worthless.
-The rule then fails on the three coupled fields of 1D compressible CFD (3 of 6, every positive
-prediction wrong, thresholds not refitted) but holds on the two coupled fields of 2D
-reaction-diffusion (4 of 4), so the failure is specific to that operator rather than to
-coupling, and why it fails is left open.
+An a-priori fluctuation-energy threshold, fitted on two scalar families and never refitted,
+predicts the sign of skill on held-out settings. The record is stratified since the 55 are not
+equally informative: 27 of 30 discriminating, 5 of 6 at the boundary, against 16 of 30 for
+always positive.
 
-An exact bound depending only on the trunk span (section 3.3) shows the constraint is the
-branch, not the basis: the Fourier trunk's bound is +0.96 to +1.00 on both PDEs at every
-horizon, including t = 2.00 where the achieved value is -0.3774, so the reachable set does
-not shrink with horizon while the map onto it does.
-
-Physics-informed
-training, which uses no supervision at the target time, also fails to produce positive
-fluctuation skill (-0.0003 and -0.2240), and the split shows it is not worse at the
-fluctuation but at the conserved mean (mean share 0.1246 against 0.0334 supervised).
-
-We claim a diagnostic decomposition — an exact split and a hard bound, both proved — and a
-reproducible negative result, not a new architecture or optimizer and not a theorem for the
-empirical rule. Six operator families are studied, most at a single parameter
-setting (Burgers at two viscosities, Darcy at two `beta` values), with one physics-informed
-arm. The dissociation, the horizon decay and the threshold values were then **replicated on a
-second split sharing no trajectory with the first**, with the thresholds refitted on it
-(section 5.17). Two of the six families are systems of equations, one of which falsifies
-the threshold rule of section 5.8 and one of which confirms it, so systems are covered but not
-settled.
+Physics-informed training likewise fails, its deficit again localising in the conserved mean,
+and the dissociation replicates on a second disjoint split. We claim a diagnostic decomposition
+with two proved propositions and a reproducible negative result, not a theorem for the empirical
+rule.
 
 ## 1. Research question and contribution
 
@@ -160,6 +114,18 @@ claimed as a new method.
 
 The architectures compared here are DeepONet [10] and the Fourier neural operator [11].
 Neither is ours; the contribution is a decomposition applied to both.
+
+**Relation to a posteriori error estimation.** The decomposition of section 3.1 is an a posteriori
+error identity in the plain sense that it is evaluated on a trained model's predictions and needs
+no retraining. It nonetheless differs from the classical finite-element literature [13, 14] in what
+is bounded, and the difference matters for how section 5 should be read. There the operator is
+known and the exact solution is not, so the error is unobservable and an *estimator* must be
+constructed to stand in for it — the estimator carries the argument. Here the operator is learned
+but the target is known, so nothing has to be estimated: Proposition 1 is exact by orthogonality, and
+Proposition 2 bounds what the architecture can represent rather than the error of any particular
+fit. The two shares are therefore not error estimates but error *accounts*. What they localise is a
+property of a model class, not a residual of a discretisation to be driven to zero by refinement —
+which is why adding updates does not repair it (section 5.10).
 
 Lee and Shin introduce two-step DeepONet training with trunk-first learning followed by
 branch learning and orthonormalization [1]. Fixed-trunk training and basis
@@ -1251,6 +1217,28 @@ seed 2. Shared inputs and related seeds do not constitute 30 independent dataset
 aggregate significance claim is made. The best zero-init validation group, MLP/n=1000 at
 0.38981, still trails the validation conservation-law baseline of 0.374509.
 
+### 5.19 Practical guidance: what to report
+
+A diagnostic earns its keep only if it changes what gets written down. For a learned surrogate of
+a PDE with a conserved spatial mean, three numbers are cheap and each answers a different question.
+
+1. **Report the mean share, not only total relative L2.** If the mean share is near 1, the model is
+   level with the conservation law and predicting nothing beyond it. Total relative L2 cannot
+   separate these cases, because the conserved mean is the easy part and it sits in the
+   denominator.
+2. **Report per-sample fluctuation `R^2` alongside the energy-weighted one.** The two disagree in
+   sign on Burgers `Nu = 0.01` (section 5.4), and which is chosen determines whether the
+   same result reads as success or failure. Say which is the headline.
+3. **State the forecast horizon and re-measure at it.** Trunk quality is horizon-dependent: the
+   Fourier trunk leads the MLP trunk by +0.2553 at `t = 0.25` and trails it by -0.0892 at
+   `t = 1.00` (section 5.5). A claim about basis quality that omits the horizon is
+   incomplete.
+
+Two warnings follow. Optimising total relative L2 can make the per-sample fluctuation measure
+**worse** (section 5.10), so total error is not a safe proxy for fluctuation skill. And a
+per-sample `R^2` within two seed standard deviations of zero is not evidence of skill in either
+direction: report the interval, not the sign of the point estimate.
+
 ## 6. Interpretation and limitations
 
 The supported finding is a **localization**: on this protocol the error of both DeepONet
@@ -1446,6 +1434,13 @@ Entries 1-9 keep their original numbering so that in-text citations do not shift
     https://arxiv.org/abs/2602.19265
     (added 2026-10-08; reports that spectral bias in neural operators is architecture
     dependent, consistent with the horizon-dependent trunk result in section 5.5)
+13. Mark Ainsworth and J. Tinsley Oden. *A Posteriori Error Estimation in Finite Element
+    Analysis*. Wiley-Interscience, 2000.
+14. Roland Becker and Rolf Rannacher. *An optimal control approach to a posteriori error
+    estimation in finite element methods*. Acta Numerica 10, 1-102, 2001.
+    https://doi.org/10.1017/S0962492901000010
+    (added 2026-10-28; cited in section 2 to distinguish an exact error account from a
+    classical error estimator)
 
 ## Declaration of competing interest
 

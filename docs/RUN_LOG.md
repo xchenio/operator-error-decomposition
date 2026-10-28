@@ -1274,3 +1274,53 @@ present. Suite: 125 tests, all pass.
   is still a factual confirmation only the author can make
 - Re-check JCP's current APC policy and editorial scope, and that the PDEBench deposit is
   still version 8, immediately before submitting
+
+
+## 2026-10-28 — JCP submission preparation
+
+The author confirmed the venue order (JCP first, MLST second, CMAME third) and supplied the
+Elsevier Guide for Authors and `elsarticle` template. Verified both against the journal: the guide
+is JCP's (ISSN 0021-9991), and `elsarticle` is Elsevier's class for it.
+
+### Abstract was over three times the cap
+The abstract had grown to **816 words** against JCP's hard limit of **250**. It now stands at 243
+words and is stored in `paper/arxiv_metadata.md`, with `paper/main.md` carrying the same text, so
+the arXiv listing and the journal submission cannot diverge.
+
+### Section 2 now places the decomposition against a posteriori error estimation
+The gap in the previous draft was that the decomposition had no literature home. It now has one,
+and the distinction drawn is the one a computational-mathematics reviewer will look for:
+
+- classical a posteriori estimation bounds an **unobservable** discretisation error of a **known**
+  operator, so the *estimator* carries the argument;
+- here the operator is learned but the target is **known**, so nothing is estimated — Proposition
+  1 is exact by orthogonality, and Proposition 2 bounds the **architecture**, not a particular
+  fit.
+
+The parts are therefore error *accounts* rather than error *estimates*, and what they localise is
+a property of a model class rather than a residual to be refined away. That is why the guidance
+in section 5.19 exists at all.
+
+### Section 5.19: what a practitioner should report
+Added, because a diagnostic that does not change what gets written down has no value. Three
+numbers, each answering a different question: the mean share (is the model beating the
+conservation law at all?); per-sample fluctuation `R^2` alongside the energy-weighted one (which
+one is the headline, since they disagree in sign); and the forecast horizon, re-measured at it.
+Two warnings close the section.
+
+### The compression target turned out not to be binding
+The guide states **"JCP does not impose a formal page limit."** The ~30-page length is therefore
+not a defect in itself. Compression to 22 pages is retained only as risk reduction against a
+handling Editor who asks for a shorter version, not as a requirement. The page-limit plan from the
+earlier strategy is withdrawn.
+
+### Two numbering defects fixed
+Section 8's next-experiments list had "(iii)" twice. The same list also described the
+disjoint-split replication and the per-update cost measurement as pending; both are now complete,
+and the entries say so.
+
+### Verified
+`scripts/verify_manuscript.py` is now a kept tool rather than a one-off. It checks cross-reference
+resolution, reference-list contiguity, citation coverage in both directions, the abstract cap and
+image existence, and exits non-zero on failure. `tests/test_manuscript_integrity.py` runs the same
+constraints as assertions (9 tests). Suite: 134 tests, all pass.
