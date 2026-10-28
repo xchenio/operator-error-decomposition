@@ -1,11 +1,19 @@
-# Conserved Means and Lost Fluctuations
+# An Exact A Posteriori Error Decomposition for Operator Learning
 
-A mean/fluctuation diagnosis of operator learning across six PDEBench operator families.
+An exact mean/fluctuation decomposition of operator-learning error, applied across six PDEBench
+operator families, with preregistered protocols and prediction ledgers.
+
+**Xiaochen Yan** · ORCID [0009-0002-9280-4323](https://orcid.org/0009-0002-9280-4323) ·
+Independent Researcher · MIT licensed
 
 > **Status.** Evidence-audited research draft, not a submitted manuscript.
 > **The authoritative text is [`paper/main.md`](paper/main.md);** this file is only a map of
 > the repository. The current scientific position is summarised in
 > [`docs/CURRENT_CONCLUSIONS.md`](docs/CURRENT_CONCLUSIONS.md).
+>
+> *The previous title was "Conserved Means and Lost Fluctuations". It was changed because it read
+> as a claim about which architecture wins, whereas what is offered here is the decomposition
+> itself and the negative result it measures.*
 
 ---
 
@@ -30,6 +38,11 @@ above zero.
 Six operator families — linear advection, Burgers at two viscosities, diffusion-sorption,
 steady 2D Darcy, a three-field compressible system and a two-field reaction-diffusion system
 — plus one physics-informed arm. See `paper/main.md` §5 for results and §6 for limitations.
+
+The dissociation, the horizon decay and the threshold values were then replicated on a **second
+split sharing no trajectory with the first** (315 further runs, thresholds refitted on the new
+split), under the protocol committed before any run on it — `docs/REPLICATION_SPLIT2_V1.md`,
+results in `paper/main.md` §5.17.
 
 ---
 
@@ -230,6 +243,41 @@ are absent.
 1. `paper/main.md` — the manuscript (§5 results, §6 limitations, §7 withdrawn claims).
 2. `docs/CURRENT_CONCLUSIONS.md` — what is supported, what is retracted.
 3. `docs/FLUCTUATION_DIAGNOSIS_V1.md` — the decomposition and its protocol.
-4. `docs/REMAINING_GAPS_V1.md` — what is still open.
-5. `docs/VENUE_STRATEGY_V1.md` — venue reasoning.
-6. `docs/RUNBOOK.md` — rules for long, sleep-safe runs.
+4. `docs/REPLICATION_SPLIT2_V1.md` — the disjoint-split replication and its outcome.
+5. `docs/REMAINING_GAPS_V1.md` — what is still open.
+6. `docs/VENUE_STRATEGY_V1.md` — venue reasoning.
+7. `docs/RUNBOOK.md` — rules for long, sleep-safe runs.
+
+---
+
+## 9. Checking the manuscript without the data
+
+The training runs need the ~50 GB PDEBench deposits, which are not in Git. Everything that
+depends only on committed artifacts runs immediately:
+
+```powershell
+python -m unittest discover -s tests          # 134 tests, none require CUDA
+python scripts/verify_manuscript.py           # cross-refs, references, abstract cap, figures
+python scripts/analyze_prediction_ledger.py   # stratified records in manuscript section 5.16
+```
+
+`verify_manuscript.py` exits non-zero on failure and writes its report to
+`results/manuscript_check.txt`. It is the check to run after any edit to `paper/main.md`.
+
+---
+
+## 10. Citation
+
+```bibtex
+@misc{yan2026decomposition,
+  title  = {An Exact A Posteriori Error Decomposition for Operator Learning:
+            Conservation, Fluctuation, and the Limit of Branch Capacity},
+  author = {Yan, Xiaochen},
+  year   = {2026},
+  note   = {Under review at the Journal of Computational Physics}
+}
+```
+
+## 11. License
+
+MIT — see [`LICENSE`](LICENSE).
