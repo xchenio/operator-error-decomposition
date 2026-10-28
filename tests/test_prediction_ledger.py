@@ -86,6 +86,49 @@ class StratificationTest(unittest.TestCase):
         self.assertEqual(sum(r['resolvable'] for r in misses), 1)
 
 
+class ManuscriptTableTest(unittest.TestCase):
+    """The stratified table in main.md must equal the recomputed strata, not a hand copy."""
+
+    def setUp(self):
+        path = ROOT / 'paper/main.md'
+        if not path.exists():
+            self.skipTest('manuscript not present')
+        self.text = path.read_text(encoding='utf-8')
+        _, rows = load()
+        for r in rows:
+            r['saturated'] = r['measured'] >= 0.9
+            r['informative'] = not r['saturated']
+            r['boundary'] = abs(r['fluctuation_energy'] - r['threshold']) / r['threshold'] <= 0.15
+            r['resolvable'] = abs(r['measured']) > 2.0 * r['sd']
+            r['correct'] = r['predicted'] == r['measured_sign']
+        self.rows = rows
+
+    def _row(self, label, predicate):
+        sel = [r for r in self.rows if predicate(r)]
+        ok = sum(r['correct'] for r in sel)
+        lo, hi = WilsonTest.wilson(ok, len(sel))
+        # matched to the formatting used in section 5.16 of main.md
+        row = (f"| {label} | {len(sel)} | {ok} | {ok / len(sel) * 100:.1f}% | "
+               f"[{lo * 100:.1f}, {hi * 100:.1f}] |")
+        self.assertIn(row, self.text, row)
+
+    def test_stratified_rows_are_in_the_manuscript(self):
+        self._row('all', lambda r: True)
+        self._row('saturated (measured `R^2 >= 0.9`)', lambda r: r['saturated'])
+        self._row('informative (not saturated)', lambda r: r['informative'])
+        self._row('boundary (within 15% of the threshold)', lambda r: r['boundary'])
+        self._row('resolvable (`|R^2| > 2 sd`)', lambda r: r['resolvable'])
+        self._row('not resolvable', lambda r: not r['resolvable'])
+        both = lambda r: r['informative'] and r['resolvable']  # noqa: E731
+        self._row('informative **and** resolvable', both)
+
+    def test_baseline_row_is_in_the_manuscript(self):
+        informative = [r for r in self.rows if r['informative']]
+        ok = sum(r['measured_sign'] == '+' for r in informative)
+        lo, hi = WilsonTest.wilson(ok, len(informative))
+        self.assertIn(f"**16 of 30 (53.3%, CI [{lo * 100:.1f}, {hi * 100:.1f}])**", self.text)
+
+
 class WilsonTest(unittest.TestCase):
     @staticmethod
     def wilson(k, n, z=1.96):

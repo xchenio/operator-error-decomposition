@@ -69,7 +69,7 @@ not either (DeepONet at 3500 updates, 14 s, scores -0.0057 against FNO's +0.6503
 1500 updates, 14 s).
 
 On linear advection, the same seven horizons show constant fluctuation energy (0.6446) and
-**no** skill decay for any architecture (MLP +0.20 to +0.25, Fourier +0.93 to +0.95, FNO
+**no** skill decay for any architecture (MLP +0.18 to +0.25, Fourier +0.92 to +0.95, FNO
 +0.9994), so the decay tracks nonlinear spectral evolution rather than elapsed forecast
 time. On diffusion-sorption, whose fluctuation energy decays from 0.7333 to 0.6506 without
 approaching any threshold, no architecture decays either (all +0.998 to +1.000), supporting
@@ -516,8 +516,10 @@ Two things change at once, and both matter:
 
 1. **Fluctuation energy is constant across horizons** (0.6446 at every t), as it must be
    for pure translation, against a monotone decay from 0.5939 to 0.1428 on Burgers.
-2. **No architecture shows a skill horizon.** MLP DeepONet stays near +0.20 to +0.25,
-   Fourier DeepONet near +0.93 to +0.95 and FNO at +0.9994, with no trend in t.
+2. **No architecture shows a skill horizon.** MLP DeepONet stays within +0.18 to +0.25,
+   Fourier DeepONet within +0.92 to +0.95 and FNO at +0.9994, with no trend in t. The ranges
+   are the observed extrema over the seven horizons, not confidence intervals; five seeds share
+   one split (section 6).
 
 So the decay measured on Burgers is not a generic effect of forecasting further ahead. It
 appears in the problem whose fluctuation spectrum evolves nonlinearly and is absent in the
@@ -910,9 +912,21 @@ Burgers Nu = 0.01 and linear advection admit a trustworthy residual with the dat
 
 Every quantity above divides by each sample's own norm, so target norms spanning orders of
 magnitude make the per-sample numbers uninterpretable. Measured on the test split, the
-coefficient of variation of `||y_j||` is at most 0.66 in every reported family (Burgers at
-both viscosities 0.65 and 0.66, advection 0.45, Darcy beta 1.0 0.54 and beta 10.0 0.47,
-diffusion-sorption 0.06) and the spread is below 100-fold.
+coefficient of variation of `||y_j||` and the max/min spread of `||y_j||` are:
+
+| family | CV | spread |
+|---|---:|---:|
+| Burgers Nu = 0.001 | 0.65 | 59.5 |
+| Burgers Nu = 0.01 | 0.66 | 90.6 |
+| linear advection | 0.45 | 14.2 |
+| diffusion-sorption | 0.06 | 1.3 |
+| Darcy beta 1.0 / beta 10.0 | 0.54 / 0.47 | 10.7 / 7.9 |
+| 2D reaction-diffusion, components 0 / 1 | 0.04 / 0.07 | 1.3 / 1.6 |
+| 1D CFD density / Vx / pressure | 0.48 / **0.75** / 0.49 | 11.5 / **99.8** / 12.5 |
+
+The largest values anywhere in the reported families are **CV 0.75 and a 99.8-fold spread**,
+both on the CFD `Vx` component. Every reported setting is therefore inside the stated scope
+condition below; no reported family exceeds it.
 
 A Darcy variant at beta = 0.01 has a coefficient of variation of **2.43** and a 343-fold
 spread. There every architecture produced relL2 of 0.70 to 3.80 and R^2 of -1.9 to -87, but
@@ -1068,15 +1082,23 @@ What the misses do share is shown below.
 |---|---:|---:|---:|---|
 | density | -0.0237 | -0.1132 | 0.011 | yes, 1.000000 |
 | Vx | -0.0160 | **-0.2356** | **0.598** | **no, 12% difference** |
-| pressure | -0.0448 | -0.1967 | 0.003 | approximately, 0.6% |
+| pressure | -0.0448 | -0.1967 | 0.0007 | approximately, 0.6% |
 
 Two of the three misses (density and Vx, MLP trunk) sit inside |R^2| < 0.03, a band where the
 measured skill is not distinguishable from the zero-fluctuation reference, so they are sign
 flips on an essentially flat quantity rather than substantive failures. The one miss with real
 magnitude is **Vx on the Fourier trunk at -0.2356**, and Vx is the only setting anywhere in
 this study with two properties at once: its **mean share dominates the error** (0.598 for the
-MLP trunk, 0.747 for Fourier, against at most 0.017 in every other reported family), and its
-**spatial mean is not conserved** — momentum is conserved but velocity is not (section 5.13).
+MLP trunk, 0.747 for Fourier), and its **spatial mean is not conserved** — momentum is
+conserved but velocity is not (section 5.13).
+
+For scale, the largest family-mean mean share anywhere outside this system is **0.051**
+(supervised Fourier DeepONet on Burgers at `Nu = 0.01`, section 5.11); the Burgers
+`Nu = 0.001` family of section 5.2 reaches 0.034. The only other place where the mean share is
+comparable to CFD `Vx` is the **physics-informed arm** (0.071 and 0.157, section 5.11), and
+there the cause is known and different: with no supervision at the target time, the conserved
+mean is precisely what is not learned. On CFD `Vx` the mean share dominates under ordinary
+supervised training, which is what makes it the outlier.
 
 So the failure is localised rather than explained. The rule is right on 52 of 55 held-out
 predictions; every miss is on one operator; two of them are marginal; and the one substantial
@@ -1094,12 +1116,16 @@ inside strata and against a trivial baseline. Three cuts matter.
 | stratum | n | correct | accuracy | 95% Wilson CI |
 |---|---:|---:|---:|---|
 | all | 55 | 52 | 94.5% | [85.1, 98.1] |
-| **saturated** (measured `R^2 >= 0.9`) | **25** | 25 | 100% | [86.7, 100] |
-| informative (not saturated) | 30 | 27 | **90.0%** | [74.4, 96.5] |
+| saturated (measured `R^2 >= 0.9`) | 25 | 25 | 100.0% | [86.7, 100.0] |
+| informative (not saturated) | 30 | 27 | 90.0% | [74.4, 96.5] |
 | boundary (within 15% of the threshold) | 6 | 5 | 83.3% | [43.6, 97.0] |
 | resolvable (`|R^2| > 2 sd`) | 47 | 46 | 97.9% | [88.9, 99.6] |
 | not resolvable | 8 | 6 | 75.0% | [40.9, 92.9] |
 | informative **and** resolvable | 22 | 21 | 95.5% | [78.2, 99.2] |
+
+(The rows above are the output of `scripts/analyze_prediction_ledger.py` verbatim, and
+`tests/test_prediction_ledger.py` asserts they still match, so the table cannot drift from the
+ledger.)
 
 1. **25 of the 55 are nearly free.** On diffusion-sorption every setting scores above 0.998,
    and on Darcy the two non-MLP arms score above 0.91; where a model is essentially perfect
@@ -1205,8 +1231,14 @@ Limitations:
   rather than a measurement, because `torch.utils.flop_counter` registers no FFT op. The
   estimated part belongs to FNO, so the direction of any error in it favours FNO, but equal
   *estimated* FLOPs are still not provably equal real work.
-- The test split was exposed during exploratory development and validation guided later
-  study choices; these numbers are descriptive and no fresh holdout was used.
+- **One data split.** The test split was exposed during exploratory development and validation
+  guided later study choices; these numbers are descriptive. A replication on a **second split
+  disjoint from the first** — sharing no trajectory with it, with the thresholds refitted on the
+  new split rather than carried over — is predeclared in
+  [docs/REPLICATION_SPLIT2_V1.md](../docs/REPLICATION_SPLIT2_V1.md), committed before any run
+  on it, with endpoints and tolerances fixed in advance (R0 the dissociation, P1 threshold
+  stability within 25%, P2 at least 18 of 21 held-out signs). Its outcome is reported whatever
+  it is. At the time of writing the runs have not started, so this remains a single-split study.
 - Five seeds share one data split, so seed standard deviations do not measure task
   variability.
 - Numerical-rank sensitivity of the projection oracle (rcond 1e-12 versus 1e-6) is reported
@@ -1242,9 +1274,11 @@ from its stored value beyond a tolerance. The test suite asserts the exact squar
 closure, the invariance of the skill measure to the mean, and that stored metrics are
 reproduced.
 
-Next experiments, in priority order: (i) a FLOP counter that registers FFT work, so that the
-matched comparison in section 5.9 rests on a measurement rather than on the analytic
-estimate it currently uses; (ii) work per update matched between the physics-informed arm of
+Next experiments, in priority order: (i) the disjoint-split replication of
+[docs/REPLICATION_SPLIT2_V1.md](../docs/REPLICATION_SPLIT2_V1.md), which closes the one-split
+limitation above and whose protocol is already fixed; (ii) a FLOP counter that registers FFT
+work, so that the matched comparison in section 5.9 rests on a measurement rather than on the
+analytic estimate it currently uses; (iii) work per update matched between the physics-informed arm of
 section 5.11 and the supervised runs, together with a physics-informed FNO control, which the
 present 1D FNO cannot supply because it maps a field to a field at one fixed time and has no
 time coordinate to differentiate; (iii) a compressible system at a second parameter set,
