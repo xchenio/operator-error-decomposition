@@ -24,9 +24,11 @@ crosses zero, giving an interpolated **skill horizon** of about 0.86 (Fourier De
 constraint is the branch, not the basis. A fluctuation-energy threshold fitted on two scalar
 families predicts the sign of skill on four held-out families — 52 of 55 preregistered
 predictions, thresholds never refitted — but fails on one compressible system, which is
-reported as a boundary rather than defended. A physics-informed arm reaches at most 0.38 of
-supervised fluctuation skill. We claim a diagnostic decomposition and a reproducible negative
-result, not a new architecture or optimizer.
+reported as a boundary rather than defended. Stratified, 25 of the 55 are on settings where the
+architecture is essentially perfect; the rule is 27 of 30 on the remaining discriminating
+predictions against 16 of 30 for an always-positive baseline. A physics-informed arm reaches at
+most 0.38 of supervised fluctuation skill. We claim a diagnostic decomposition and a reproducible
+negative result, not a new architecture or optimizer.
 
 ## 1. Scope and prior work
 
@@ -71,9 +73,12 @@ explain the gap (131,969 versus 136,481), and neither does a wall-clock-matched 
 **Six settings.** Linear advection, Burgers at two viscosities, diffusion-sorption, steady 2D
 Darcy, a 1D three-field compressible system and a 2D two-field system. A fluctuation-energy
 threshold fitted on two scalar families predicts the sign of skill on four held-out families:
-52 of 55 preregistered predictions correct. It fails on 1D compressible CFD (3 of 6). Two of
-those three misses are inside |R^2| < 0.03; the substantial one, Vx, is the only setting in
-the study where the mean share dominates the error and the spatial mean is not conserved.
+52 of 55 preregistered predictions correct. Stratified: 25 of the 55 are on settings where the
+architecture scores R^2 >= 0.9 and the sign is not in doubt; the rule is 27 of 30 on the
+remaining discriminating predictions, against 16 of 30 for always predicting positive. It fails
+on 1D compressible CFD (3 of 6). Two of those three misses are inside |R^2| < 0.03; the
+substantial one, Vx, is the only setting in the study where the mean share dominates the error
+and the spatial mean is not conserved.
 
 **Where the constraint is.** An exact upper bound from the trunk span shows the Fourier
 trunk's bound is +0.96 to +1.00 on both PDEs at every horizon, including t=2.00 where the

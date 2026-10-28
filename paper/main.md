@@ -126,8 +126,10 @@ Contribution candidates:
 6. A **prospective predictor, stated with its boundary**. An a-priori fluctuation-energy
    threshold, fitted on two scalar families and never refitted, predicts the sign of
    fluctuation skill on held-out settings: 52 of 55 preregistered sign predictions are
-   correct (section 5.15). It fails on 1D compressible CFD (3 of 6, every prediction of
-   positive skill wrong) and holds on 2D reaction-diffusion (4 of 4), so the failure is
+   correct, of which 27 of 30 are on settings that can actually discriminate and 5 of 6 are
+   at the threshold boundary (sections 5.15-5.16). It fails on 1D compressible CFD (3 of 6,
+   every prediction of positive skill wrong) and holds on 2D reaction-diffusion (4 of 4), so
+   the failure is
    specific to that operator rather than to coupled fields. Both the confirmations and the
    falsification are reported; nothing was adjusted in response.
 7. A **localisation of where physics-informed training fails**. With no supervision at the
@@ -1028,7 +1030,8 @@ Across the six held-out evaluations the rule made **55 preregistered sign predic
 were correct**: 18 of 18 on diffusion-sorption, 21 of 21 on Burgers at Nu = 0.01, 3 of 3 on
 Darcy beta 1.0, 3 of 3 on Darcy beta 10, 4 of 4 on 2D reaction-diffusion, and 3 of 6 on 1D
 compressible CFD. The thresholds were never refitted on any held-out family. All three misses
-are on that single operator, so the question is what is distinctive about it.
+are on that single operator, so the question is what is distinctive about it. Section 5.16
+asks how much this count is worth, because the 55 are not equally informative.
 
 Three candidate explanations can be **eliminated with the data already collected**:
 
@@ -1059,7 +1062,53 @@ predictions; every miss is on one operator; two of them are marginal; and the on
 miss is on the only component whose error is dominated by a mean the input does not determine.
 We do not claim a cause, and we did not adjust anything in response.
 
-### 5.16 Zero initialization helps, but fitting and generalization remain distinct
+### 5.16 How much the 52 of 55 is worth
+
+The headline count is honest but easy to over-read, because the 55 predictions are not
+equally informative. `experiments/prediction_ledger.json` records every prediction with the
+a-priori fluctuation energy, the threshold, the predicted sign and the measured value with
+its seed standard deviation; `scripts/analyze_prediction_ledger.py` recomputes the count
+inside strata and against a trivial baseline. Three cuts matter.
+
+| stratum | n | correct | accuracy | 95% Wilson CI |
+|---|---:|---:|---:|---|
+| all | 55 | 52 | 94.5% | [85.1, 98.1] |
+| **saturated** (measured `R^2 >= 0.9`) | **25** | 25 | 100% | [86.7, 100] |
+| informative (not saturated) | 30 | 27 | **90.0%** | [74.4, 96.5] |
+| boundary (within 15% of the threshold) | 6 | 5 | 83.3% | [43.6, 97.0] |
+| resolvable (`|R^2| > 2 sd`) | 47 | 46 | 97.9% | [88.9, 99.6] |
+| not resolvable | 8 | 6 | 75.0% | [40.9, 92.9] |
+| informative **and** resolvable | 22 | 21 | 95.5% | [78.2, 99.2] |
+
+1. **25 of the 55 are nearly free.** On diffusion-sorption every setting scores above 0.998,
+   and on Darcy the two non-MLP arms score above 0.91; where a model is essentially perfect
+   the sign is not in doubt and the prediction cannot discriminate between methods. The rule
+   is 25 of 25 there, which says little. The saturated cut is **signed on purpose**: a large
+   negative `R^2` is a decisive failure and stays in the informative set.
+2. **Only six predictions test the rule where it could go either way** — those whose
+   fluctuation energy lies within 15% of the relevant threshold. They are the two Burgers
+   `Nu = 0.01` trunks at `t = 0.75` (whose energies straddle the two thresholds and for which
+   the rule therefore makes *opposite* predictions on the same target), MLP at `t = 1.00`,
+   FNO at `t = 1.50`, and both CFD density trunks. The rule is **5 of 6** there, and the
+   single miss is CFD density on the MLP trunk, at `-0.0237 +- 0.0150`.
+3. **Eight predictions are not statistically resolvable** — the measured value is within two
+   seed standard deviations of zero, so their sign is partly a coin flip. The rule is 6 of 8
+   there and 46 of 47 where the sign *is* resolvable. Two of the three misses are
+   non-resolvable; the one miss with real magnitude is CFD `Vx` on the Fourier trunk at
+   `-0.2356 +- 0.0813` (2.9 sd).
+
+**Baseline.** The rule predicted `+` in 44 of 55 cases, so the obvious skeptical baseline is
+"always predict positive". That baseline scores 41 of 55 (74.5%, CI [61.7, 84.2]) overall but
+only **16 of 30 (53.3%, CI [36.1, 69.8])** on the informative subset, against the rule's 27 of
+30 (90.0%, CI [74.4, 96.5]). The two intervals do not overlap on the informative subset, which
+is the comparison that matters: on the easy saturated settings the baseline does nearly as
+well, and it is the discriminating settings that separate the rule from it.
+
+We therefore state the result as **27 of 30 on informative predictions, 5 of 6 at the
+threshold boundary**, and report 52 of 55 only as the raw count. The ledger is machine-readable
+and the strata are recomputed by test rather than transcribed.
+
+### 5.17 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
