@@ -1,0 +1,39 @@
+[skip completed] deeponet_mlp_s0
+[skip completed] deeponet_mlp_s1
+deeponet_mlp_s2 41750 val= 0.39189 train_s= 134.76
+deeponet_mlp_s2 42000 val= 0.39326 train_s= 135.88
+deeponet_mlp_s2 42250 val= 0.40589 train_s= 136.87
+deeponet_mlp_s2 42500 val= 0.39584 train_s= 137.95
+deeponet_mlp_s2 42750 val= 0.39562 train_s= 139.0
+deeponet_mlp_s2 43000 val= 0.39084 train_s= 140.02
+deeponet_mlp_s2 43250 val= 0.39497 train_s= 141.09
+deeponet_mlp_s2 43500 val= 0.39343 train_s= 142.09
+deeponet_mlp_s2 43750 val= 0.38984 train_s= 143.03
+deeponet_mlp_s2 44000 val= 0.3904 train_s= 143.83
+deeponet_mlp_s2 44250 val= 0.3916 train_s= 144.49
+deeponet_mlp_s2 44500 val= 0.39975 train_s= 145.23
+deeponet_mlp_s2 44750 val= 0.38919 train_s= 145.91
+deeponet_mlp_s2 45000 val= 0.39393 train_s= 146.58
+deeponet_mlp_s2 45250 val= 0.39425 train_s= 147.22
+deeponet_mlp_s2 45500 val= 0.38855 train_s= 147.98
+deeponet_mlp_s2 45750 val= 0.39354 train_s= 148.78
+deeponet_mlp_s2 46000 val= 0.39404 train_s= 149.54
+deeponet_mlp_s2 46250 val= 0.39595 train_s= 150.3
+deeponet_mlp_s2 46500 val= 0.46164 train_s= 151.08
+deeponet_mlp_s2 46750 val= 0.41365 train_s= 151.94
+deeponet_mlp_s2 47000 val= 0.40422 train_s= 152.79
+deeponet_mlp_s2 47250 val= 0.39478 train_s= 153.83
+Traceback (most recent call last):
+  File "F:\Desktop\temp4 - PINN\pinode_align\scripts\run_public_benchmark.py", line 171, in <module>
+    main()
+  File "F:\Desktop\temp4 - PINN\pinode_align\scripts\run_public_benchmark.py", line 166, in main
+    train_one(cfg,arrays,protocol,out/f'{architecture}_s{seed}',device)
+  File "F:\Desktop\temp4 - PINN\pinode_align\scripts\run_public_benchmark.py", line 119, in train_one
+    save()
+  File "F:\Desktop\temp4 - PINN\pinode_align\scripts\run_public_benchmark.py", line 100, in save
+    atomic_save(dict(identity=identity,model=model.state_dict(),optimizer=optimizer.state_dict(),
+  File "F:\Desktop\temp4 - PINN\pinode_align\src\resume.py", line 32, in atomic_save
+    temp.replace(path)
+  File "D:\miniconda3\envs\pytorch\Lib\pathlib.py", line 1188, in replace
+    os.replace(self, target)
+PermissionError: [WinError 5] ¾Ü¾ø·ÃÎÊ¡£: 'F:\\Desktop\\temp4 - PINN\\pinode_align\\results\\public_steps50k_v1\\deeponet_mlp_s2\\checkpoints\\latest.pt.tmp' -> 'F:\\Desktop\\temp4 - PINN\\pinode_align\\results\\public_steps50k_v1\\deeponet_mlp_s2\\checkpoints\\latest.pt'

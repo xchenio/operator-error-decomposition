@@ -1,0 +1,42 @@
+deeponet_mlp_s0 250 val= 0.42366 train_s= 1.72
+deeponet_mlp_s0 500 val= 0.38871 train_s= 2.72
+deeponet_mlp_s0 750 val= 0.40726 train_s= 3.73
+deeponet_mlp_s0 1000 val= 0.40167 train_s= 4.73
+deeponet_mlp_s0 1250 val= 0.39937 train_s= 5.72
+deeponet_mlp_s0 1500 val= 0.40314 train_s= 6.73
+deeponet_mlp_s0 1750 val= 0.3899 train_s= 7.72
+deeponet_mlp_s0 2000 val= 0.39528 train_s= 8.7
+deeponet_mlp_s0 2250 val= 0.39204 train_s= 9.68
+deeponet_mlp_s0 2500 val= 0.39676 train_s= 10.69
+deeponet_mlp_s0 2750 val= 0.39229 train_s= 11.68
+deeponet_mlp_s0 3000 val= 0.40135 train_s= 12.74
+deeponet_mlp_s0 3250 val= 0.3893 train_s= 13.73
+deeponet_mlp_s0 3500 val= 0.39612 train_s= 14.68
+deeponet_mlp_s0 3750 val= 0.42293 train_s= 15.64
+deeponet_mlp_s0 4000 val= 0.39231 train_s= 16.63
+deeponet_mlp_s0 4250 val= 0.38821 train_s= 17.69
+deeponet_mlp_s0 4500 val= 0.398 train_s= 18.68
+deeponet_mlp_s0 4750 val= 0.39021 train_s= 19.67
+deeponet_mlp_s0 5000 val= 0.39691 train_s= 20.66
+deeponet_mlp_s0 5250 val= 0.39035 train_s= 21.64
+deeponet_mlp_s0 5500 val= 0.39027 train_s= 22.61
+deeponet_mlp_s0 5750 val= 0.39204 train_s= 23.57
+deeponet_mlp_s0 6000 val= 0.42298 train_s= 24.57
+deeponet_mlp_s0 6250 val= 0.39453 train_s= 25.54
+deeponet_mlp_s0 6500 val= 0.39843 train_s= 26.49
+deeponet_mlp_s0 6750 val= 0.38512 train_s= 27.49
+deeponet_mlp_s0 7000 val= 0.39251 train_s= 28.46
+Traceback (most recent call last):
+  File "F:\Desktop\temp4 - PINN\pinode_align\scripts\run_public_benchmark.py", line 171, in <module>
+    main()
+  File "F:\Desktop\temp4 - PINN\pinode_align\scripts\run_public_benchmark.py", line 166, in main
+    train_one(cfg,arrays,protocol,out/f'{architecture}_s{seed}',device)
+  File "F:\Desktop\temp4 - PINN\pinode_align\scripts\run_public_benchmark.py", line 119, in train_one
+    save()
+  File "F:\Desktop\temp4 - PINN\pinode_align\scripts\run_public_benchmark.py", line 100, in save
+    atomic_save(dict(identity=identity,model=model.state_dict(),optimizer=optimizer.state_dict(),
+  File "F:\Desktop\temp4 - PINN\pinode_align\src\resume.py", line 32, in atomic_save
+    temp.replace(path)
+  File "D:\miniconda3\envs\pytorch\Lib\pathlib.py", line 1188, in replace
+    os.replace(self, target)
+PermissionError: [WinError 5] ¾Ü¾ø·ÃÎÊ¡£: 'F:\\Desktop\\temp4 - PINN\\pinode_align\\results\\public_steps20k_v1\\deeponet_mlp_s0\\checkpoints\\latest.pt.tmp' -> 'F:\\Desktop\\temp4 - PINN\\pinode_align\\results\\public_steps20k_v1\\deeponet_mlp_s0\\checkpoints\\latest.pt'
