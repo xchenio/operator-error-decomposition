@@ -1159,3 +1159,44 @@ re-verified. Lesson: on this repository, a checkout can silently change a run id
 - Primary submission JCP; fallback CMAME, TMLR, Neurocomputing. See docs/VENUE_STRATEGY_V1.md.
 - Before submitting, re-check APC policy, editorial scope, and that the PDEBench deposit is
   still version 8.
+
+
+## 2026-10-28 — disjoint-split replication (experiments run)
+
+Interpreter: conda env `pytorch`, Python 3.11.16, torch 2.14.0+cu130, numpy 2.4.6,
+scipy 1.17.1, h5py 3.16.0, matplotlib 3.11.2. **No new download**: all three source
+files (Burgers Nu=0.001, Nu=0.01, advection) were already local under
+`external_data/pdebench/`.
+
+### Protocol first
+`docs/REPLICATION_SPLIT2_V1.md` was committed (97c37ea) **before** any run, fixing the split
+seed, the refitting rule, the endpoints and their tolerances.
+
+### What ran
+- 21 cache directories prepared under `external_data/pdebench/rs2/`, each verified disjoint
+  from split 1 by `scripts/verify_split_disjointness.py` (preflight gate).
+- **315 runs** (21 families x 3 architectures x 5 seeds), 1500 updates each, CUDA.
+- Mean/fluctuation diagnostic recomputed for all 21 families; every recomputation reproduces
+  its stored metric exactly (`max_abs_metric_difference = 0.00e+00`).
+
+### Result
+R0 (primary) **passes**: the mean/fluctuation dissociation replicates on trajectories none of
+which entered split 1 (MLP -0.0003 +- 0.0167, FNO +0.6162 +- 0.0347, gap +0.6165).
+
+P1: MLP threshold 0.2477 -> 0.2444 (1.3% drift); Fourier 0.2728 -> 0.3045 (11.6%); both
+inside the predeclared 25% band. **FNO has no threshold on split 2** — its skill stays positive
+at all seven fitting horizons — so that arm issues no prediction.
+
+P2: 14 predictions instead of 21. Rule **13/14** (92.9%, CI [68.5, 98.7]) vs always-positive
+**6/14** (42.9%, CI [21.4, 67.4]). The single miss sits inside the same statistically
+unresolvable band that produced two of split 1's three misses.
+
+Full numbers, deviation list and artifacts: section 9 of
+`docs/REPLICATION_SPLIT2_V1.md`.
+
+### Also, outside the protocol (thesis disclosure)
+The author's 2025 undergraduate thesis (Harbin Institute of Technology, advisor Prof. Jiu Lou;
+Prof. Ru Zhang thanked in its acknowledgments) covers the same broad topic. Checked for
+substantive overlap: Burgers, advection, PDEBench, Darcy, CFD, spatial mean and fluctuation each
+appear zero times in it, and it uses self-generated 1D diffusion-reaction data with total
+relative L2 as its only measure. Disclosed in the manuscript and cover letter (3b8846d).
