@@ -1228,3 +1228,49 @@ part that is.
 Recorded by `scripts/measure_pi_update_cost.py`, which reads the stored artifacts rather than
 re-implementing either update; `tests/test_pi_update_cost.py` pins the range so the quoted factor
 cannot drift away from the runs. Suite: 125 tests, all pass.
+
+
+## 2026-10-28 — submission package closed out
+
+arXiv, ORCID and the Zenodo code DOI are all registered by the author. Three manuscript-side
+items followed from that and are now done.
+
+### The "one split per family" claim in the abstract was stale
+The abstract still said "one split per family", written when the study had one split. The
+disjoint-split replication has since run, so the sentence now says the dissociation, the horizon
+decay and the threshold values were replicated on a second split sharing no trajectory with the
+first, and points to section 5.17. This is the kind of drift that survives a section-level
+read-through, because each statement is individually checked and none of them is the abstract.
+
+### Section 8 still said the release was not prepared
+The reproducibility section closed with "A redistributable release and author/affiliation
+details are not yet prepared." Now states what is actually true: the data is not redistributable
+regardless (50 GB), and the code is released as a versioned archive with a DOI. The distinction
+matters — the release carries the code and the pinned digests, never the data.
+
+### Seven legacy figures were in the submission package unreferenced
+`paper/figures/` held `fig1_attribution`, `fig2_2d_controls`, `fig3_bug`, `fig4_varfloor`,
+`fig5_mechanism`, `fig6_1d_ablation` and `fig7_budget`. Every one of them is cited only by
+`paper/archive/pre_audit_20260924/main.md` — the withdrawn basis-align draft — and none by the
+current manuscript. They document claims section 7 retracts: a variance floor, a mechanism, a
+sampler bug.
+
+They were also **already broken**: the archived draft links them as `figures/figX.png`, relative to
+`paper/archive/pre_audit_20260924/`, but the directory was at `paper/figures/`. Moving them to
+`paper/archive/pre_audit_20260924/figures/` fixes the archive's links and keeps them out of the
+submission package, which is where a reviewer would otherwise find figures for a retracted argument.
+The manuscript itself carries one figure (section 5.10).
+
+### Verified
+All 46 `section X.Y` cross-references resolve; headings are contiguous 1-8 with no gaps.
+Reference list is 1-12, contiguous, every entry cited, none uncited. All figure files
+present. Suite: 125 tests, all pass.
+
+### Remaining (author side)
+- Fill the Zenodo concept DOI into the Data availability statement ([fill: ...] marker)
+- Add the author name, affiliation ("Independent Researcher"), email and ORCID iD to the
+  manuscript title block — these are the only identifiers the journal needs that I cannot
+  supply, and the cover letter's one bracketed item (the prior-submission declaration)
+  is still a factual confirmation only the author can make
+- Re-check JCP's current APC policy and editorial scope, and that the PDEBench deposit is
+  still version 8, immediately before submitting

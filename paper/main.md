@@ -98,9 +98,11 @@ We claim a diagnostic decomposition — an exact split and a hard bound, both pr
 reproducible negative result, not a new architecture or optimizer and not a theorem for the
 empirical rule. Six operator families are studied, most at a single parameter
 setting (Burgers at two viscosities, Darcy at two `beta` values), with one physics-informed
-arm and one split per family. Two of the six families are systems of equations, one of which
-falsifies the threshold rule of section 5.8 and one of which confirms it, so systems are
-covered but not settled.
+arm. The dissociation, the horizon decay and the threshold values were then **replicated on a
+second split sharing no trajectory with the first**, with the thresholds refitted on it
+(section 5.17). Two of the six families are systems of equations, one of which falsifies
+the threshold rule of section 5.8 and one of which confirms it, so systems are covered but not
+settled.
 
 ## 1. Research question and contribution
 
@@ -1352,8 +1354,11 @@ and the endpoint of a failed study was not replaced by a secondary metric.
 
 Versioned result directories contain manifests, events, final metrics and summaries.
 Dataset SHA-256, exact row identities, code hashes and environment records are retained.
-Large downloaded data and resumable checkpoints remain local rather than in Git. A
-redistributable release and author/affiliation details are not yet prepared.
+Large downloaded data and resumable checkpoints remain local rather than in Git; the data is not
+redistributable in any case, since the PDEBench deposit exceeds 50 GB. The **code** is released as a
+versioned archive with a DOI (see the Data availability statement before the references), which is
+what makes the pinned bytes retrievable: the repository records the download scripts and the
+byte-level digests, so the release is a carrier for the code rather than for the data.
 
 Recomputation is enforced rather than assumed: `scripts/diagnose_fluctuation.py` refuses to
 proceed if the pair cache hash changed, and reports any run whose recomputed metric differs
@@ -1457,7 +1462,7 @@ MD5 together with a publisher revision identifier (`HuggingFace pdebench/Burgers
 `97bf5bb5315b9a083b4f9fc03e5c84d35286d52c`; DaRUS `doi:10.18419/darus-2986` version 8), and the
 repository provides the download scripts, so every result in this paper is reproducible on the
 exact bytes used. All recomputed quantities and every protocol document are retained in the
-repository.
+repository. The code is archived with a DOI: [fill: Zenodo concept DOI once the deposit is public].
 
 ## Author contribution
 
