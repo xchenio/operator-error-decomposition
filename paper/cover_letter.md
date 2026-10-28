@@ -11,6 +11,9 @@ Conservation, Fluctuation, and the Limit of Branch Capacity*
 > and is not under consideration elsewhere. An earlier draft existed under a workshop-specific
 > filename and an anonymous code bundle was prepared from it, but the manuscript was not
 > submitted in that form; please adjust this sentence to match what actually happened.
+>
+> The relation of this manuscript to the author's 2025 undergraduate thesis is disclosed in
+> full below and in the manuscript; nothing in it is reproduced from that thesis.
 
 ---
 
@@ -107,6 +110,28 @@ advance. The protocol was committed before any run on split 2; the runs are in p
 result will be reported whatever it is. Reviewers may read that document as evidence of how the
 study is conducted.
 
+## 5. Disclosure: relation to the author's prior thesis
+
+For full transparency before review: part of this line of work began in the author's
+undergraduate thesis (*Research and Implementation of DeepONet-Based Methods for Solving Partial
+Differential Equations*, Harbin Institute of Technology, May 2025). That thesis studied a
+physics-informed DeepONet on a **self-generated** one-dimensional diffusion-reaction problem,
+used **total relative L2** as its only reported measure, and concluded that adding a residual
+loss **improved** accuracy (4.80e-3 on its test set).
+
+The submitted manuscript shares only the broad topic and standard background with that thesis.
+It differs in data source (byte-pinned PDEBench deposits downloaded in 2026 rather than a
+self-written finite-difference solver), in the PDEs studied (six families, none of which appears
+in the thesis), in the reported measure (an exact mean/fluctuation decomposition rather than a
+single scalar), and in conclusion: where the thesis reported improvement, section 5.11 localises
+the physics-informed deficit and finds that at most 0.38 of supervised fluctuation skill is
+recovered. The concepts that carry this paper — the conserved-mean decomposition, the
+trunk-span bound, the skill horizon, the fluctuation-energy threshold — are absent from the
+thesis. No figure, table, experiment or number is reused.
+
+The editors may therefore treat this as new work. It is disclosed rather than hidden because the
+earlier framing is part of what this paper corrects, and that is worth the reviewer knowing.
+
 ## Relation to the venue and suggested reviewers
 
 JCP publishes the two nearest neighbours to this work — Williams et al. on what
@@ -122,8 +147,13 @@ neighbours and the editors may prefer to avoid them].
 ## Practical
 
 - Single author, publishing as an independent researcher; no funding was received and no
-  employer resources were used. Funding and competing-interests statements are in the
-  manuscript.
+  employer resources were used. Declarations of competing interest, funding, data availability
+  and author contribution are all in the manuscript, before the references.
+- [confirm before sending] The acknowledgment names Prof. Jiu Lou and Prof. Ru Zhang for their
+  supervision of the author's undergraduate thesis. They have not seen this manuscript, and the
+  acknowledgment explicitly states that they did not contribute to, review or endorse it. If you
+  prefer, remove the names entirely — COPE guidance is to ask named individuals before listing
+  them.
 - Data: the PDEBench deposits are too large to redistribute; the manuscript gives
   publisher-checked digests and the repository provides download scripts, so every result is
   reproducible on the exact bytes used. Code will be released under a personal GitHub repository

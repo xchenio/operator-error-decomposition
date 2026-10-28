@@ -1351,3 +1351,60 @@ Entries 1-9 keep their original numbering so that in-text citations do not shift
     https://arxiv.org/abs/2602.19265
     (added 2026-10-08; reports that spectral bias in neural operators is architecture
     dependent, consistent with the horizon-dependent trunk result in section 5.5)
+
+## Declaration of competing interest
+
+The author declares that he has no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this paper.
+
+## Funding
+
+This research received no funding from any public, commercial or not-for-profit body. No
+employer resources were used.
+
+## Data availability
+
+The datasets are not redistributed with this paper: the PDEBench deposit exceeds 50 GB and is
+obtained from the publishers cited in section 4. Every input file is byte-pinned by SHA-256 or
+MD5 together with a publisher revision identifier (`HuggingFace pdebench/Burgers` git revision
+`97bf5bb5315b9a083b4f9fc03e5c84d35286d52c`; DaRUS `doi:10.18419/darus-2986` version 8), and the
+repository provides the download scripts, so every result in this paper is reproducible on the
+exact bytes used. All recomputed quantities and every protocol document are retained in the
+repository.
+
+## Author contribution
+
+Single author: problem statement, decomposition and proofs, software, experiments, analysis and
+writing.
+
+## Relation to the author's prior thesis
+
+Part of this work grew out of the author's undergraduate thesis, *Research and Implementation of
+DeepONet-Based Methods for Solving Partial Differential Equations* (Harbin Institute of
+Technology, May 2025), which studied a physics-informed DeepONet on a self-generated
+one-dimensional diffusion-reaction problem and reported that adding a residual loss improved the
+**total** relative L2 error to 4.80e-3.
+
+The present paper is not a republication of that thesis. The two share only the broad topic
+(operator learning for PDEs) and standard background. They differ in every respect that carries
+evidence:
+
+| | prior thesis | present paper |
+|---|---|---|
+| data | self-generated finite-difference solutions | PDEBench deposits, byte-pinned, downloaded 2026-09/10 |
+| PDEs | one-dimensional diffusion-reaction | Burgers (two viscosities), linear advection, diffusion-sorption, Darcy, compressible CFD, reaction-diffusion |
+| reported measure | total relative L2 only | exact mean/fluctuation split with Propositions 1 and 2 |
+| headline claim | physics-informed training **improves** accuracy | the deficit is localised in the conserved mean; at most 0.38 of supervised fluctuation skill is recovered |
+
+The concepts central to this paper — the spatial-mean/fluctuation decomposition, the conserved-mean
+reference, the trunk-span bound, the skill horizon and the fluctuation-energy threshold — do not
+appear in the thesis. No figure, table, experiment or numerical result is reproduced from it. The
+current paper reaches conclusions that qualify the thesis's positive claim rather than repeat it.
+
+## Acknowledgments
+
+The author thanks Prof. Jiu Lou and Prof. Ru Zhang for their supervision of the undergraduate
+thesis named above, during which he first worked on operator learning for PDEs. They did not
+contribute to, review or endorse this manuscript, and the author takes sole responsibility for
+its contents. The author also thanks the maintainers of the PDEBench deposit for making the data
+publicly available with stable versioning.
