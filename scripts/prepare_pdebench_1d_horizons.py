@@ -38,6 +38,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from scripts.split_utils import draw_split, split_fields  # noqa: E402
 from src.public_benchmark import (  # noqa: E402  reused, not modified
     atomic_json, extract_pair, file_hash, split_indices)
 
@@ -51,7 +52,8 @@ def md5_of(path: Path) -> str:
 
 
 def prepare_one(source: Path, folder: Path, time_index: int, stride: int, equation: str,
-                sizes=(1000, 200, 200), seed: int = 20260922) -> dict:
+                sizes=(1000, 200, 200), seed: int = 20260922,
+                exclude_seed: int | None = None) -> dict:
     with h5py.File(source, "r") as f:
         data = f["tensor"]
         if data.shape != (10000, 201, 1024) or not 0 < time_index < data.shape[1]:
@@ -62,7 +64,7 @@ def prepare_one(source: Path, folder: Path, time_index: int, stride: int, equati
         if stride <= 0 or data.shape[2] % stride:
             raise ValueError("stride must divide spatial resolution")
         attrs = {k: (v.item() if hasattr(v, "item") else v) for k, v in f.attrs.items()}
-        ids = split_indices(len(data), sizes, seed)
+        ids = draw_split(len(data), sizes, seed, exclude_seed)
         arrays = {"x": xs[::stride]}
         for name, index in ids.items():
             arrays[name + "_x"], arrays[name + "_y"] = extract_pair(data, index, time_index, stride)
@@ -79,7 +81,7 @@ def prepare_one(source: Path, folder: Path, time_index: int, stride: int, equati
                 equation=equation,
                 source=str(source.resolve()), source_md5=md5_of(source),
                 source_shape=[10000, 201, 1024], source_dtype="float32", field="tensor",
-                split_seed=seed, sample_ids={k: v.tolist() for k, v in ids.items()},
+                **split_fields(ids, seed, sizes, exclude_seed),
                 time_index=time_index, target_time=float(ts[time_index]),
                 stored_time_coordinate_count=len(ts), solution_time_count=201,
                 unused_trailing_time_coordinates=ts[201:].tolist(),
@@ -105,6 +107,10 @@ def main() -> None:
     ap.add_argument("--equation", required=True)
     ap.add_argument("--time-indices", default="10,25,50,75,100,150,200")
     ap.add_argument("--stride", type=int, default=4)
+    # Defaults reproduce every cache already committed. Passing --exclude-seed draws split 2
+    # from the trajectories the excluded seed did not use, so the two splits are disjoint.
+    ap.add_argument("--split-seed", type=int, default=20260922)
+    ap.add_argument("--exclude-seed", type=int, default=None)
     args = ap.parse_args()
 
     source, out_root = Path(args.source), Path(args.out)
@@ -113,7 +119,8 @@ def main() -> None:
         if (folder / "protocol.json").exists():
             print("[skip] already prepared", folder.name, flush=True)
             continue
-        info = prepare_one(source, folder, time_index, args.stride, args.equation)
+        info = prepare_one(source, folder, time_index, args.stride, args.equation,
+                           seed=args.split_seed, exclude_seed=args.exclude_seed)
         print("prepared", folder.name, "target_time", info["target_time"],
               "grid", info["grid_size"], "attrs", info["file_attrs"], flush=True)
 
