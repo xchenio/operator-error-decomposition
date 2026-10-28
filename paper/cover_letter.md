@@ -149,11 +149,10 @@ neighbours and the editors may prefer to avoid them].
 - Single author, publishing as an independent researcher; no funding was received and no
   employer resources were used. Declarations of competing interest, funding, data availability
   and author contribution are all in the manuscript, before the references.
-- [confirm before sending] The acknowledgment names Prof. Jiu Lou and Prof. Ru Zhang for their
-  supervision of the author's undergraduate thesis. They have not seen this manuscript, and the
-  acknowledgment explicitly states that they did not contribute to, review or endorse it. If you
-  prefer, remove the names entirely — COPE guidance is to ask named individuals before listing
-  them.
+- The manuscript's acknowledgment names no individual. COPE guidance is to ask before listing
+  someone, and an acknowledgment can read as endorsement, so the undergraduate-thesis
+  relationship is disclosed in the "Relation to the author's prior thesis" section without
+  naming the supervisors.
 - Data: the PDEBench deposits are too large to redistribute; the manuscript gives
   publisher-checked digests and the repository provides download scripts, so every result is
   reproducible on the exact bytes used. Code will be released under a personal GitHub repository

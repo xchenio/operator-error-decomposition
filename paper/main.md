@@ -1475,8 +1475,6 @@ current paper reaches conclusions that qualify the thesis's positive claim rathe
 
 ## Acknowledgments
 
-The author thanks Prof. Jiu Lou and Prof. Ru Zhang for their supervision of the undergraduate
-thesis named above, during which he first worked on operator learning for PDEs. They did not
-contribute to, review or endorse this manuscript, and the author takes sole responsibility for
-its contents. The author also thanks the maintainers of the PDEBench deposit for making the data
-publicly available with stable versioning.
+The author thanks the maintainers of the PDEBench deposit for making the data publicly available
+under stable versioning. No named individual contributed to, reviewed or endorsed this manuscript,
+and the author takes sole responsibility for its contents.
