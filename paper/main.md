@@ -179,13 +179,14 @@ same `N`-point grid. Write the per-sample spatial mean as `bar(y)_j` and the flu
 
 ### 3.1 An exact split of squared error
 
-The constant vector and the zero-mean residual are orthogonal, so for every sample
+**Proposition 1 (orthogonal split).** For any `y_j, p_j \in R^N`, writing
+`\bar y_j = N^{-1} 1^T y_j` and `y_{c,j} = y_j - \bar y_j 1`, and likewise for `p`,
 
 \[
-  \|p_j - y_j\|^2 = N\,(\bar p_j - \bar y_j)^2 + \|p_{c,j} - y_{c,j}\|^2 .
+  \|p_j - y_j\|^2 = N(\bar p_j - \bar y_j)^2 + \|p_{c,j} - y_{c,j}\|^2 .
 \]
 
-Dividing by `||y_j||^2` and averaging gives an identity, not an attribution:
+Consequently, for any finite collection of samples and any prediction rule,
 
 \[
   \underbrace{\mathbb{E}_j \frac{N(\bar p_j-\bar y_j)^2}{\|y_j\|^2}}_{\text{mean share}}
@@ -193,6 +194,16 @@ Dividing by `||y_j||^2` and averaging gives an identity, not an attribution:
   \underbrace{\mathbb{E}_j \frac{\|p_{c,j}-y_{c,j}\|^2}{\|y_j\|^2}}_{\text{fluctuation share}}
   = \mathbb{E}_j\,\mathrm{relL2}_j^2 .
 \]
+
+*Proof.* Write `p_j - y_j = (\bar p_j - \bar y_j)1 + (p_{c,j} - y_{c,j})`. The two summands
+are orthogonal because `1^T (p_{c,j} - y_{c,j}) = 0` by construction, and
+`\|(\bar p_j - \bar y_j)1\|^2 = N(\bar p_j - \bar y_j)^2`; Pythagoras gives the first
+identity. Dividing by `\|y_j\|^2` and averaging over `j` gives the second. ∎
+
+The split is an **identity**, not an attribution of cause: it holds for every prediction,
+so it cannot by itself say why a model fails. Its content is that the two shares are
+exactly additive and separately computable, which is what makes the localisation in
+section 5 possible.
 
 `scripts/diagnose_fluctuation.py` reports both shares and a closure term that the test
 suite asserts to be zero to machine precision.
@@ -213,19 +224,39 @@ two can disagree in sign (section 5.4).
 
 ### 3.3 An exact upper bound from the trunk span
 
-A DeepONet with trunk features `Phi in R^{N x p}` can only output fields in `span(Phi)`.
-Grant the branch an oracle that chooses optimal coefficients **separately for each sample**
-(strictly more powerful than any real branch, which must be a function of the input), and
-allow a constant column. Writing `P` for the projector onto `span([Phi, 1])`, the smallest
-fluctuation share any such model can reach is
+**Proposition 2 (trunk-span bound).** Let `Phi \in R^{N x p}` be the trunk feature matrix,
+let `S = span([Phi, 1])` and let `P` be the orthogonal projector onto `S`. Write
+`e = E_j \|y_{c,j}\|^2 / \|y_j\|^2` for the per-sample fluctuation energy. Then every
+DeepONet output `p_j \in S` satisfies
 
 \[
-  \text{fluctuation share}_{\min} = \mathbb{E}_j \frac{\|(I-P)y_{c,j}\|^2}{\|y_j\|^2},
+  R^2_{\text{per sample}} \;\le\; 1 - \frac{s_{\min}}{e},
   \qquad
-  R^2_{\text{per sample}} \le 1 - \frac{\text{fluctuation share}_{\min}}{\text{per-sample fluctuation energy}} .
+  s_{\min} \;=\; \mathbb{E}_j \frac{\|(I-P)\,y_{c,j}\|^2}{\|y_j\|^2} .
 \]
 
-This is an identity about the trunk's span, hence a **hard upper bound**, not an attribution.
+Moreover `s_{\min}` is attained by a per-sample oracle branch, so the bound is tight for
+the given trunk and cannot be improved without changing `Phi`.
+
+*Proof.* Since `1 \in S` and `p_j \in S`, the fluctuation `p_{c,j} = p_j - \bar p_j 1`
+also lies in `S`. Decompose the target fluctuation orthogonally as
+`y_{c,j} = P y_{c,j} + (I-P) y_{c,j}`. Then
+
+\[
+  p_{c,j} - y_{c,j} = \underbrace{(p_{c,j} - P y_{c,j})}_{\in S}
+                      - \underbrace{(I-P) y_{c,j}}_{\in S^\perp},
+\]
+
+and the two terms are orthogonal, so by Pythagoras
+`\|p_{c,j} - y_{c,j}\|^2 = \|p_{c,j} - P y_{c,j}\|^2 + \|(I-P)y_{c,j}\|^2 \ge
+\|(I-P)y_{c,j}\|^2`. Dividing by `\|y_j\|^2` and averaging bounds the fluctuation share
+below by `s_{\min}`, and `R^2_{\text{per sample}} = 1 - (\text{fluctuation share})/e` gives
+the claim. For tightness, take `p_j = P y_{c,j} + c\,1 \in S` for any constant `c`; its
+fluctuation is `P y_{c,j}`, which attains equality. Such a `p_j` is realised by choosing
+the coefficient vector per sample, i.e. by an oracle branch. ∎
+
+The bound is evaluated in section 5.7 on 50 trained trunks and is never violated. This is an
+identity about the trunk's span, hence a **hard upper bound**, not an attribution.
 It requires the trunk but no branch training. Comparing it with achieved skill separates two
 failure modes: achieved near the bound means the trunk span is binding; achieved far below it
 means the branch, that is the input-to-coefficient map, is binding. The gap is the amount
