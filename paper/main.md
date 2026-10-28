@@ -108,13 +108,32 @@ Contribution candidates:
    exact orthogonal split of squared error, and two skill measures that differ in how they
    weight samples. It identifies the widely used "input spatial-mean baseline" as a
    conservation-law predictor.
-2. A **negative result with a mechanism**: on this protocol DeepONet reproduces a conserved
-   quantity and has no per-sample fluctuation skill, and the skill it does have at short
-   forecast horizons decays to zero as the horizon grows.
+2. A **negative result with a boundary rather than a mechanism**: on this protocol DeepONet
+   reproduces a conserved quantity and has no per-sample fluctuation skill, and the skill it
+   does have at short forecast horizons decays to zero as the horizon grows. The decay is
+   quantified as an interpolated *skill horizon* that differs by architecture, and it is
+   shown to track nonlinear spectral evolution rather than elapsed forecast time, because it
+   is absent on linear advection (section 5.6.1).
 3. A **budget control**: the near-zero skill is not undertraining, and additional updates
    make the per-sample measure worse while leaving total relative L2 flat.
 4. A **measurement warning**: an energy-weighted skill measure can report improvement where
    the per-sample measure reports degradation. Both are reported throughout.
+5. A **localisation of the binding constraint**. An exact upper bound on fluctuation skill
+   that depends only on the trunk span (section 3.3) shows the reachable set does not shrink
+   with forecast horizon while the map onto it does, so on this protocol the constraint is
+   the branch — the input-to-coefficient mapping — and not the trunk basis. This qualifies
+   rather than contradicts the basis-quality line of work in [2].
+6. A **prospective predictor, stated with its boundary**. An a-priori fluctuation-energy
+   threshold, fitted on two scalar families and never refitted, predicts the sign of
+   fluctuation skill on held-out settings: 52 of 55 preregistered sign predictions are
+   correct (section 5.15). It fails on 1D compressible CFD (3 of 6, every prediction of
+   positive skill wrong) and holds on 2D reaction-diffusion (4 of 4), so the failure is
+   specific to that operator rather than to coupled fields. Both the confirmations and the
+   falsification are reported; nothing was adjusted in response.
+7. A **localisation of where physics-informed training fails**. With no supervision at the
+   target time, the decomposition shows the deficit sits in the conserved mean and not in the
+   fluctuation: the fluctuation share reaches the oracle value while the mean share rises by
+   roughly a factor of four (section 5.11).
 
 The linear-algebra identities below are standard, not new approximation theory. Neither
 orthonormalization, zero-residual initialization, cosine decay, nor POD truncation is
@@ -594,8 +613,9 @@ Three consequences:
    yet the achieved skill is still far below even that reduced bound. So both trunks fail
    mainly through the branch.
 
-This is the mechanism behind the skill horizon: the reachable set does not shrink with
-horizon, the map onto it does.
+This is what the skill horizon reflects: the reachable set does not shrink with horizon,
+the map onto it does. It is a statement about where the loss occurs, not a causal mechanism
+for why.
 
 ### 5.8 Toward a prospective predictor
 
