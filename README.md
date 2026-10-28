@@ -1,865 +1,234 @@
-# Basis-Align: PI-DeepONet 的「基函数对齐」
+# Conserved Means and Lost Fluctuations
 
-研究假设：**PI-DeepONet 训练失败的一个可诊断、可干预的中间原因是——trunk 网学到的基函数无法张成目标解空间。**
+A mean/fluctuation diagnosis of operator learning across six PDEBench operator families.
 
-本仓库提供：
-1. 一套可复现的 PI-DeepONet 训练框架（3 个参数化 PDE、物理残差 + 初边值损失）；
-2. **基函数诊断模块**（子空间捕获能量、主角度、有效秩、条件数、奇异值谱）；
-3. 三种干预手段：**解析先验基对齐（零数据）**、**数据子空间对齐**、**两阶段训练**；
-4. 端到端实验脚本与可视化分析。
+> **Status.** Evidence-audited research draft, not a submitted manuscript.
+> **The authoritative text is [`paper/main.md`](paper/main.md);** this file is only a map of
+> the repository. The current scientific position is summarised in
+> [`docs/CURRENT_CONCLUSIONS.md`](docs/CURRENT_CONCLUSIONS.md).
 
 ---
 
-## 1. 环境
+## 1. What this repository is
 
-```bash
-# 推荐（CUDA 可用）：torch 2.14.0+cu130
-conda activate pytorch
-python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+On periodic Burgers the spatial mean of the solution is conserved, so a model can look
+competitive on relative L2 while predicting nothing beyond a conserved scalar. This project
+separates operator-learning prediction error into a **conserved-mean part** and a
+**fluctuation part**, measures skill on each against a **zero-fluctuation reference**, and
+asks which part each architecture actually predicts.
 
-# 依赖
-pip install numpy scipy matplotlib
+Headline finding: on PDEBench 1D Burgers (`Nu0.001`, `t = 0 → 1.0`), MLP DeepONet scores
+`-0.0042 ± 0.0072` and Fourier DeepONet `-0.0934 ± 0.0886` in per-sample fluctuation R²,
+while FNO scores `+0.6503 ± 0.0222` on identical data, split and update budget. Across 175
+reconstructed runs spanning trunk architecture, whitening, mean lifting, zero initialization,
+learning-rate schedule, batch size and training-subset size, no DeepONet configuration scores
+above zero.
+
+**What is claimed:** a diagnostic decomposition and a reproducible negative result.
+**What is not claimed:** a new architecture, a new optimizer, a theory, or a causal mechanism.
+
+Six operator families — linear advection, Burgers at two viscosities, diffusion-sorption,
+steady 2D Darcy, a three-field compressible system and a two-field reaction-diffusion system
+— plus one physics-informed arm. See `paper/main.md` §5 for results and §6 for limitations.
+
+---
+
+## 2. ⚠️ An earlier programme in this repository is withdrawn
+
+This repository began as **Basis-Align**, a study of trunk-basis alignment in PI-DeepONet on
+synthetic PDEs. That line is **retracted** and is not evidence for the current paper:
+
+- the "silent broadcasting bug" that dominated its results was fixed, after which the baseline
+  trained normally;
+- the central claim (*trunk-basis collapse is the root cause of PI-DeepONet failure*) does not
+  survive that fix — see `paper/main.md` §7 and [`docs/AUDIT_V2.md`](docs/AUDIT_V2.md);
+- the derived claims — a problem-independent variance floor, a linear law between alignment
+  gain and baseline cross-seed standard deviation, and a modal-shrinkage rule — were each
+  withdrawn or failed their predeclared confirmation.
+
+The corresponding code is retained **for provenance only**:
+
+| Legacy path | Status |
+|---|---|
+| `src/config.py`, `src/trainer.py`, `src/basis.py`, `src/diagnostics.py`, `src/data.py`, `src/pdes/` | synthetic-PDE basis-align pipeline, not used by the current study |
+| `scripts/run.py`, `scripts/analyze*.py`, `scripts/ntk_analysis.py`, `scripts/inspect_subspace.py`, `scripts/make_paper_figs.py`, `scripts/*.cmd` | legacy drivers |
+| `scripts/run_*_modal.py`, `scripts/audit_*_modal.py` | closed modal-shrinkage line (`docs/UNCERTAINTY_MODAL_V1.md`) |
+
+Do not read numbers from those results directories as support for the current manuscript.
+See `paper/main.md` §7 for the full withdrawal list.
+
+---
+
+## 3. Environment
+
+```powershell
+& 'D:/miniconda3/envs/pytorch/python.exe' -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 ```
 
-> ⚠️ 注意：名为 `pytorch126` 的环境装的是 `torch 2.14.0+cu126`，**编译到 sm_90 为止**，
-> 无法在 sm_120（RTX 50 系）显卡上使用，会报
-> `CUDA error: no kernel image is available for execution on the device`。
-> 需要 CUDA 请用 `pytorch` 环境（cu130，含 sm_120），或加 `--device cpu`。
+Validated: Python 3.11.16, torch 2.14.0+cu130, numpy 2.4.6, scipy 1.17.1, h5py 3.16.0.
+`environment.yml` reproduces it; see also `requirements.txt` for a pip-only install.
 
-## 2. 目录结构
+> **CUDA note.** An environment built as `torch 2.14.0+cu126` is compiled up to `sm_90` and
+> fails on `sm_120` (RTX 50 series) with
+> `CUDA error: no kernel image is available for execution on the device`.
+> Use the `cu130` environment, or pass `--device cpu`.
+
+---
+
+## 4. Repository layout
 
 ```
 src/
-  derivatives.py   trunk 导数（vmap + jacrev/jacfwd），已做性能选型
-  models.py        MLP / DeepONet（branch-trunk + 可微求值器）
-  pdes/            burgers.py / diffusion_reaction.py / darcy.py
-  basis.py         解析先验基、数据子空间、能量秩
-  diagnostics.py   子空间指标 + 可微对齐损失
-  trainer.py       多阶段训练（physics / data）、trunk 冻结、诊断钩子
-  config.py        问题默认参数、方法预设、目标子空间构造
+  public_benchmark.py   data preparation + publisher digest pinning + protocol.json
+  models.py             MLP / FourierFeature / DeepONet (trunk_type = mlp | fourier)
+  fno.py                FNO1d          (supervised reference, 1D)
+  fno1d_multi.py        FNO1dMulti     (multi-channel 1D, for the CFD system)
+  fno2d.py              FNO2d          (2D Darcy)
+  fno2d_multi.py        FNO2dMulti     (2D reaction-diffusion system)
+  derivatives.py        trunk derivatives (vmap + jacfwd/jacrev) for the physics arm
+  projection_audit.py   representation / coefficient orthogonal error split
+  resume.py             random-state capture/restore, atomic checkpoint save
+  health_checks.py      paired-shape contracts for samplers
+  utils.py              seeding, relative-L2, environment fingerprint
 scripts/
-  run.py                  主实验入口
-  inspect_subspace.py     训练前体检（解空间秩 / 先验基质量）
-  analyze.py              汇总表 + 4 张图
-  bench*.py               性能基准
+  download_pdebench.py  download_pdebench.py / download_darus.py / download_advection.py
+  prepare_*.py          one per operator family; each writes a protocol.json
+  run_public_benchmark.py   main supervised training entry point
+  run_physics_public.py     physics-informed arm
+  run_darcy_benchmark.py    2D Darcy entry point
+  run_public_*.py           conditioning / small-fit / stability / POD / modal arms
+  diagnose_fluctuation.py   recompute the mean/fluctuation decomposition from checkpoints
+  skill_bound.py            trunk-span upper bound on fluctuation skill
+  predict_skill_horizon.py  training-split-only predictors of skill
+  measure_flops.py          per-step FLOP measurement
+  experiment_runner.py      resumable manifest-driven batch runner
+tests/                  ~26 files; no test requires CUDA
+docs/                   30 experiment reports; start with CURRENT_CONCLUSIONS.md
+paper/                  main.md (authoritative), ml4ps2026_4page.md (short draft), archive/
+results/                ~130 versioned result families, one directory per experiment
 ```
 
-## 3. 核心概念与指标
+---
 
-设 trunk 特征矩阵 `Phi = trunk(Y) ∈ R^{N×p}`，其列张成模型可表示的解空间 `span(Phi)`。
-目标子空间 `U ∈ R^{N×r}` 来自真实解 SVD 或解析谱基。
+## 5. The decomposition in one page
 
-| 指标 | 含义 | 好 |
-|---|---|---|
-| `captured_energy` | U 被 span(Phi) 捕获的能量比例（按奇异值加权） | ↑ 1 |
-| `angle_mean/max_deg` | 两子空间主角度 | ↓ 0 |
-| `eff_rank` | Phi 的有效秩（奇异值熵） | 接近真实秩 |
-| `cond` | Phi 条件数 | 小 |
+For targets `Y` and predictions `P` in `R^{m x N}`, write the per-sample spatial mean
+`bar(y)_j` and the fluctuation `Y_c = Y - bar(y) 1^T`.
 
-**随机初始化的 MLP trunk 有效秩只有 ~1.4（基坍缩）**，这是本研究的起点。
-
-### 3.1 关键理论：captured_energy 就是可达误差的硬下界
-
-DeepONet 的表示能力恰为 `span(Phi)`。给定真实解矩阵 `S ∈ R^{N×n}`，
-**在所有可能的 branch 网络中**，最好的那个的相对误差为
+Because the constant vector and the zero-mean residual are orthogonal,
 
 ```
-min_B ||Phi B - S||_F / ||S||_F = ||(I - P_Phi) S||_F / ||S||_F = sqrt(1 - captured_energy)
+||p_j - y_j||^2 = N (bar(p)_j - bar(y)_j)^2 + ||p_{c,j} - y_{c,j}||^2
 ```
 
-即
-
-```
-LB := sqrt(1 - captured_energy)      # 表示下界，可在训练中实时计算，无需训练到收敛
-opt_gap := test_relL2 - LB           # 优化差距
-```
-
-于是把失败**归因**：
-
-- `LB` 大 → **表示受限**：trunk 基不够，表示类方法（对齐/加宽/换基）应当有效
-- `opt_gap` 大 → **优化受限**：表示够用但优化没找到解，应转向因果加权、课程学习等
-
-这个分解不依赖任何训练收敛，是本框架最有价值的方法论产出。
-见 `scripts/analyze.py` 生成的 `figs/attribution.png`。
-
-## 4. 方法（训练阶段预设）
-
-| method | 阶段 | 说明 |
-|---|---|---|
-| `pi_baseline` | physics | 标准 PI-DeepONet |
-| `pi_align` | physics + 对齐损失 | 目标 `prior` / `data` / `hybrid` / `random` / `randomgauss` |
-| `pi_ortho` | physics + trunk 去相关正则 | **无目标子空间**的"纯多样性"对照 |
-| `pi_align_ortho` | 两者叠加 | |
-| `pi_data` | physics + 少量监督 | 混合训练 |
-| `two_stage_freeze` | data 预训练 → physics（trunk 冻结） | 保住已学好的基 |
-| `two_stage_slow` | data 预训练 → physics（trunk 小 lr） | 折中 |
-| `two_stage_align` | 两阶段 + 对齐损失 | 组合 |
-| `data_only` | 纯监督 | 上界参考 |
-
-**四类"让基变多样"的手段（必须一起比较，否则无法说明先验是否特殊）**
-
-| 手段 | 是否需要目标子空间 | 是否含谱结构先验 |
-|---|---|---|
-| `align prior` | 是（解析 sin/Chebyshev 基） | ✅ 有 |
-| `align random` | 是（同光滑类的随机子空间） | ❌ 打乱 |
-| `align randomgauss` | 是（纯高斯随机子空间） | ❌ 无 |
-| `ortho` 正则 | 否（只要求 `Phi^T Phi ∝ I`） | ❌ 无 |
-| `--trunk-type fourier` | 否（架构自带随机傅里叶特征） | ❌ 无 |
-
-> 新增 CLI：`--ortho-weight`、`--trunk-type fourier`、`--align-kind random/randomgauss`、
-> `--width`、`--init-gain`。tag 会自动带上 `-w64` / `-fourier` / `-g3` 等后缀。
-
-## 5. 用法
-
-```bash
-# ① 训练前体检：解空间秩够不够、先验基好不好
-python scripts/inspect_subspace.py --pde burgers
-
-# ② 主实验
-python scripts/run.py --pde burgers --methods pi_baseline,pi_align \
-       --n-data 0 --align-kind prior --align-weight 0.1,1,10 \
-       --steps 20000 --device cuda --out results/exp1
-
-# ③ 分析
-python scripts/analyze.py --out results/exp1
-```
-
-常用参数：`--pde-kwargs '{"nu":0.005}'`、`--lr`、`--steps-col`、`--bs`、`--n-ic`、`--n-bc`、
-`--ic-weight`（初边值损失权重）、`--seeds`。
-
-## 6. 实验结果（DR，12000 步 / 10000 步，seed 0）
-
-### 6.1 纯物理设定（n_data = 0，12000 步）
-
-| 方法 | test relL2 | captured(init→final) | eff_rank | 主角度均值 |
-|---|---|---|---|---|
-| pi_baseline | 0.9996 | 0.9748 → **0.9755** | **1.54** | **67.2°** |
-| pi_align [prior ×1] | 1.0000 | 0.9748 → **0.9999** | **33.66** | **17.1°** |
-| pi_align [prior ×10] | 0.9818 | 0.9748 → 0.9997 | 4.90 | 18.1° |
-
-### 6.2 稀缺数据设定（n_data = 8，10000 步）
-
-| 方法 | test relL2 | captured(final) | eff_rank | 主角度均值 |
-|---|---|---|---|---|
-| pi_data | 0.9270 | 0.9996 | 2.67 | 43.2° |
-| pi_data + align [prior ×1] | **0.9232** | 0.9999 | **12.75** | **17.2°** |
-
-### 结论
-
-1. **基坍缩真实存在且严重**：随机初始化 trunk 有效秩 ≈1.4；纯物理训练 12000 步后仅升到 **1.54**，
-   主角度 67°，捕获能量几乎不变 → trunk 实际只用到 ~1 个自由度。
-2. **零数据的解析先验基对齐能彻底修复表示能力**：有效秩 **1.54 → 33.66**，
-   捕获能量 0.9755 → **0.9999**，主角度 67° → **17°**，且 **完全不需要任何真实解数据**。
-3. **但准确率没有跟着涨**（本设定下纯物理训练本身学不动，见下）→
-   **修复表示是必要但非充分条件**。这是一个重要的负面结果，指向下一步工作。
-
-## 6.4 四类"让基变多样"手段的对照（DR，width=64，10000 步，seed 0）
-
-| 手段 | test relL2 | **LB（表示下界）** | opt_gap | captured | eff_rank | 主角度 |
-|---|---|---|---|---|---|---|
-| **mlp baseline** | 0.9857 | **0.1502** | 0.836 | 0.9774 | 1.75 | 68.0° |
-| `ortho` 去相关正则（无目标） | 0.9696 | 0.0389 | 0.931 | 0.9985 | 7.00 | 44.3° |
-| `--trunk-type fourier` | **0.9624** | 0.0451 | 0.917 | 0.9980 | 3.74 | 40.2° |
-| `align random`（随机光滑子空间） | 0.9904 | 0.0647 | 0.926 | 0.9958 | **31.50** | 37.1° |
-| `align prior`（解析谱先验） | 0.9839 | **0.0362** | 0.948 | **0.9987** | 22.64 | **30.5°** |
-
-### 三条结论
-
-1. **归因框架有效**：只有 baseline 的 LB 显著偏高（0.150），所有干预都把 LB 压到 0.036~0.065。
-   而 `opt_gap ≈ 0.92` 在所有组都巨大 → **本设定是彻底的优化受限，不是表示受限**。
-   这正是"加了表示侧方法却没涨点"的定量解释。
-
-2. ⚠️ **谱先验并不特殊（关键负面结果）**：
-   **无目标子空间的正交去相关正则就达到了几乎相同的效果**（captured 0.9985 vs 0.9987，
-   LB 0.039 vs 0.036），而固定随机傅里叶特征的 trunk 更是拿到了最好的精度（0.9624）。
-   → 说明"逼 trunk 张成高维子空间"这件事**不需要任何先验知识**，
-   本方法相对 `ortho` / Fourier features 没有明显增量，**novelty 不足**。
-
-3. **多样性 ≠ 对齐**：`align random` 拿到最高的 eff_rank（31.5）却是最差的 captured（0.9958）
-   和最大的 LB（0.065）之一——张成"任意高维空间"和张成"正确的空间"是两件事。
-   这支持 **diversity × alignment 的 2×2 框架**：
-   |  | 低对齐 | 高对齐 |
-   |---|---|---|
-   | **低多样性** | mlp baseline | — |
-   | **高多样性** | `ortho` / Fourier | `align prior` |
-
-### ⚠️ 本轮 ablation 的局限
-
-DR 的解空间只有约 2 维（99.9% 能量需 13 个模态），captured 在 0.995~0.999 区间**饱和**，
-无法区分各方法。**该对照必须在 Burgers（目标子空间 89 维、初始 captured 仅 0.594）上重做**，
-否则结论不可靠。
-
-## 6.5 ⚠️ 决定性 bug 修复：训练期逐样本配对错误（2026-09-16）
-
-### 症状
-纯物理训练时 PDE 损失始终停在 `E[u²]`（平凡解 `s≡0` 的残差水平）附近，预测恒为 0，
-怎么调 lr / 损失权重 / 初始化 / 因果加权都无效。
-
-### 根因
-`PDE.input_at(coef, x)` 用的是**共享网格**约定：把每个 `coef[i]` 都对**所有**点求值，
-返回 `(n, *x.shape)`。但 `sample_points` 传入的是 `(B, N)` 的**逐样本配对**坐标，
-于是广播成 `(B, B, N)` —— **第 b 个样本在用它自己那批点上的「另一个样本」的源项 / 初值**。
-
-| PDE | 受影响的量 | 错误形状 | 正确形状 |
-|---|---|---|---|
-| Burgers | IC 目标 `u0(x)` | `(B, B, N_ic)` | `(B, N_ic)` |
-| 扩散-反应 | 配点源项 `u(x)` | `(B, B, N_col)` | `(B, N_col)` |
-| Darcy | 配点系数 `a, a_x, a_y` | `(B, B, N_col)` | `(B, N_col)` |
-
-残差里混入了 B−1 个错误配对，梯度被严重污染 → 优化器永远走不出平凡解。
-**注意：数据集本身是对的**（求解器内部用的是逐样本正确的 forcing），
-这也是为什么"真解的有限差分残差 = 6e-6"这条检查当初没有暴露问题。
-
-### 修复后的效果（同样配置，仅修 bug）
-
-| 问题 | 修复前 | 修复后 |
-|---|---|---|
-| DR（width 64, 6000 步） | test relL2 **0.9857** | **0.1737** |
-| Burgers（width 64, 4000 步） | test relL2 **0.9992** | **0.7724** |
-| DR trunk captured | 0.9774 | 0.9999 |
-| Burgers trunk captured | 0.6653 | 0.9204 |
-
-### 教训（写给未来的自己，也建议写进论文 checklist）
-
-1. **"基坍缩 / 有效秩 1.5" 主要是这个 bug 的症状，不是独立现象**——修复后基线自己就能
-   把 captured 训到 0.92~0.9999。**任何表示侧结论都必须在"训练真的能跑起来"之后再做。**
-2. 验证 PDE 实现是否正确的**唯一可靠方法**：拿一个监督训练好的模型，算它的自动微分残差；
-   而不是只检查真解的有限差分残差。
-3. numpy 广播不会报错，只会静默产生"统计上看起来合理"的错误结果。凡是 `(B, N)` 坐标
-   配上 `(B, n_coef)` 参数的地方，都要显式检查输出形状是否为 `(B, N)`。
-
-> 已加回归检查：`scripts/` 下可用如下命令核验形状与数值一致性
-> ```python
-> python -c "import sys,numpy as np; sys.path.insert(0,'.'); from src.pdes import make_problem; \
-> p=make_problem('burgers',hard_ic=True); c=p.sample_coeffs(4,np.random.default_rng(0)); \
-> q=p.sample_points(c,64,32,16,np.random.default_rng(1)); print(q['col']['u0'].shape)  # 应为 (4,64)"
-> ```
-
-## 6.8 因果加权（P0 方向）：**被证伪**
-
-修复 bug 后残差量级恢复正常（PDE 0.13 / IC 1.4），因果加权有了发力点，
-在 Burgers 上扫描强度（width 64，10000 步）：
-
-| eps | test relL2 | captured |
-|---|---|---|
-| 关闭（基线） | **0.7213** | 0.9471 |
-| 1 | 0.7601 | 0.9375 |
-| 10 | 0.8045 | 0.9366 |
-| 100 | 0.8285 | 0.9317 |
-
-**单调变差**。原因：bug 修复后模型本来就能正常学习，
-而因果加权把 PDE 残差的训练权重压向 t 小处，反而饿死了后期时刻的拟合
-（我们的 IC 只是软约束、权重与 PDE 相同，并没有"必须先精确满足 IC"的硬结构）。
-→ **"因果加权是解药"这一假设不成立，P0 方向关闭。**
-
-## 6.7 🔄 修复 bug 之后重跑的 Burgers 全组对照（width=64，10000 步，seed 0）
-
-| 手段 | test relL2 | LB | opt_gap | captured | eff_rank | 主角度 |
-|---|---|---|---|---|---|---|
-| mlp baseline | 0.7213 | 0.2301 | 0.491 | 0.9471 | 4.47 | 45.6° |
-| `ortho` 去相关正则 | 0.7114 | 0.2347 | 0.477 | 0.9449 | 14.04 | 46.1° |
-| `align random` | 0.6988 | 0.2454 | 0.453 | 0.9398 | 11.59 | 45.1° |
-| `align prior` | 0.6672 | 0.2136 | 0.454 | 0.9544 | 10.46 | 43.2° |
-| Fourier + `align prior` | 0.6680 | 0.2084 | 0.460 | 0.9566 | 10.04 | 43.7° |
-| **`--trunk-type fourier`** | **0.6651** | **0.1891** | 0.476 | **0.9642** | 8.00 | **39.4°** |
-
-### 修复后的新结论（与 §6.6 的旧结论不同，以本节为准）
-
-1. ✅ **对齐确实带来真实精度收益**：`align prior` 0.6672 vs 基线 0.7213（**相对提升 7.5%**），
-   且优于 `align random`（0.6988）与无目标 `ortho`（0.7114）→ **先验 > 随机 > 无目标**。
-2. ⚠️ **但 `--trunk-type fourier` 单独就达到 0.6651 / captured 0.9642，仍是全场最好**，
-   且成本为零（无目标、无超参）。
-3. ❌ **Fourier + 对齐不互补**：0.6680，与 Fourier 单独（0.6651）持平甚至略差，
-   captured 也没超过（0.9566 vs 0.9642）。
-4. 📉 **表示不再是瓶颈**：修复后所有方法的 captured 都在 0.94~0.96，LB 收窄到 0.19~0.25，
-   而 opt_gap 稳定在 0.45~0.49 —— **优化差距是绝对主导项**。
-   这也意味着 §6.5 之前观察到的"captured↔精度严格单调"有一部分是 bug 造成的假象。
-
-### 由此修正的论文主张
-
-- 不要说"基坍缩是根因"——修复 bug 后基线自己就能训到 captured 0.947。
-- 可以说：**在 trunk 宽度受限、解空间高秩的场景下，谱先验对齐仍能带来 ~7% 的相对提升**，
-  但该收益可被"换成 Fourier 特征 trunk"零成本获得。
-- 真正的瓶颈是 **opt_gap ≈ 0.45~0.49**，应当把精力放在优化侧（因果加权、课程学习、更好的优化器）。
-
-## 6.6 同一组对照搬到 Burgers（⚠️ 本节为重跑前的旧数据，已被 §6.7 取代）（width=64，10000 步，seed 0）——决定性结果
-
-| 手段 | test relL2 | **LB（表示下界）** | opt_gap | captured | eff_rank | 主角度 |
-|---|---|---|---|---|---|---|
-| mlp baseline | 0.9992 | 0.5786 | 0.421 | 0.6653 | 1.16 | 74.4° |
-| `ortho` 去相关正则（无目标） | 0.9966 | 0.4826 | 0.514 | 0.7671 | 5.05 | 68.8° |
-| `align random` | 0.9826 | 0.3366 | 0.646 | 0.8867 | **13.23** | 56.3° |
-| `align prior`（解析谱先验） | 0.9809 | 0.2960 | 0.685 | 0.9124 | 6.18 | 52.5° |
-| **`--trunk-type fourier`** | **0.9493** | **0.2838** | 0.666 | **0.9195** | 4.81 | **50.8°** |
-
-### 三条决定性结论
-
-1. ✅ **诊断指标与精度严格单调对应**（5 个方法，Spearman = −1）：
-   `captured` 0.665 → 0.767 → 0.887 → 0.912 → 0.920
-   `relL2`    0.999 → 0.997 → 0.983 → 0.981 → 0.949
-   这是本框架最强的验证：**下界/捕获率确实能预测最终精度**。
-
-2. ✅ **谱先验确实特殊**（推翻 DR 上的结论）：
-   `align prior`（0.912）**显著优于**无目标的正交去相关正则（0.767），
-   LB 也低得多（0.296 vs 0.483）→ **先验知识是有效的，不是"任意多样性"能替代的**。
-   → 同时也说明：**DR 那轮 ablation 因 captured 饱和而失效，必须用高秩问题做对照**。
-
-3. ⚠️ **但随机傅里叶特征 trunk 全面胜出**：
-   Fourier 在**两个指标上都第一**（captured 0.9195、relL2 0.9493），
-   而且**不需要任何目标子空间、不需要先验、零额外超参**。
-   → 作为**方法**，对齐损失被"换个 trunk 架构"完胜；
-   作为**诊断/归因框架**，它仍然成立且被本轮严格验证。
-
-### 由此确定的论文定位
-
-> **不要把"基函数对齐"包装成方法，包装成诊断与归因框架。**
-> - 方法层面：对齐带来的表示改善，用 Fourier features / 更宽 trunk 更便宜地就能拿到。
-> - 分析层面：`LB = sqrt(1-captured)` 可实时计算、可证下界、与精度单调相关，
->   能判定"表示受限 vs 优化受限"，这是现有文献没有的工具。
-> - 负面结果本身可发表：*"PI-DeepONet 的失败常被归因为表示能力；
->   我们证明表示瓶颈可以廉价修复，真正的瓶颈在优化（opt_gap ≈ 0.5~0.7）。"*
-
-## 7. 已确认的关键事实（实验记录）
-
-1. **二阶导数实现选型**（1024 点 / p=100 / d=2，CPU 实测）：
-   `jacfwd(jacfwd)` **18 ms** ≪ `jacfwd(jacrev)` 107 ms ≪ `jacrev(jacfwd)` 345 ms；
-   `jacrev(jacrev)` 直接爆内存（>10 GB）。四者数值一致（差 ~5e-8）。
-2. **不是所有 PDE 都适合做「基对齐」研究**。解空间有效秩是前提条件：
-
-   | 问题 | 解矩阵有效秩 | 99.9% 能量所需模态 | 随机 trunk 捕获率 | 结论 |
-   |---|---|---|---|---|
-   | Burgers ν=0.02 | **9.55** | 89 | 0.594 | ✅ 主试验台 |
-   | 扩散-反应 | 1.78 | ~5 | — | ❌ 抛物光滑 → 解空间近 2 维 |
-   | Darcy | 1.23 | 13 | 0.985 | ❌ 椭圆光滑 → 近 1 维 |
-
-   椭圆/抛物算子的格林函数会强烈压制高频，导致目标子空间近乎低维，
-   "基失配"无从谈起。**这一点本身就是可用于筛选问题的判据。**
-3. **PI-DeepONet 需要很长的训练**。1k~2k 步几乎学不到东西；需要 2 万步量级。
-   Burgers 上纯物理训练会出现典型的**因果性违背**：IC 损失在降（2.12→1.69），
-   但 relL2 始终 ≈1（只拟合了 t=0，其余时刻输出≈0）。
-4. RTX 5060 (sm_120) 上 GPU 相对 CPU 只快 ~3×（functorch 逐点 vmap 开销主导，
-   模型太小），加大 batch 才能提高利用率。
-
-## 8. 「纯物理训练学不动」的排查记录（重要，避免重复踩坑）
-
-现象：DR 上纯物理训练 12000 步，PDE 损失始终在 `E[u²] ≈ 0.18` 附近震荡，预测恒为 `s ≡ 0`。
-已逐一排除：
-
-| 排查项 | 结果 |
+so `mean share + fluctuation share = E_j relL2_j^2` **exactly** (the test suite asserts the
+closure term to be 0). Skill on the fluctuation is measured against a **zero-fluctuation
+predictor**, which scores 0:
+
+| Measure | Dominated by |
 |---|---|
-| PDE 公式 / 数据是否正确 | ✅ 真解的有限差分残差 **6e-6** |
-| 架构 / 数据是否可学 | ✅ 纯监督 5000 步 relL2 → **0.24**，有效秩 1.39→3.40 |
-| 损失权重（ic/bc ×1/×10/×100） | ❌ 无变化 |
-| 学习率 1e-3 / 1e-2 | ❌ 无本质变化（relL2 0.95~1.0） |
-| 初始化增益 1.0 / 3.0 | ❌ 有效秩仅 1.54→2.40，仍学不动 |
-| trunk 基对齐（本方法） | ✅ 有效秩 →33.66，但准确率仍未提升 |
+| `fluctuation_r2` (energy-weighted) | high-energy samples |
+| `fluctuation_r2_per_sample` | every sample equally |
 
-根因分析：`s ≡ 0` 精确满足 IC/BC，且此时 PDE 残差 = `-u(x)`。
-要降低残差，模型必须产生曲率 `s_xx ≈ -u/D ~ O(40)`；
-而近线性初始化的 trunk 有 `s_xx ≈ 0`，**残差在 trunk 变非线性之前无法下降**，
-形成表示层面的瓶颈。对齐损失解决了这一步，但后续仍需要优化器真正找到解。
+The manuscript's headline metric is a per-sample mean, so **the per-sample measure decides**
+and the energy-weighted one is reported alongside. The two can disagree in sign: at 20000
+updates MLP DeepONet reads `+0.2126` energy-weighted but `-0.2470` per sample.
 
-## 8.5 当前最终结论（2026-09-17，修复 bug 后）
+A second ingredient is an **exact upper bound depending only on the trunk span** (grant the
+branch a per-sample oracle over `span([Phi, 1])`). Comparing the bound with achieved skill
+separates a trunk limitation from a branch limitation.
 
-### 已确证
-1. **PDE 的 `input_at` 逐样本配对 bug 是此前一切"训练不动"的主因**（§6.5）。
-   修复后 DR 基线 relL2 0.986→0.174，Burgers 0.999→0.721。
-2. **`LB = sqrt(1-captured)` 作为可达误差硬下界成立**，`opt_gap = relL2 - LB` 可定量分离
-   表示受限与优化受限（§3.1）。
-3. **修复后表示不再是瓶颈**：所有方法的 captured 0.94~0.96，LB 0.19~0.25，
-   而 opt_gap 稳定在 0.45~0.49 —— **优化差距是主导项**。
+---
 
-### 各方法在 Burgers 上的最终排名（width 64，10000 步）
+## 6. Reproducing
 
-| 排名 | 方法 | relL2 | 相对基线的提升 | 成本 |
-|---|---|---|---|---|
-| 1 | `--trunk-type fourier` | **0.6651** | **7.8%** | 零（换个 trunk） |
-| 2 | `align prior` | 0.6672 | 7.5% | 需构造先验基 + 调权重 |
-| 3 | Fourier + `align prior` | 0.6680 | 7.4% | 更高，**不互补** |
-| 4 | `align random` | 0.6988 | 3.1% | 需目标子空间 |
-| 5 | `ortho` 去相关 | 0.7114 | 1.4% | 低 |
-| 6 | mlp baseline | 0.7213 | — | — |
-| — | 因果加权（eps 1/10/100） | 0.760 / 0.805 / 0.829 | **负** | — |
+Data are **not** in Git (`external_data/` is git-ignored). Every file is byte-pinned, so
+results are reproducible from the exact bytes listed in `paper/main.md` §4.
 
-### 论文可主张 / 不可主张
+### 6.1 Obtain the data
 
-✅ 可以主张
-- 一个**可证下界 + 归因框架**，能在不训练到收敛的前提下判断"表示受限 vs 优化受限"，
-  并在 6 个方法 × 2 个 PDE 上验证它与精度的对应关系。
-- **一个必须公开的方法论警告**：numpy 广播会让"逐样本配对"静默退化为"跨样本混配"，
-  这在 DeepONet 类代码里极易发生，且**用"真解的有限差分残差"检查不出来**
-  （只有监督模型的自动微分残差才能暴露）。建议配可复现的最小检查脚本。
-- 在高秩解空间问题上，**谱先验对齐优于无目标正则**（0.667 vs 0.711），
-  说明先验知识有价值，但收益上限被"换个 trunk 架构"封住。
-
-❌ 不能主张
-- "基坍缩是 PI-DeepONet 失败的根因"（修复 bug 后基线自己就能到 captured 0.947）。
-- "因果加权能解决优化瓶颈"（实测单调变差）。
-- "对齐与 Fourier 特征互补"（实测不互补）。
-
-## 8.13 ⚠️ 统计修正（2026-09-17）：此前的 p 值与 r 都有误，以本节为准
-
-做正式的相图分析（`scripts/analyze_phase.py`）时发现并修正了三处问题：
-
-1. **我此前手算的 Welch p 值有误**（用了 ddof=0 且 Welch 自由度算错）。
-   正确实现后，w32 的 p 是 **0.098 而非 0.045**（不显著）。
-2. **分组时没区分 `trunk_type`**，把 Fourier trunk 的 run 混进了 MLP 组。
-3. **同一 (设置,方法,seed) 被重复跑过且结果不同** —— CUDA 非确定性。
-   现在对重复运行取平均以降噪。
-
-### 清洗后的权威相图（每格 3 seed，6000 步）
-
-| 设置 | baseline mean ± std | align mean ± std | 增益 | Welch p | 显著 |
-|---|---|---|---|---|---|
-| ν=0.02, w16 | 0.7296 ± 0.0061 | 0.7088 ± 0.0077 | 2.86% | 0.024 | ✅ |
-| ν=0.02, w32 | 0.8361 ± 0.0920 | 0.6821 ± 0.0137 | **18.41%** | **0.098** | ❌ |
-| ν=0.02, w64 | 0.7601 ± 0.0160 | 0.6839 ± 0.0164 | **10.03%** | **0.0045** | ✅ |
-| ν=0.005, w16 | 0.7910 ± 0.0078 | 0.7770 ± 0.0182 | 1.77% | 0.316 | ❌ |
-| ν=0.005, w64 | 0.8122 ± 0.0117 | 0.7732 ± 0.0099 | 4.80% | 0.012 | ✅ |
-
-**5 个设置中 3 个在 p<0.05 下显著；增益符号全部为正。**
-
-### r 的最终值（5 seed × n=8）：相关性彻底崩塌，**该定量主张已撤回**
-
-| | 3 seed / n=4–5 | **5 seed / n=8** |
-|---|---|---|
-| Pearson r | 0.926 ~ 0.985 | **0.349** |
-| 95% CI | [−0.754, 0.983] | **[−0.275, 0.739]** |
-
-**"增益 ∝ 基线不稳定度"这个线性关系被证伪，已从论文中整段删除并改为撤回声明。**
-崩塌原因（两条）：自变量 σ 由 3 个 seed 估出、相对误差约 40%（带噪自变量系统性高估 |r|）；n 太小。
-
-### ✅ 取代它的稳健规律：方差地板效应
-
-看 aligned 那一列的 σ：**7 个 1D 设置全部落在 0.0056–0.0138 这个窄带内（≈0.01）**，
-而 baseline 的 σ 跨度是 0.0089–0.0780（**8.8 倍**）。
-
-| 基线 σ 相对地板的位置 | 方差降低倍数 | 例子 |
-|---|---|---|
-| 约 8 倍于地板（σ≈0.073–0.078） | **7.6× / 9.1× / 13.1×** | ν=0.02 w32、ν=0.01 w32、ν=0.005 w32 |
-| 已在地板附近（σ≈0.009–0.015） | 0.93× ~ 1.34×（基本不变） | ν=0.02 w64、ν=0.005 w64/w16、ν=0.02 w16 |
-
-→ 对齐**不是**按比例降方差，而是**把 σ 钉到 ≈0.01 的地板**。
-基线离地板多远，收益就有多大；基线已在地板上，就没收益。
-
-> **这是比线性关系更稳、也更好解释的版本**，已写入论文 §5.6。
-> 注意：地板值 0.01 目前是**经验规律，不是机制**——论文 §7 已如实列为限制。
-
-运行方式：
-```bash
-python scripts/analyze_phase.py            # 汇总表 + r + bootstrap CI
-python scripts/analyze_phase.py --verbose  # 附带逐 seed 原始值
+```powershell
+& 'D:/miniconda3/envs/pytorch/python.exe' scripts/download_pdebench.py   # 1D Burgers Nu0.001, 8.2 GB
+& 'D:/miniconda3/envs/pytorch/python.exe' scripts/download_advection.py
+& 'D:/miniconda3/envs/pytorch/python.exe' scripts/download_darus.py      # remaining families
 ```
 
-## 8.6 多 seed × 宽度扫描（Burgers，6000 步，seed 0/1/2）
+The downloaders resume partial bytes and verify the publisher digest before finishing. If you
+obtain a file manually, place it directly in `external_data/pdebench/`; the preparers verify
+the digest and refuse to proceed on a mismatch.
 
-| width | method | seed 0 | seed 1 | seed 2 | mean ± std | 相对提升 | Welch p |
-|---|---|---|---|---|---|---|---|
-| 16 | baseline | 0.7277 | 0.7365 | 0.7247 | 0.7296 ± 0.0061 | — | — |
-| 16 | `align prior` | 0.7004 | 0.7157 | 0.7102 | **0.7088 ± 0.0078** | **2.85%** | **0.022** |
-| 32 | baseline | 0.7845 | 0.7814 | 0.9423 | 0.8361 ± **0.0924** | — | — |
-| 32 | `align prior` | 0.6827 | 0.6682 | 0.6955 | **0.6821 ± 0.0137** | **18.4%** | **≈0.045** |
-| 64 | baseline | 0.7213 | 待补 | 待补 | — | — | — |
-| 64 | `align prior` | 0.6672 | 待补 | 待补 | — | 7.5%（单 seed） | — |
+### 6.2 Prepare a family
 
-### 两条关键发现
-
-1. **效果量随宽度非单调，且在宽度 32 处最大（18.4%，p≈0.045）**：
-   w16 2.85% → w32 **18.4%** → w64 7.5%。宽度 32 正是基线最不稳定的区间。
-2. ⭐ **对齐的主要作用可能是"稳定优化"，而不仅仅是"提升表示"**：
-   宽度 32 处基线跨 seed 标准差 **0.0924**，对齐后降到 **0.0137**（**降低 6.7 倍**）。
-   `captured` 同期只从 0.85 左右微升到 0.89 —— 表示侧的改善远不足以解释 6.7 倍的方差下降。
-   → 这提示对齐损失起到了**正则/预条件**作用，把优化从"偶尔掉进坏解"变成"稳定收敛"。
-   **这是比"提升 7.5% 精度"更值得写进论文的机制性发现。**
-3. 基线精度对宽度非单调（0.730 → 0.836 → 0.721），跨宽度差异大于对齐增益，
-   继续支持"优化主导"的判断。
-
-## 8.7 L-BFGS 精调：**同样失败**
-
-动机：`opt_gap ≈ 0.45~0.49` 主导，Adam 后期在病态损失面上抖动，用二阶信息精调是标准做法
-（`pi_lbfgs` / `pi_align_lbfgs`，固定训练集 + `strong_wolfe` 线搜索）。
-
-| 方法 | 固定训练集 | 外层步数 | Adam 后 | **L-BFGS 后** | opt_gap 变化 | eff_rank 变化 |
-|---|---|---|---|---|---|---|
-| `pi_lbfgs` | 16 函数 × 64 点 | 200 | 0.7213 | **2.0036** | — | — |
-| `pi_lbfgs` | 64 函数 × 32 点 | 100 | 0.7213 | **0.9119** | 0.491 → **0.688** | 4.47 → **1.40**（坍缩） |
-| `pi_align_lbfgs` | 64 函数 × 32 点 | 100 | 0.6672 | **0.7219** | 0.454 → 0.516 | 10.46 → **18.89**（保持） |
-
-**一个附带发现（对论文有用）**：L-BFGS 会把**基线**的 trunk 打到坍缩
-（eff_rank 4.47 → 1.40，opt_gap 0.49 → 0.69），而**对齐过的 trunk 反而更健壮**
-（eff_rank 10.46 → 18.89）。
-→ 对齐不仅提升精度，还**显著提升对激进优化器的鲁棒性**；
-这也和 §8.6 观察到的"方差降低 6.7 倍"指向同一机制：**对齐起的是正则/稳定化作用**。
-
-两次都**恶化**。原因：L-BFGS 必须在固定训练集上工作（要求确定性目标函数），
-而这个固定集相对任务规模太小，二阶方法把它过拟合到极致 —— 训练损失在降、
-验证误差在涨。扩大固定集能缓解（2.00 → 0.91）但不能消除。
-
-**结论**：在 PI-DeepONet 这类"大量输入函数 × 连续坐标"的算子学习任务上，
-PDE 求解中常用的"Adam + L-BFGS"配方**不能直接迁移**：
-L-BFGS 需要的是一个能代表整个算子族的训练集，而这在算子学习里代价极高
-（需覆盖数百个输入函数 × 上千坐标）。`opt_gap` 不能靠这一招压下去。
-
-### P0 阶段性总结：优化侧的两条标准路线都被证伪
-
-| 手段 | 结果 |
-|---|---|
-| 因果加权（eps 1/10/100） | 单调变差：0.721 → 0.760 → 0.805 → 0.829 |
-| L-BFGS 精调（两种固定集规模） | 变差：0.721 → 0.912 / 2.004 |
-
-→ 需要真正的新思路（见 §9 P1），而不是套用单实例 PDE 求解的既有配方。
-
-## 8.9 ⭐ 机制验证：对齐 = 正则化 / 稳定优化（NTK 谱与损失面曲率）
-
-**这是目前最重要的科学结果，且假设被证实。**
-
-用两个在训练中**未被优化过**的、与任务无关的几何量来检验：
-`scripts/ntk_analysis.py` 计算
-(1) trunk NTK 谱（= Φ 奇异值平方）、(2) **全模型输出 NTK** `K = J Jᵀ`（逐点 Jacobian）、
-(3) 物理损失 Hessian 的最大特征值 λ_max（幂迭代 + HVP）。
-
-### w64 上的配对对比（同 seed、同数据、同优化器，唯一差别是有无对齐损失）
-
-| ckpt | trunk 有效秩 | **输出 NTK 有效秩** | **NTK 最大特征值占比** | **λ_max** | **尖锐度 λ_max/2L** |
-|---|---|---|---|---|---|
-| baseline s1 | 4.1 | 1.7 | 0.874 | 1035 | 295 |
-| **align s1** | **9.0** | **3.8** | **0.542** | **430** | **141** |
-| baseline s2 | 4.2 | 2.0 | 0.803 | 2020 | 682 |
-| **align s2** | **10.6** | **4.0** | **0.432** | **833** | **336** |
-| （参考）w32 baseline s0 | 2.7 | 1.5 | 0.917 | 959 | 437 |
-
-### 结论
-
-1. **对齐把输出 NTK 的有效秩提高一倍**（1.7→3.8、2.0→4.0），
-   把**最大特征值占比从 ~0.85 压到 ~0.49** —— NTK 谱明显变平。
-   （注意：这**不是** trunk 有效秩的简单重述，二者是独立量。）
-2. **对齐把损失面尖锐度砍半**（295→141、682→336），
-   **λ_max 从 959~2020 降到 430~833** —— 基线 3 个样本全部 ≥959，
-   对齐 2 个样本全部 <959，**两组完全分离**。
-3. 与 §8.6（w32 跨 seed 标准差 6.7 倍下降）和 §8.7（对齐后 trunk 在 L-BFGS 冲击下不坍缩）
-   互相印证 —— **三条独立证据指向同一机制**。
-
-> **修正后的核心主张**：
-> 谱先验对齐在此处的主要作用不是"扩充表示能力"（captured 只从 0.947 升到 0.951），
-> 而是**把损失面变平、把 NTK 谱变宽，从而稳定优化**。
-> 这解释了为什么它的精度增益有限但方差下降极大、且对激进优化器鲁棒。
-
-## 8.8 完整相图（Burgers，6000 步，每格 3 seed）
-
-| width | baseline (mean ± std) | `align prior` (mean ± std) | 相对提升 | Welch p |
-|---|---|---|---|---|
-| 16 | 0.7296 ± 0.0061 | **0.7088 ± 0.0078** | 2.85% | 0.022 |
-| 32 | 0.8361 ± **0.0924** | **0.6821 ± 0.0137** | **18.4%** | 0.045 |
-| 64 | 0.7512 ± 0.0257 | **0.6839 ± 0.0165** | 8.96% | 0.019 |
-
-**三个宽度上对齐都显著更优**（p < 0.05），且**中间宽度（32）增益最大**——
-那正是基线最不稳定（σ = 0.0924，比对齐大 6.7 倍）的区间。
-
-## 8.10 更高秩问题（ν=0.005, Nx=1024）：**"高秩→增益更大"的预期被证伪**
-
-ν 从 0.02 降到 0.005，激波更陡、解空间更高秩（初始 captured **0.5711 vs 0.6374**）。
-
-| 方法 | s0 | s1 | s2 | mean ± std |
-|---|---|---|---|---|
-| baseline | 0.8256 | 0.8071 | 0.8039 | **0.8122 ± 0.0118** |
-| `align prior` | 0.7844 | 0.7657 | 0.7694 | **0.7732 ± 0.0098** |
-
-增益 **4.8%**（Welch p ≈ 0.012，显著），但**低于 ν=0.02 时的 8.96%**。
-
-⚠️ 这与"解空间越高秩、对齐增益越大"的直觉**相反**（ν=0.005 的初始 captured 0.5711 < 0.6374，
-解空间确实更高秩，增益却更小）。
-
-### ⭐ 但出现了一个极强的定量规律
-
-把全部四组（3 seed）放在一起：
-
-| 设置 | baseline mean ± **std** | align mean ± std | 对齐增益 | Welch p |
-|---|---|---|---|---|
-| w16, ν=0.02 | 0.7296 ± **0.0061** | 0.7088 ± 0.0078 | 2.85% | 0.022 |
-| w64, ν=0.005 | 0.8122 ± **0.0118** | 0.7732 ± 0.0098 | 4.80% | 0.012 |
-| w64, ν=0.02 | 0.7512 ± **0.0257** | 0.6839 ± 0.0165 | 8.96% | 0.019 |
-| **w32, ν=0.02** | 0.8361 ± **0.0924** | 0.6821 ± 0.0137 | **18.4%** | 0.045 |
-
-> ⚠️ **本节已被 §8.13 取代。** 换成 5 seed × n=8 后这条线性关系**崩了**（r 0.985 → 0.349），
-> 正确结论是"方差地板效应"（对齐把 σ 钉在 ≈0.01），见 §8.13。
-
-```
-baseline std:  0.0061 → 0.0118 → 0.0257 → 0.0924
-对齐增益:      2.85%  → 4.80%  → 8.96%  → 18.40%
+```powershell
+& 'D:/miniconda3/envs/pytorch/python.exe' scripts/prepare_public_benchmark.py
 ```
 
-而与"解空间秩 / 问题难度"**无关**（ν=0.005 更难，增益反而更小）。
+writes `external_data/pdebench/fixed_t1_v1/` with `pairs.npz` and `protocol.json`
+(source digest, split seed, sample ids, target time, spatial stride, normalization).
+It refuses to overwrite an existing locked split. The other families have their own preparer
+(`prepare_advection_horizons.py`, `prepare_pdebench_1d_horizons.py`,
+`prepare_diffsorp_horizons.py`, `prepare_darcy.py`, `prepare_diffreact2d.py`,
+`prepare_cfd.py`).
 
-> **这是全项目最强的机制性证据**：对齐的价值在于**把不稳定的优化过程拉稳**，
-> 而不是弥补一个其实并不缺的表示能力。它与 §8.9 的 NTK/曲率结果
-> （NTK 有效秩翻倍、尖锐度减半）在定量上自洽。
+### 6.3 Train
 
-~~**可直接写进论文的一句话**：对齐带来的精度增益可由基线的跨种子标准差线性预测（r = 0.985）~~
-> ❌ **已撤回**（见 §8.13）：换成 5 seed × n=8 后 r 降到 0.349、CI 跨 0。
-> ✅ **替换版本**：对齐把跨种子标准差钉在 ≈0.01 的问题无关地板上
-> （baseline σ 跨度 8.8× → aligned 2.5×，基线高于地板处降低 7.6–13.1×），
-> 说明其作用是**压住优化方差**，而非提升表示能力。
-
-### 机制图
-
-`python scripts/ntk_analysis.py --dir results/expQ --out results/ntk.json`
-`python scripts/plot_ntk.py --json results/ntk.json` →
-`results/ntk_fig/ntk_mechanism.png`（三联图：输出 NTK 谱 / trunk 谱 / 有效秩与尖锐度柱状图）
-
-## 8.11 论文
-
-- **`paper/main.md`** —— 完整论文（约 4700 词，含参考文献与复现附录），当前唯一权威版本。
-- `paper/short_paper.md` —— 早期短稿，已被 `main.md` 取代（保留作对照）。
-- 图：`results/ntk_fig/ntk_mechanism.png`（机制三联图）、`results/gain_vs_std.png`（r=0.985）
-
-论文标题：
-> *What Really Limits Physics-Informed Operator Learning? A Silent Broadcasting Pitfall,
-> an Error-Attribution Diagnostic, and Evidence that Subspace Alignment Regularizes Rather
-> than Expands*
-
-四条贡献：
-① 静默广播 bug + 最小检测配方 + "它能制造出可发表假象"的实证；
-② `LB = sqrt(1-captured)` 免训练硬下界与归因框架；
-③ 机制（对齐 = 正则化：NTK 有效秩翻倍、尖锐度减半、**方差钉在 ≈0.01 的地板**）；
-④ **2D 上对齐不可缺席**（baseline 坍缩到 NTK 秩 1.1、relL2 1.003 → 对齐后 0.807）。
-
-> 已**撤回**的第五条：线性关系 r = 0.985（见 §8.13）。论文中作为"自我修正"保留，是加分项。
-
-**投稿定位（诚实评估）**
-| 目标 | 可行性 | 缺口 |
-|---|---|---|
-| ICLR/NeurIPS AI4Science / ML4PS Workshop | ✅ 高 | 无明显缺口，当前即投 |
-| J. Machine Learning for Modeling and Computing / Neurocomputing | ⚠️ 中 | 需补 2D 问题与更多设置 |
-| JCP / CMAME | ⚠️ 中低 | 需 2D/3D、更高精度区间、n≥8 的设置 |
-| NeurIPS/ICLR 主会 | ❌ 低 | 仅 1D、精度区间偏低、核心是自身 bug |
-
-## 8.12 2D 问题（Burgers2D）与 n 扩展（进行中）
-
-### 8.12.1 新增 2D Burgers（`src/pdes/burgers2d.py`）
-
-```
-u_t + u u_x + u u_y = ν (u_xx + u_yy),  (x,y) ∈ [0,1)² 周期,  t ∈ [0,1]
-u(0,x,y) = u0(x,y) ~ 截断二维 Fourier 级数（解析，任意点可求值）
-```
-- trunk 输入 (t,x,y)（`trunk_dim = 3`），先验基 `[cheb, fourier, fourier]`
-- 2D 谱方法（Strang 分裂：扩散精确 + RK4 对流），`Nx=Ny=64, ν=0.05`
-- 传感器 16×16=256；评估网格 `Nt×Ns×Ns = 21×32×32 = 21504`
-- 数据生成 200 样本约 550 s（一次性，已缓存）
-
-**为什么它是有意义的试验台**：解空间比 1D 更丰富——
-归一化奇异值 `[1, .774, .493, .487, .428, .373, .257, ...]`，
-**99.9% 能量需 58 个模态**；而**随机初始化 trunk 的 captured 只有 0.295**
-（1D Burgers 是 0.63）→ **2D 上表示受限问题严重得多**。
-
-训练速度：width 32、d=3 时 **0.0625 s/步**（6000 步约 6 分钟）。
-
-### 8.12.2 n 扩展（4 → 8+）
-
-新设置（每个 3 seed × 2 方法，6000 步）：
-
-| 设置 | baseline (mean ± std) | align (mean ± std) | 增益 | 状态 |
-|---|---|---|---|---|
-| w16, ν=0.005 | 0.7910 ± 0.0078 | 0.7771 ± 0.0182 | **1.76%（p≈0.29，不显著）** | ✅ |
-| w32, ν=0.005 | 运行中 | | | |
-| w32, ν=0.01 | 排队 | | | |
-| w64, ν=0.01 | 排队 | | | |
-| **w32, 2D Burgers** | 运行中 | | | |
-
-⚠️ **第 5 个设置（w16, ν=0.005）增益仅 1.76% 且不显著，基线也很稳定（σ=0.0078）**——
-方向与 r=0.985 一致，但会让拟合带上一个新的（偏低的）点。
-**必须等全部 8+ 个设置跑完再重算 r**，不要用 n=4 的数字下结论。
-
-## 8.14 三项误差归因：test = LB + opt_gap_train + gen_gap（2026-09-21）
-
-**动机**：原来的两项分解 `test = LB + opt_gap` 把"优化"和"对新输入函数的泛化"混在了一起。
-模型在 200 个输入函数上训练、50 个未见函数上测试，`opt_gap ≈ 0.45` 里到底有多少是泛化误差？
-不知道这一点，"优化受限"这个核心主张就缺一个对照。
-
-**实现**：`Trainer.fit()` 结尾多评估一次 train split，输出
-`train_rel_l2 / opt_gap_train = train − LB / gen_gap = test − train`（旧的 `opt_gap` 保留兼容）。
-所有 2026-09-21 之后跑的 run 自动带这三个字段。
-旧 run 用 `scripts/eval_saved.py --dir results/expV` 从存档 `.pt` 补算（无需重训，
-且复算出的 test/LB 与存档值 **逐位一致**，Δtest = 0.00e+00）。
-
-### 结果（checkpoint 复算，无需重训）
-
-| 单元 | n | LB | train | test | **opt(LB→train)** | **gen(train→test)** |
-|---|---|---|---|---|---|---|
-| 1D Burgers ν=0.02, w64 | 4 | 0.22–0.30 | 0.742 | 0.740 | **0.47** | ≈ −0.002 |
-| 1D Burgers ν=0.005, w64 | 6 | 0.32–0.39 | 0.793 | 0.793 | **0.45** | ≈ 0.000 |
-| 2D Burgers w32 baseline | 5 | **0.85** | 1.003 | 1.004 | 0.15 | ≈ 0.000 |
-| 2D Burgers w32 `align prior` | 5 | **0.65** | 0.811 | 0.812 | 0.15 | ≈ +0.007 |
-
-### 三条结论
-
-1. ✅ **`gen_gap ≈ 0`（|gen| < 0.01，不足总误差的 1%）**：两项分解在这批问题上是安全的，
-   "泛化到新输入函数"不是瓶颈。**但要注意读法**：train ≈ test 不是说泛化好，而是
-   **连 200 个训练函数都没拟合上**（train 0.74 ≈ test 0.74，都很差）。
-   这个读法反而更强地支持"优化受限"——不是泛化受限，也不是表示受限。
-2. ✅ **1D 与 2D 是两种完全不同的受限类型**：
-   - 1D：`LB ≈ 0.22–0.39`，`opt_gap_train ≈ 0.45–0.52` → **优化主导**（与 §4.4 一致）；
-   - 2D：baseline `LB = 0.85`（trunk 只捕获约 28% 的解子空间能量），对齐后降到 **0.65**
-     → **表示主导**，对齐在这里是真的"扩充了表示"，而不只是正则化。
-   → 论文可以更锋利：**"PI-DeepONet 的瓶颈随问题而变；1D 是优化，2D 是表示。"**
-3. ⚠️ 2D 上 `align` 把 LB 从 0.85 压到 0.65，但 `opt_gap_train` 仍是 0.15 ——
-   修好表示之后还剩 0.15 的优化差距，两者都要处理。
-
-### ⚠️ 修正一处此前的说法（重要）
-
-上一轮评审说"修复后目录里同配置重复运行为 0 组"是**错的**（当时 glob 漏了 `results/` 前缀）。
-重查结果：115 个 run 里有 **1 组真正的同配置同 seed 重复**：
-
-```
-burgers w64 baseline seed 1：0.77756  vs  0.76517     Δ = 0.0124
+```powershell
+& 'D:/miniconda3/envs/pytorch/python.exe' scripts/run_public_benchmark.py `
+    --data-dir external_data/pdebench/fixed_t1_v1 `
+    --out results/public_fixed_t1_v1 `
+    --steps 1500 --seeds 0,1,2,3,4 `
+    --architectures deeponet_mlp,deeponet_fourier,fno `
+    --device cuda
 ```
 
-**Δ ≈ 0.012 与"方差地板 ≈0.01"同量级。** 这直接威胁 §8.13 的方差地板结论：
-地板值有可能主要来自 CUDA 非确定性，而不是对齐在压优化方差。
-→ **必须先做 R8 对照**（同一 (设置, 方法, seed) 连跑 5 次，测 `σ_repeat`），
-才能决定"地板 0.01"能不能写进论文。
+Each run writes `manifest.json`, `events.jsonl`, `progress.json`, a checkpoint and
+`result.json`. Re-running the same command **skips completed runs** and resumes interrupted
+ones; a run whose identity changed (configuration, source hash, data protocol or environment)
+is refused rather than silently overwritten.
 
-## 8.15 2D 四组对照（P0-1，2026-09-21）—— §5.7 的 "necessary" 被推翻
+### 6.4 Diagnose
 
-脚本 `scripts/sweep2d_controls.cmd`，输出 `results/expW`。2D Burgers，width 32，6000 步，每格 5 seed。
-**全部跑完**（20 个 run，约 2 小时）。expV 的 baseline / align 用 `eval_saved.py --write-back`
-补了 train 误差，故下表同时给出三项分解。
-
-| arm | n | test relL2 | 增益 | p(vs base) | **LB** | opt(train) | gen | captured | 需要目标子空间？ | 成本 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| MLP baseline | 5 | 1.0039 ± 0.0024 | — | — | **0.849** | 0.154 | 0.000 | 0.28 | — | — |
-| `ortho` 去相关（无目标） | 5 | 1.0016 ± 0.0010 | 0.22% | 0.112 ❌ | 0.838 | 0.164 | 0.000 | 0.30 | 否 | 1 超参 |
-| `--ic-weight 10` | 5 | 1.0029 ± 0.0013 | 0.10% | 0.464 ❌ | — | — | — | 0.28 | 否 | 1 超参 |
-| `align prior`（解析谱基） | 5 | 0.8205 ± 0.0421 | 18.27% | 6.1e-4 ✅ | 0.654 | 0.157 | 0.010 | 0.61 | 是 | 构造+调权 |
-| `align random`（任意光滑子空间） | 5 | 0.7910 ± 0.0165 | 21.21% | 6.0e-6 ✅ | 0.628 | 0.154 | 0.009 | 0.60 | 是 | 构造+调权 |
-| **`--trunk-type fourier`** | 5 | **0.6933 ± 0.0199** | **30.94%** | 3.1e-6 ✅ | **0.481** | 0.194 | 0.019 | **0.77** | **否** | **零** |
-
-`fourier` vs `align prior`：**+15.5%，p = 1.1e-3**。
-
-### 四条结论
-
-1. ❌ **"alignment is necessary" 在 2D 同样被推翻**：零成本的随机傅里叶特征 trunk
-   （0.693）显著优于解析先验对齐（0.821）。与 1D 结论（§6.7：fourier 0.6651 全场最好）一致。
-2. ✅ **"多样性"不是全部——本次最重要的新发现**：`ortho`（无目标、只要求 `ΦᵀΦ ∝ I`）
-   在 2D 上**完全无效**（1.0016，p=0.11），而它在 1D 上还有 1.4% 的正增益。
-   → 决定成败的不是"trunk 张成了多少维"，而是"张成的是不是像解空间的那类函数空间"。
-   2D 解空间需 58 个模态、随机 trunk 只捕获 0.295，任意方向根本撞不上。
-3. ✅ **先验的具体方向不重要**：`align random`（0.7910）≥ `align prior`（0.8205），
-   两者 captured 几乎相同（0.60 / 0.61）。→ 收益来自"被推向某个高维光滑子空间"。
-4. ❌ **不是软 IC 权重问题**：`--ic-weight 10` 完全无效（1.0029，p=0.46），
-   排除"塌缩只是因为 IC 约束太软"这一解释。
-
-**排序**：baseline 1.004 → ortho 1.002 / ic×10 1.003（都无效）→ align 0.79~0.82 → fourier 0.69。
-
-**归因**：2D baseline 的误差 **85% 来自 LB（表示）**，opt_gap_train 只有 0.15；
-`gen_gap ≈ 0`。→ **2D 是彻底的表示受限**，与 1D（LB 0.22~0.39 / opt 0.45~0.52）形成对照。
-
-### 对论文的影响
-
-§5.7 "alignment is necessary" 必须改写。可主张的版本：
-
-> 2D 上 PI-DeepONet 的失败是**表示性**的（baseline LB = 0.85，输出 NTK 数值秩 1.1）。
-> 修复它的必要条件是**让 trunk 拥有一个谱结构化的基**：解析先验对齐能做到
-> （LB 0.85 → 0.65），而**随机傅里叶特征更便宜且更好**（LB → 0.48，relL2 0.693）。
-> 但"方向无关"的去相关正则做不到（1.002）——说明**紧要的是基的谱结构，不是基的数量**。
-
-这个版本比原版更干净：1D 与 2D 由同一个机制解释，且负面结果（ortho 无效）反而
-把机制钉死了。
-
-## 8.16 三个缺失的参照系（2026-09-21，运行中）
-
-脚本 `scripts/sweep_refs.cmd` + `scripts/sweep_dataonly_long.cmd`，输出
-`results/expDO, expDOlong, rep1d1..5, rep2d1..5, expS20k, expS50k`。
-
-### A) `data_only` 监督上界（已完成，含 50k 预算对等版）
-
-| setting | 监督 6k | 监督 30k | 监督 50k | 物理 50k |
-|---|---|---|---|---|
-| 2D w32 | 0.868 ± 0.008 | 0.638 ± 0.007 | **0.618 ± 0.011** | **0.5983**（fourier，1 seed） |
-| 1D ν=0.02 w64 | 0.582 ± 0.021 | 0.486 ± 0.022 | **0.472 ± 0.011** | 0.6139（base，1 seed） |
-
-**预算对等后的结论**
-- **2D：物理（0.598，无任何解数据）与全监督（0.618 ± 0.011）统计上打平**——差距远小于
-  seed 间波动（6k 时 σ≈0.02）。只主张 parity，不主张 superiority。
-- **1D：监督明显更优**（0.472 vs 0.614）→ 物理信息训练在 1D 上**计算效率低**。
-- **物理残差是强正则**：监督 2D@50k 的 `gen_gap≈0.175`（train 0.454 / test 0.629），
-  而物理模型全程 ≈0.01。
-- 教训：6k 步时监督 2D 是 0.868，**比物理还差**——"physics beats data"完全可能是
-  监督没训够的假象。任何此类比较都必须把监督曲线跑过拐点。
-
-**三条结论**
-1. **"物理打赢监督"是监督没训够的假象**：2D 监督 6k 步 0.868 → 30k 步 0.637。
-   任何"physics beats data"的主张都必须给出监督曲线过拐点之后的值。
-2. **1D 的 opt_gap 不是容量上限**：同一 trunk 全监督能到 0.58（6k 步），远低于物理 baseline
-   的 0.763 → 1D 的 0.45 差距确实归于"优化物理残差"这一件事。
-3. **2D 上物理+fourier（0.693）与全监督（0.637，5 倍步数）同量级**，且物理不用任何解数据。
-   另外监督模型的 `gen_gap≈0.12`（train 0.51 / test 0.63），而物理模型 ≈0.01
-   —— 物理残差本身是很好的正则。
-
-### B) σ_repeat（已完成）——**结论反转，是好消息**
-
-```
-1D ν=0.02 w64 baseline seed0 × 5 次：0.7623 0.7623 0.7623 0.7623 0.7623   σ_repeat = 0.000000
-2D baseline      seed0 × 5 次：1.0033 1.0033 1.0033 1.0033 1.0033   σ_repeat = 0.000000
+```powershell
+& 'D:/miniconda3/envs/pytorch/python.exe' scripts/diagnose_fluctuation.py --device cuda
 ```
 
-**重跑是逐位一致的**——流水线完全确定性。所以：
+recomputes the decomposition from stored checkpoints into `results/fluctuation_v1/`. Every
+recomputed `mean_relative_l2` is compared against the value stored in that run's
+`result.json`; a run that disagrees beyond tolerance is reported as a failure. All
+recomputations in the study reproduce their stored metrics exactly
+(`max_abs_metric_difference = 0.00e+00`).
 
-1. ✅ **"方差地板 ≈0.01"不是数值噪声，§5.6 的地板主张安全保留**（已写进论文 §5.9）。
-2. ⚠️ 但此前发现的 `Δ=0.0124`（expN 0.77756 vs expQ 0.76517）**不是非确定性**，
-   而是两个文件由**相隔 4 天的两份不同代码**产生（mtime 9/17 vs 9/21），却没有任何记录
-   说明哪个结果对应哪份代码。这是比数值噪声更常见、也更危险的复现性失败。
-   → **每个 run 必须记录代码 hash**（见 §9 待办的 R4，仍未做）。
+### 6.5 Test
 
-### C) 步数扫描 6k/20k/50k（已完成）
+```powershell
+& 'D:/miniconda3/envs/pytorch/python.exe' -m unittest discover -s tests -v
+```
 
-| steps | 2D fourier（物理） | 1D baseline（物理） |
-|---|---|---|
-| 6k | 0.6933（captured 0.77） | 0.7627（5 seed） |
-| 20k | 0.6427（0.93） | 0.6736（0.95） |
-| 50k | **0.5983**（0.94） | **0.6139**（0.96） |
+No test requires CUDA. A handful read `results/` archives or git objects and skip when they
+are absent.
 
-→ "优化受限 / 表示受限"都必须读作**固定预算下的结论**：加步数两个 regime 都持续改善，
-captured 升到 0.93–0.96。诊断的价值不是"永远修不好"，而是"**下一单位算力该花在哪**——
-1D 花在优化器上，2D 花在 trunk 基上"。
+---
 
-### 论文配图
-`python scripts/make_paper_figs.py` → `results/paper_figs/`（已复制到 `paper/figures/`）：
-fig1 三项分解堆叠条 / fig2 2D 七组对照 / fig3 bug 前后 / fig4 方差地板 / fig5 机制 / fig6 1D 消融。
+## 7. Reproducibility guarantees
 
-## 9. 后续待办（已按新结果重排优先级）
+- **Data**: publisher SHA-256 / MD5 pinned per file; `src/public_benchmark.py` raises on
+  mismatch, and consumers re-verify the prepared cache hash at load time.
+- **Runs**: each run's identity is `configuration + source hash + data protocol +
+  environment`, recorded in `manifest.json` together with the git commit; a changed identity
+  is refused. Events are appended to `events.jsonl`.
+- **Recomputation**: enforced, not assumed — diagnostics refuse to proceed if the pair-cache
+  hash changed and report any metric that fails to reproduce.
+- **Provenance of held-out data**: protocols and sign predictions were committed before the
+  corresponding runs (`docs/*_V1.md`); the thresholds were never refitted on a held-out
+  family.
 
-### P0 —— 决定项目走向
+---
 
-- [x] ~~把整组对照搬到 Burgers 上重做~~ → **已完成，见 §6.5**（结论：先验有效，但被 Fourier 完胜）
-- [x] ~~加因果加权 / 时间课程~~ → **已证伪，见 §6.8**（eps 1/10/100 单调变差 0.721→0.829）
-- [x] **三项误差归因（加入 train split）** → **已完成，见 §8.14**：
-      `gen_gap ≈ 0`，1D 优化主导、2D 表示主导
-- [x] **监督上界 + 步数扫描** → **已完成，见 §8.16 A/C**：预算对等后 2D 物理与监督打平
-      （0.598 vs 0.618），1D 监督明显更优（0.472 vs 0.614）；两个 regime 加步数都持续改善
-- [x] **2D 四组对照（P0-1）** → **已完成，见 §8.15**。结论：Fourier（0.693，零成本）
-      > align random（0.791）≈ align prior（0.821）> ortho / ic×10（无效）> baseline（1.004）。
-      → §5.7 的 "alignment is necessary" 必须改写。
-- [x] **同 seed 重跑 5 次测 `σ_repeat`（R8）** → **已完成，见 §8.16 B**：σ_repeat = 0
-      （逐位一致），方差地板主张保住；真正的风险被确认为**代码漂移无记录**。
-- [x] **每个 run 记录复现性指纹（R4）**：`src/utils.py:code_fingerprint()` 对
-      `src/**/*.py` + `scripts/**/*.py` 做 sha256，`env_fingerprint()` 记库版本 / GPU；
-      两者写进每个 run 的 `meta.code_hash` / `meta.env`，启动时打印一行。
-      → 同配置两次结果不一致时，**先比对 code_hash，再怀疑非确定性**（§5.9 的教训）。
-- [ ] **Fourier + 对齐**的组合：既然 Fourier 已免费拿到 0.92 的 captured，
-      再叠加对齐能否突破 0.95？（低成本、有明确科学问题）
-- [ ] **多 seed + 宽度扫描**：把 §6.5 的单调关系在 width ∈ {16,32,64,128} × 5 seeds 上验证，
-      得到"LB–精度"散点图与相关系数（n≈20，才有统计意义）
+## 8. Reading order
 
-### P1 —— 把归因框架做成主贡献
-
-- [ ] 扫 trunk 宽度（8/16/32/64/128/256）画 **"表示受限 ↔ 优化受限"相图**
-- [ ] 在"优化成功"的设定（两阶段 / 稀缺数据）下验证 LB 是否紧（opt_gap 是否小）
-- [ ] 多 seed（≥5）+ 误差棒；captured 与 relL2 的相关性分析
-- [ ] 把 LB 用到**训练早停 / 方法选择**：LB 不降就别再加表示侧 trick
-
-### P2 —— 提高上限
-
-- [ ] 两阶段中物理微调是否**破坏**预训练好的基（记录 stage-2 全程 eff_rank 曲线）
-- [ ] 推广到 FNO / CViT 骨干（PINO）
-- [ ] 残差驱动的闭环基扩展（让 PDE 残差告诉模型缺哪个方向）
-- [ ] 理论：把 LB 与 trunk NTK / 收敛性联系起来
+1. `paper/main.md` — the manuscript (§5 results, §6 limitations, §7 withdrawn claims).
+2. `docs/CURRENT_CONCLUSIONS.md` — what is supported, what is retracted.
+3. `docs/FLUCTUATION_DIAGNOSIS_V1.md` — the decomposition and its protocol.
+4. `docs/REMAINING_GAPS_V1.md` — what is still open.
+5. `docs/VENUE_STRATEGY_V1.md` — venue reasoning.
+6. `docs/RUNBOOK.md` — rules for long, sleep-safe runs.
