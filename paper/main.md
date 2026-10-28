@@ -1,5 +1,11 @@
 # An Exact A Posteriori Error Decomposition for Operator Learning: Conservation, Fluctuation, and the Limit of Branch Capacity
 
+**Xiaochen Yan**
+
+ORCID: 0009-0002-9280-4323
+
+Independent Researcher, [fill: city], China · [fill: email]
+
 **Evidence-audited research draft v6 — 2026-10-28. Not a submitted manuscript.**
 
 *Retitled 2026-10-28 for a computational-mathematics venue. The previous title, "Conserved

@@ -155,7 +155,13 @@ neighbours and the editors may prefer to avoid them].
   naming the supervisors.
 - Data: the PDEBench deposits are too large to redistribute; the manuscript gives
   publisher-checked digests and the repository provides download scripts, so every result is
-  reproducible on the exact bytes used. Code will be released under a personal GitHub repository
-  with a Zenodo DOI, and an arXiv preprint (`cs.LG`, cross-listed `math.NA`) is being prepared.
+  reproducible on the exact bytes used. [confirm before sending] The code is released under MIT at
+  https://github.com/xchenio/operator-error-decomposition with a Zenodo DOI, and an arXiv preprint
+  (`cs.LG`, cross-listed `math.NA`) is being prepared — confirm the repository is public and the
+  DOI is live before sending.
 
 Thank you for considering this manuscript.
+
+Xiaochen Yan
+ORCID: 0009-0002-9280-4323
+Independent Researcher, [fill: city], China · [fill: email]
