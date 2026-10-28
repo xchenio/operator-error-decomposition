@@ -303,7 +303,7 @@ decomposition is applied to a faithful reconstruction rather than an approximati
 | FNO | 0.22835 ± 0.00680 |
 
 Both initial DeepONets fail to beat the conservation-law baseline while FNO beats it by a
-wide margin. Equal update counts do not match parameter counts or compute (section 5.6).
+wide margin. Equal update counts do not match parameter counts or compute (section 5.9).
 
 ### 5.2 Fluctuation skill at t = 1.0
 
@@ -1065,10 +1065,16 @@ Limitations:
   whose stored initial state is spatially constant (so it is used from layer 20 onward),
   and Darcy, whose only setting is far above every threshold. The quantitative boundary
   evidence rests on the viscosity ladder alone.
-- **Compute is not FLOP-matched.** Parameter counts are within 18% and FNO costs about
-  2.2x more wall-clock per update, so the gap is not explained by DeepONet having less of
-  either (section 5.6). No FLOP-level accounting or FLOP-matched control was run, and the
-  two architectures perform different operations per update.
+- **Compute is measured and matched, but the match rests partly on an estimate.** Parameter
+  counts are within 18% and FNO costs about 2.2x more wall-clock per update, so the gap is
+  not explained by DeepONet having less of either. A FLOP-matched control was run at the
+  measured dense FLOP budget (5135 and 4233 updates) and again at a budget that adds an
+  analytic FFT term (6744 and 5559 updates); the gap survives both and is larger at the
+  larger budget, and DeepONet given 3.9x the FLOP budget is still negative (section 5.9).
+  The remaining limitation is that the FFT portion of the FNO count is an analytic estimate
+  rather than a measurement, because `torch.utils.flop_counter` registers no FFT op. The
+  estimated part belongs to FNO, so the direction of any error in it favours FNO, but equal
+  *estimated* FLOPs are still not provably equal real work.
 - The test split was exposed during exploratory development and validation guided later
   study choices; these numbers are descriptive and no fresh holdout was used.
 - Five seeds share one data split, so seed standard deviations do not measure task
@@ -1106,10 +1112,15 @@ from its stored value beyond a tolerance. The test suite asserts the exact squar
 closure, the invariance of the skill measure to the mean, and that stored metrics are
 reproduced.
 
-Next experiments, in priority order: (i) a compute- or FLOP-matched FNO control; (ii) a
-second public PDE with a different operator class, prepared under a locked protocol with a
-reserved holdout; (iii) applying the same decomposition to a physics-informed training
-objective, which this study does not cover.
+Next experiments, in priority order: (i) a FLOP counter that registers FFT work, so that the
+matched comparison in section 5.9 rests on a measurement rather than on the analytic
+estimate it currently uses; (ii) work per update matched between the physics-informed arm of
+section 5.11 and the supervised runs, together with a physics-informed FNO control, which the
+present 1D FNO cannot supply because it maps a field to a field at one fixed time and has no
+time coordinate to differentiate; (iii) a compressible system at a second parameter set,
+which is what would separate the three candidate explanations that section 5.15 leaves open
+for the 1D CFD failure. No shallow-water or incompressible multi-dimensional system exists in
+the deposit used, so that class remains untested.
 
 ## References
 
