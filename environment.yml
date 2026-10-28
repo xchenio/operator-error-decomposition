@@ -7,8 +7,10 @@ dependencies:
   - python=3.11
   - numpy=2.4.6
   - scipy=1.17.1
-  - matplotlib
+  - matplotlib=3.11.2
   - pip
   - pip:
+      # cu130 is required for sm_120 (RTX 50 series); a cu126 build is compiled
+      # only up to sm_90 and fails with "no kernel image is available".
       - torch==2.14.0+cu130
       - h5py==3.16.0

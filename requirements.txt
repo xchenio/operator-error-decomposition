@@ -1,0 +1,16 @@
+# Pip-only mirror of environment.yml.
+# Validated 2026-10-28 on Windows: Python 3.11.16, torch 2.14.0+cu130.
+#
+# torch is NOT listed as a plain requirement because the correct wheel depends on the
+# local CUDA runtime. Install it explicitly, for example:
+#
+#     pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cu130
+#
+# A cu126 build is compiled up to sm_90 and fails on sm_120 (RTX 50 series) with
+# "CUDA error: no kernel image is available for execution on the device".
+# Use the cu130 build, or run every script with --device cpu.
+
+numpy==2.4.6
+scipy==1.17.1
+matplotlib==3.11.2
+h5py==3.16.0
