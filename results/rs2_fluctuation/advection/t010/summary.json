@@ -1,0 +1,59 @@
+{
+  "families": {
+    "rs2_advection_t010_v1": {
+      "n_runs": 15,
+      "max_abs_metric_difference": 0.0,
+      "faithfulness_failures": []
+    }
+  },
+  "oracle_input_mean": {
+    "val": {
+      "mean_relative_l2": 0.6862068465907305,
+      "relative_l2_rms": 0.7385196188177438,
+      "relative_fro": 0.6361583390223892,
+      "rmse": 0.5039039242464708,
+      "fluctuation_r2": 0.0,
+      "fluctuation_energy_fraction_per_sample": 0.545411226370581,
+      "normalized_mean_error": 1.9015539357200842e-05,
+      "fluctuation_energy_fraction": 0.6361583383606658,
+      "squared_error_mean_share": 1.0081244794730753e-09,
+      "squared_error_fluctuation_share": 0.545411226370581,
+      "squared_error_closure": 0.0,
+      "fluctuation_r2_per_sample": 0.0
+    },
+    "test": {
+      "mean_relative_l2": 0.7043998919254348,
+      "relative_l2_rms": 0.7524912808561319,
+      "relative_fro": 0.6561179030015111,
+      "rmse": 0.502090610354074,
+      "fluctuation_r2": 0.0,
+      "fluctuation_energy_fraction_per_sample": 0.5662431174165903,
+      "normalized_mean_error": 2.6674658726511362e-05,
+      "fluctuation_energy_fraction": 0.6561178973953673,
+      "squared_error_mean_share": 1.0347911818441713e-08,
+      "squared_error_fluctuation_share": 0.5662431174165902,
+      "squared_error_closure": 0.0,
+      "fluctuation_r2_per_sample": 2.220446049250313e-16
+    }
+  },
+  "conservation": [
+    {
+      "split": "train",
+      "mean_correlation": 0.9999999995380697,
+      "mean_abs_difference": 1.2042214836173107e-05,
+      "mean_abs_target_mean": 0.479293828983924
+    },
+    {
+      "split": "val",
+      "mean_correlation": 0.9999999992975449,
+      "mean_abs_difference": 1.294434567533434e-05,
+      "mean_abs_target_mean": 0.47411882572379116
+    },
+    {
+      "split": "test",
+      "mean_correlation": 0.9999999934925101,
+      "mean_abs_difference": 1.761784330941704e-05,
+      "mean_abs_target_mean": 0.44480905324692144
+    }
+  ]
+}

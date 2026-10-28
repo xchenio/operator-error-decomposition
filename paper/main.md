@@ -1155,7 +1155,78 @@ We therefore state the result as **27 of 30 on informative predictions, 5 of 6 a
 threshold boundary**, and report 52 of 55 only as the raw count. The ledger is machine-readable
 and the strata are recomputed by test rather than transcribed.
 
-### 5.17 Zero initialization helps, but fitting and generalization remain distinct
+### 5.17 Replication on a disjoint split
+
+Every number above comes from one split whose test set was seen during exploratory development.
+Section 5.15 preregisters the *rule* against later families, which protects it from hindsight but
+not the split from it. We therefore replicated the study on a second split, under the protocol
+committed in [docs/REPLICATION_SPLIT2_V1.md](../docs/REPLICATION_SPLIT2_V1.md) before any run on
+it.
+
+Split 2 uses seed 20261028 and is drawn from the **complement** of all 1400 split-1 ids, so the two
+splits share no trajectory. This matters: two bare seeds over 10000 trajectories would be expected to
+overlap on about 196 samples, which is not an independent sample. The thresholds were **refitted on
+split 2** rather than carried over, so what is replicated is the procedure rather than the number.
+All 21 families were retrained (315 runs) and every diagnostic recomputation reproduces its stored
+metric exactly.
+
+**Primary endpoint: the dissociation replicates.** Burgers Nu = 0.001 at `t = 1.00`, test split:
+
+| | split 1 | split 2 |
+|---|---:|---:|
+| MLP DeepONet per-sample R^2 | -0.0042 +- 0.0072 | **-0.0003 +- 0.0167** |
+| FNO per-sample R^2 | +0.6503 +- 0.0222 | **+0.6162 +- 0.0347** |
+| FNO - MLP gap | +0.6545 | **+0.6165** |
+
+All three fall inside the predeclared bands, so R0 passes. **The dissociation is not an artifact of
+one split.**
+
+**Secondary endpoint: thresholds are stable where they exist.** MLP moved 0.2477 → **0.2444**
+(1.3% drift) and Fourier 0.2728 → **0.3045** (11.6% drift), both inside the 25% band with the
+ordering preserved. **The FNO branch has no threshold on split 2 at all**: FNO's measured per-sample
+fluctuation R^2 stays positive across all seven fitting horizons, reaching +0.0972 +- 0.1689 at
+`t = 2.00` where split 1 gave -0.0586 +- 0.2357. With no sign change there is nothing to
+interpolate, so the rule issues no FNO prediction. That is not a miss — nothing was predicted and
+nothing was wrong — but it removes the FNO arm from the replication, and it shows that section 5.5's
+statement that FNO falls below zero at `t = 2.00` is split-dependent. On split 2 it does not
+cross, though at +0.0972 +- 0.1689 the margin is not distinguishable from zero either way.
+
+**Secondary endpoint: held-out signs, 13 of 14.** With FNO unscored, the 21 preregistered
+predictions become 14 (two architectures, seven horizons).
+
+| t | fluctE | architecture | predicted | measured | |
+|---:|---:|---|---|---:|---|
+| 0.10 | 0.5721 | MLP | + | **+0.1798 +- 0.0119** | correct |
+| 0.10 | 0.5721 | Fourier | + | **+0.6467 +- 0.0271** | correct |
+| 0.25 | 0.4551 | MLP | + | **+0.1409 +- 0.0163** | correct |
+| 0.25 | 0.4551 | Fourier | + | **+0.3680 +- 0.0220** | correct |
+| 0.50 | 0.3403 | MLP | + | **+0.0555 +- 0.0434** | correct |
+| 0.50 | 0.3403 | Fourier | + | **+0.0318 +- 0.1243** | correct |
+| 0.75 | 0.2678 | MLP | + | **-0.0332 +- 0.0708** | **wrong** |
+| 0.75 | 0.2678 | Fourier | - | **-0.4405 +- 0.3456** | correct |
+| 1.00 | 0.2190 | MLP | - | **-0.1032 +- 0.1055** | correct |
+| 1.00 | 0.2190 | Fourier | - | **-0.8114 +- 0.2929** | correct |
+| 1.50 | 0.1597 | MLP | - | **-0.1206 +- 0.0334** | correct |
+| 1.50 | 0.1597 | Fourier | - | **-0.8781 +- 0.0611** | correct |
+| 2.00 | 0.1248 | MLP | - | **-0.0431 +- 0.0453** | correct |
+| 2.00 | 0.1248 | Fourier | - | **-0.5368 +- 0.1474** | correct |
+
+**13 of 14** (92.9%, CI [68.5, 98.7]) against **6 of 14 (42.9%, CI [21.4, 67.4])** for
+always predicting positive. The two splits agree on where the rule is fragile: the only miss on
+split 2 is Burgers Nu = 0.01 at `t = 0.75` on the MLP trunk, measured at -0.0332 +- 0.0708,
+i.e. within two seed standard deviations of zero — the same statistically unresolvable band
+that produced two of split 1's three misses.
+
+**What this settles and what it does not.** The dissociation, the monotone horizon decay and the
+approximate threshold values are reproducible on trajectories none of which entered split 1. It does
+**not** close the gap identified above: the held-out family is still Burgers at a second viscosity,
+so the replication demonstrates stability across *data*, not reach across *operator classes*. It
+also produced one observation the single-split study could not have made — that the FNO branch of
+the rule is not re-fittable on this split — which is recorded in section 9 of the protocol.
+Artifacts: `results/rs2_fluctuation/**`, `experiments/prediction_ledger_rs2.json`,
+`results/rs2_skill_prediction_v1/report.json`, `results/rs2_*/`.
+
+### 5.18 Zero initialization helps, but fitting and generalization remain distinct
 
 Zero initialization improves final validation relative L2 in 29/30 paired comparisons; all
 six group means and seed standard deviations improve. The exception is Fourier at n=1000,
@@ -1231,14 +1302,15 @@ Limitations:
   rather than a measurement, because `torch.utils.flop_counter` registers no FFT op. The
   estimated part belongs to FNO, so the direction of any error in it favours FNO, but equal
   *estimated* FLOPs are still not provably equal real work.
-- **One data split.** The test split was exposed during exploratory development and validation
-  guided later study choices; these numbers are descriptive. A replication on a **second split
-  disjoint from the first** — sharing no trajectory with it, with the thresholds refitted on the
-  new split rather than carried over — is predeclared in
-  [docs/REPLICATION_SPLIT2_V1.md](../docs/REPLICATION_SPLIT2_V1.md), committed before any run
-  on it, with endpoints and tolerances fixed in advance (R0 the dissociation, P1 threshold
-  stability within 25%, P2 at least 18 of 21 held-out signs). Its outcome is reported whatever
-  it is. At the time of writing the runs have not started, so this remains a single-split study.
+- **Split 1 is still the reference for section 5.15, but the study is no longer single-split.**
+  The test split was exposed during exploratory development and validation guided later study
+  choices, so the numbers in sections 5.2-5.16 are descriptive. The dissociation, the horizon
+  decay and the threshold values were then **replicated on a second split sharing no trajectory
+  with the first**, with the thresholds refitted on it, under the protocol predeclared in
+  [docs/REPLICATION_SPLIT2_V1.md](../docs/REPLICATION_SPLIT2_V1.md) and committed before any
+  run (section 5.17). Two limitations survive that replication unchanged: the held-out family
+  is still Burgers at a second viscosity rather than a new operator class, and the five seeds still
+  share one split.
 - Five seeds share one data split, so seed standard deviations do not measure task
   variability.
 - Numerical-rank sensitivity of the projection oracle (rcond 1e-12 versus 1e-6) is reported

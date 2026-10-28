@@ -207,4 +207,101 @@ runs, and is the only part of this document that may change.
 
 ## 9. Result
 
-_To be written after the runs. Endpoints, bands and tolerances above are fixed._
+All 315 runs (21 families x 3 architectures x 5 seeds) completed. Every diagnostic
+recomputation reproduces its stored metric exactly (`max_abs_metric_difference = 0.00e+00`).
+Preflight disjointness passed: split 2 shares zero trajectories with split 1, overall and
+per split.
+
+### R0 (primary): the dissociation replicates
+
+Burgers Nu = 0.001, `t = 1.00`, test split, split 2:
+
+| quantity | value | pass band | |
+|---|---:|---|---|
+| MLP DeepONet per-sample R^2 | **-0.0003 +- 0.0167** | `[-0.10, +0.05]` | pass |
+| FNO per-sample R^2 | **+0.6162 +- 0.0347** | `>= +0.50` | pass |
+| FNO - MLP gap | **+0.6165** | `>= +0.50` | pass |
+
+Split 1 gave -0.0042 +- 0.0072 and +0.6503 +- 0.0222, gap +0.6545. Both splits put MLP
+DeepONet at the zero-fluctuation reference and FNO far above it. **R0 passes**: the dissociation is
+not an artifact of one split.
+
+### P1 (secondary): threshold stability — only partly evaluable
+
+| architecture | split 1 | refit on split 2 | relative drift | |
+|---|---:|---:|---:|---|
+| MLP DeepONet | 0.2477 | **0.2444** | 1.3% | pass |
+| Fourier DeepONet | 0.2728 | **0.3045** | 11.6% | pass |
+| FNO | 0.1502 | **undefined** | — | **not evaluable** |
+
+**The FNO arm has no threshold on split 2.** Measured per-sample fluctuation R^2 for FNO stays
+positive at all seven fitting horizons, falling to +0.0972 +- 0.1689 at `t = 2.00` where split 1
+gave -0.0586 +- 0.2357. With no sign change on the fitting set there is nothing to
+interpolate, so the rule makes **no FNO prediction on split 2**.
+
+This is not a falsification — no prediction was made and none was wrong — but it removes the FNO
+branch from the replication entirely, and it means the FNO threshold 0.1502 was a property of split 1
+rather than a transferable constant. Section 5.5's statement that FNO falls below zero at `t = 2.00`
+is likewise split-dependent: on split 2 it does not, though the margin (+0.0972 +- 0.1689) is not
+distinguishable from zero either way.
+
+### P2 (secondary): held-out sign accuracy — 13 of 14
+
+Only the two architectures with a fitted threshold are scored, so the 21 preregistered
+predictions become 14. The always-positive baseline is computed on the same 14.
+
+| t | fluctE | arch | predicted | measured | |
+|---:|---:|---|---:|---|
+| 0.10 | 0.5721 | MLP | + | **+0.1798 +- 0.0119** | correct |
+| 0.10 | 0.5721 | Fourier | + | **+0.6467 +- 0.0271** | correct |
+| 0.25 | 0.4551 | MLP | + | **+0.1409 +- 0.0163** | correct |
+| 0.25 | 0.4551 | Fourier | + | **+0.3680 +- 0.0220** | correct |
+| 0.50 | 0.3403 | MLP | + | **+0.0555 +- 0.0434** | correct |
+| 0.50 | 0.3403 | Fourier | + | **+0.0318 +- 0.1243** | correct |
+| 0.75 | 0.2678 | MLP | + | **-0.0332 +- 0.0708** | **wrong** |
+| 0.75 | 0.2678 | Fourier | - | **-0.4405 +- 0.3456** | correct |
+| 1.00 | 0.2190 | MLP | - | **-0.1032 +- 0.1055** | correct |
+| 1.00 | 0.2190 | Fourier | - | **-0.8114 +- 0.2929** | correct |
+| 1.50 | 0.1597 | MLP | - | **-0.1206 +- 0.0334** | correct |
+| 1.50 | 0.1597 | Fourier | - | **-0.8781 +- 0.0611** | correct |
+| 2.00 | 0.1248 | MLP | - | **-0.0431 +- 0.0453** | correct |
+| 2.00 | 0.1248 | Fourier | - | **-0.5368 +- 0.1474** | correct |
+
+Stratified with the same cuts as section 5.16:
+
+| stratum | n | correct | accuracy | 95% Wilson CI |
+|---|---:|---:|---:|---|
+| all | 14 | 13 | 92.9% | [68.5, 98.7] |
+| saturated (`R^2 >= 0.9`) | 0 | — | — | not reached |
+| informative | 14 | 13 | 92.9% | [68.5, 98.7] |
+| boundary (within 15% of threshold) | 4 | 3 | 75.0% | [30.1, 95.4] |
+| resolvable (`|R^2| > 2 sd`) | 8 | 8 | 100% | [67.6, 100] |
+| not resolvable | 6 | 5 | 83.3% | [43.6, 97.0] |
+| informative AND resolvable | 8 | 8 | 100% | [67.6, 100] |
+
+Always-positive baseline on the same 14: **6 of 14 (42.9%, CI [21.4, 67.4])**, against the
+rule's 13 of 14 (92.9%, CI [68.5, 98.7]). The intervals barely overlap; with 14
+predictions the replication is too small to separate the rule from the baseline on its own, and it
+should be read together with split 1 rather than in place of it.
+
+### Deviations from section 7, recorded
+
+1. The listed command `python scripts/predict_skill_horizon.py --out results/rs2_skill_prediction_v1`
+   **cannot be used as written**: that script hardcodes the split-1 cache and diagnostic paths.
+   `scripts/fit_rs2_thresholds.py` was written instead; it reuses the original
+   `a_priori()` and `measured()` unchanged and reimplements only the interpolation.
+2. Preregistered endpoint P2 anticipated 21 predictions (7 horizons x 3 architectures). Because
+   no FNO threshold exists on split 2, it yields **14**. The preregistered pass band of 18 was
+   written for 21 and is reported as **13 of 14**, with the fraction, not the absolute count,
+   carried over.
+
+### What this does and does not establish
+
+- It **does** show the mean/fluctuation dissociation, the monotone horizon decay and the
+  approximate threshold values are reproducible on trajectories none of which entered split 1.
+- It **does not** close the gap identified in `REMAINING_GAPS_V1.md`: there is still no
+  out-of-*operator* boundary setting. The held-out family is again Burgers at a second
+  viscosity, so this replication confirms the rule's stability across data, not its reach
+  across operator classes.
+- It **adds** a new observation not in the preregistration: the FNO branch is not re-fittable on
+  this split, which the single-split study could not have revealed.
