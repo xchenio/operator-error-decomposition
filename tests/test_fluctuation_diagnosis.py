@@ -150,7 +150,11 @@ class ManuscriptTableTest(unittest.TestCase):
         return float(np.mean(v)), (float(np.std(v, ddof=1)) if len(v) > 1 else 0.0)
 
     def _groups(self, path, split="test"):
-        payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
+        """Skip rather than error when a family has not been recomputed on this machine."""
+        artifact = ROOT / path
+        if not artifact.exists():
+            self.skipTest(f"recomputed artifact absent: {path}")
+        payload = json.loads(artifact.read_text(encoding="utf-8"))
         groups = {}
         for run in payload["runs"]:
             groups.setdefault(run["configuration"]["architecture"], []).append(run["splits"][split])

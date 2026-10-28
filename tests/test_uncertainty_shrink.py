@@ -6,6 +6,16 @@ from scripts.uncertainty_shrink import coefficients,matched_global,bootstrap_mom
 
 
 class UncertaintyShrinkTest(unittest.TestCase):
+    def setUp(self):
+        root=Path(__file__).resolve().parents[1]
+        needed=['results/public_uncertainty_modal_v1/plan_v2.json',
+                'results/public_field_modal_v1/plan.json',
+                'results/public_ridge_residual_v1/plan.json',
+                'external_data/pdebench/fixed_t1_v1/protocol.json']
+        missing=[p for p in needed if not (root/p).exists()]
+        if missing:
+            self.skipTest(f'artifacts absent (data is git-ignored): {missing}')
+
     def test_fresh_ids_and_preflight_metadata(self):
         root=Path(__file__).resolve().parents[1]
         p=json.loads((root/'results/public_uncertainty_modal_v1/plan_v2.json').read_text())

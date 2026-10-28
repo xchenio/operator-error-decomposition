@@ -8,6 +8,15 @@ ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'results/public_field_modal_v1
 
 
 class FieldEvidenceTest(unittest.TestCase):
+    def setUp(self):
+        # The seal is checked against a specific commit, so a shallow clone cannot run this.
+        probe=subprocess.run(['git','cat-file','-e','8a4020b^{commit}'],cwd=ROOT,
+                             capture_output=True)
+        if probe.returncode!=0:
+            self.skipTest('commit 8a4020b not available in this clone')
+        if not (OUT/'selection_lock.json').exists():
+            self.skipTest(f'artifacts absent: {OUT}')
+
     def test_seal_and_tables(self):
         locked=json.loads(subprocess.check_output(['git','show','8a4020b:results/public_field_modal_v1/selection_lock.json'],cwd=ROOT))
         self.assertEqual(locked,json.loads((OUT/'selection_lock.json').read_text()))

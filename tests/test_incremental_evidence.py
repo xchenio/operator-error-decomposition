@@ -10,6 +10,15 @@ OUT=ROOT/'results/public_incremental_modal_v1'
 
 
 class IncrementalEvidenceTest(unittest.TestCase):
+    def setUp(self):
+        # The seal is checked against a specific commit, so a shallow clone cannot run this.
+        probe=subprocess.run(['git','cat-file','-e','ad94e69^{commit}'],cwd=ROOT,
+                             capture_output=True)
+        if probe.returncode!=0:
+            self.skipTest('commit ad94e69 not available in this clone')
+        if not (OUT/'selection_lock.json').exists():
+            self.skipTest(f'artifacts absent: {OUT}')
+
     def test_seal_precedes_confirmation(self):
         lock=json.loads((OUT/'selection_lock.json').read_text())
         committed=json.loads(subprocess.check_output(['git','show','ad94e69:results/public_incremental_modal_v1/selection_lock.json'],cwd=ROOT))

@@ -26,12 +26,17 @@ class PaperEvidenceTests(unittest.TestCase):
             count=g['stability']['stable_tail']
             self.assertIn(f"| {label} | {schedule} | {size} | {error:.6f} | {count}/5 | {val['mean']:.5f} ± {val['sample_std']:.5f} |",main)
             self.assertIn(f"{label} & {schedule} & {size} & {error:.6f} & {count}/5 & {val['mean']:.5f}",tex)
+        # These three are the numbers the manuscript cites. They are pinned deliberately: if a
+        # re-run changes them the manuscript is stale, not the test.
         wins=sum(p['3000']['val']['improved_seeds'] for p in small['paired_zero_minus_random'].values())
-        self.assertEqual(wins,29)
-        self.assertEqual(sum(g['stability']['stable_tail'] for k,g in stable['groups'].items() if '_cosine_' in k),20)
-        self.assertEqual(stable['previous_controls_exactly_reproduced'],10)
+        self.assertEqual(wins,29,'smallfit zero-init wins changed; main.md section 5.16 cites 29/30')
+        cosine_stable=sum(g['stability']['stable_tail'] for k,g in stable['groups'].items() if '_cosine_' in k)
+        self.assertEqual(cosine_stable,20,'cosine stable-tail count changed; main.md section 5.10 cites 20/20')
+        self.assertEqual(stable['previous_controls_exactly_reproduced'],10,
+                         'stability repeat-control count changed; main.md section 4 cites 10')
         families=['public_fixed_t1_v1','public_coefficients_v1','public_smallfit_v1','public_stability_v1']
-        self.assertEqual(sum(json.loads((ROOT/'results'/f/'summary.json').read_text())['completed_runs'] for f in families),155)
+        total=sum(json.loads((ROOT/'results'/f/'summary.json').read_text())['completed_runs'] for f in families)
+        self.assertEqual(total,155,'completed-run total changed; main.md section 4 cites 155')
 
     def test_active_links_citations_and_archive(self):
         for filename in ('main.md','short_paper.md','ml4ps2026_4page.md','ml4ps2026.tex'):
