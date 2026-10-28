@@ -1366,16 +1366,19 @@ from its stored value beyond a tolerance. The test suite asserts the exact squar
 closure, the invariance of the skill measure to the mean, and that stored metrics are
 reproduced.
 
-Next experiments, in priority order: (i) the disjoint-split replication of
-[docs/REPLICATION_SPLIT2_V1.md](../docs/REPLICATION_SPLIT2_V1.md), which closes the one-split
-limitation above and whose protocol is already fixed; (ii) a FLOP counter that registers FFT
+Next experiments, in priority order: (i) *completed* — the disjoint-split replication of
+[docs/REPLICATION_SPLIT2_V1.md](../docs/REPLICATION_SPLIT2_V1.md) ran in full (315 runs, 21
+families) with the thresholds refitted on split 2; see section 5.17 and section 9 of the protocol
+for the outcomes, including the FNO arm dropping out; (ii) a FLOP counter that registers FFT
 work, so that the matched comparison in section 5.9 rests on a measurement rather than on the
-analytic estimate it currently uses; (iii) work per update matched between the physics-informed arm of
-section 5.11 and the supervised runs, together with a physics-informed FNO control, which the
-present 1D FNO cannot supply because it maps a field to a field at one fixed time and has no
-time coordinate to differentiate; (iii) a compressible system at a second parameter set,
+analytic estimate it currently uses; (iii) *partly completed* — the work-per-update imbalance between
+the physics-informed arm of section 5.11 and the supervised runs is now measured (roughly 10x, in
+favour of the physics-informed arm) but still not matched, and the physics-informed FNO control
+remains unavailable because the present 1D FNO maps a field to a field at one fixed time and has
+no time coordinate to differentiate; (iv) a compressible system at a second parameter set,
 which is what would separate the three candidate explanations that section 5.15 leaves open
-for the 1D CFD failure. No shallow-water or incompressible multi-dimensional system exists in
+for the 1D CFD failure, and whose minimum available size (about 55 GB) is the reason it has not
+been run. No shallow-water or incompressible multi-dimensional system exists in
 the deposit used, so that class remains untested.
 
 ## References
