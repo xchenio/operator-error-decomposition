@@ -1,0 +1,53 @@
+{
+  "purpose": "Quantify the unmatched work per update in the physics-informed arm (manuscript section 5.11), so the caveat carries a measured factor instead of an unquantified one.",
+  "method": "Wall-clock seconds per training update read from the train_seconds and final step recorded in each stored result.json; mean over the five seeds.",
+  "device": "CUDA (NVIDIA GeForce RTX 5060 Laptop GPU)",
+  "unit": "seconds per optimizer step, i.e. one forward, loss, backward and step",
+  "rows": [
+    {
+      "setting": "Burgers Nu=0.01, t=0.50",
+      "architecture": "deeponet_mlp",
+      "seconds_per_update_pi": 0.03911394025343858,
+      "seconds_per_update_supervised": 0.004088856906668903,
+      "ratio": 9.565984123739806
+    },
+    {
+      "setting": "Burgers Nu=0.01, t=0.50",
+      "architecture": "deeponet_fourier",
+      "seconds_per_update_pi": 0.049281715346752505,
+      "seconds_per_update_supervised": 0.00414751232000223,
+      "ratio": 11.882234830040481
+    },
+    {
+      "setting": "Burgers Nu=0.01, t=1.00",
+      "architecture": "deeponet_mlp",
+      "seconds_per_update_pi": 0.03909893909339638,
+      "seconds_per_update_supervised": 0.004070321853346347,
+      "ratio": 9.605859315830724
+    },
+    {
+      "setting": "Burgers Nu=0.01, t=1.00",
+      "architecture": "deeponet_fourier",
+      "seconds_per_update_pi": 0.04925807846666236,
+      "seconds_per_update_supervised": 0.004160893266702381,
+      "ratio": 11.838342228302505
+    },
+    {
+      "setting": "linear advection, t=1.00",
+      "architecture": "deeponet_mlp",
+      "seconds_per_update_pi": 0.03664000873352245,
+      "seconds_per_update_supervised": 0.0039009109199900803,
+      "ratio": 9.392680193172836
+    },
+    {
+      "setting": "linear advection, t=1.00",
+      "architecture": "deeponet_fourier",
+      "seconds_per_update_pi": 0.05028703476006631,
+      "seconds_per_update_supervised": 0.003942364626657218,
+      "ratio": 12.755551432264484
+    }
+  ],
+  "ratio_min": 9.392680193172836,
+  "ratio_max": 12.755551432264484,
+  "ratio_mean": 10.84010868722514
+}

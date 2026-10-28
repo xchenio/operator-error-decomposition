@@ -1200,3 +1200,31 @@ Prof. Ru Zhang thanked in its acknowledgments) covers the same broad topic. Chec
 substantive overlap: Burgers, advection, PDEBench, Darcy, CFD, spatial mean and fluctuation each
 appear zero times in it, and it uses self-generated 1D diffusion-reaction data with total
 relative L2 as its only measure. Disclosed in the manuscript and cover letter (3b8846d).
+
+
+### Addendum — physics-informed compute imbalance measured
+
+Section 5.11 previously ended with the unquantified statement that the physics-informed arm "uses
+a different batch and collocation size, so its work per update is not matched to the supervised
+runs". Measured, using the `train_seconds` each training loop recorded for its 1500-update runs on
+the same GPU:
+
+| setting | trunk | PI per update | supervised per update | ratio |
+|---|---|---:|---:|---:|
+| Burgers Nu=0.01, t=0.50 | MLP | 39.11 ms | 4.09 ms | 9.57x |
+| Burgers Nu=0.01, t=0.50 | Fourier | 49.28 ms | 4.15 ms | 11.88x |
+| Burgers Nu=0.01, t=1.00 | MLP | 39.10 ms | 4.07 ms | 9.61x |
+| Burgers Nu=0.01, t=1.00 | Fourier | 49.26 ms | 4.16 ms | 11.84x |
+| linear advection, t=1.00 | MLP | 36.64 ms | 3.90 ms | 9.39x |
+| linear advection, t=1.00 | Fourier | 50.29 ms | 3.94 ms | 12.76x |
+
+Mean 10.8x, range 9.4x to 12.8x. The imbalance therefore runs **against** the physics-
+informed arm: it received roughly an order of magnitude more compute for the same update count and
+still did not reach supervised fluctuation skill, which strengthens rather than weakens the reported
+conclusion. Section 5.11 now says this explicitly, and separates the part that genuinely is not
+matched — the normalisation, since the two arms differ in both batch and collocation size — from the
+part that is.
+
+Recorded by `scripts/measure_pi_update_cost.py`, which reads the stored artifacts rather than
+re-implementing either update; `tests/test_pi_update_cost.py` pins the range so the quoted factor
+cannot drift away from the runs. Suite: 125 tests, all pass.

@@ -902,11 +902,26 @@ supervised fluctuation skill of roughly 0.06 and 0.28 on Burgers at T = 0.5, and
 the linear operator with a Fourier trunk, consistent with translation being the easiest
 residual to satisfy.
 
-Caveats: no physics-informed FNO control was run, because the 1D FNO maps a field to a field
+**The comparison is per update, not compute-matched, and the imbalance runs against the
+physics-informed arm.** Measured on the same GPU from the `train_seconds` recorded by the two
+training loops, one physics-informed update costs **9.4x to 12.8x** what one supervised update costs (mean
+10.8x over the six operator-horizon-architecture combinations), because the residual requires
+second derivatives through the trunk as well as the interior collocation points. The physics-informed
+arm therefore received roughly an order of magnitude *more* compute for the same 1500 updates and
+still did not reach supervised fluctuation skill. That direction favours the reported conclusion, so
+the correct statement is stronger than a caveat: the arm was not starved of compute, it was given more
+of it.
+
+What is *not* matched is the normalisation. The physics-informed arm runs a batch of 4 initial
+conditions against 256 collocation plus 256 initial-condition plus 64 boundary points, while the
+supervised arm runs a batch of 32 samples on the 256-point grid. Equal update counts therefore do
+not mean equal samples seen, and the two arms are not interchangeable point for point; only the
+decomposition quantities and their ratios should be carried across.
+
+Further caveats: no physics-informed FNO control was run, because the 1D FNO maps a field to a field
 at one fixed time and has no time coordinate to differentiate; FNO appears only as the
-supervised reference. This arm also uses a different batch and collocation size, so its work
-per update is not matched to the supervised runs, and it covers two operators because only
-Burgers Nu = 0.01 and linear advection admit a trustworthy residual with the data available.
+supervised reference. The arm covers two operators because only Burgers Nu = 0.01 and linear
+advection admit a trustworthy residual with the data available.
 
 ### 5.12 A scope condition on the per-sample measures
 
