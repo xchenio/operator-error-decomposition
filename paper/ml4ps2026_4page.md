@@ -1,10 +1,15 @@
 > Compatibility filename retained from an earlier venue-specific draft. This file does not
 > assert submission, anonymity compliance, a verified 2026 call, or four-page length.
 
-# Conserved Means and Lost Fluctuations: A Mean/Fluctuation Diagnosis of Operator Learning Across Six PDEBench Operator Families
+# An Exact A Posteriori Error Decomposition for Operator Learning: Conservation, Fluctuation, and the Limit of Branch Capacity
 
 **Short research draft — revised 2026-10-28. Not submitted; no venue acceptance or page-limit
 compliance implied.**
+
+*Retitled with the full manuscript for a computational-mathematics venue: the claim is the
+decomposition and its two proved propositions, not an architecture comparison. The
+fluctuation-energy threshold rule reported in section 3 is empirical and is not claimed as
+theory.*
 
 ## Abstract
 

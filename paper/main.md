@@ -1,13 +1,19 @@
-# Conserved Means and Lost Fluctuations: A Mean/Fluctuation Diagnosis of Operator Learning Across Six PDEBench Operator Families
+# An Exact A Posteriori Error Decomposition for Operator Learning: Conservation, Fluctuation, and the Limit of Branch Capacity
 
-**Evidence-audited research draft v5 — 2026-10-28. Not a submitted manuscript.**
+**Evidence-audited research draft v6 — 2026-10-28. Not a submitted manuscript.**
 
-The earlier title named Burgers only; the study now covers six operator families — linear
-advection, Burgers at two viscosities, diffusion-sorption, steady 2D Darcy, a three-field
-compressible system and a two-field reaction-diffusion system — plus a physics-informed arm,
-so the title was narrowed to the method rather than to one benchmark problem. "Family" counts
-a distinct PDEBench dataset; Burgers at two viscosities and Darcy at two `beta` values are
-one family each, giving eight setting-instances in total.
+*Retitled 2026-10-28 for a computational-mathematics venue. The previous title, "Conserved
+Means and Lost Fluctuations", read as a leaderboard claim about which architecture wins. The
+contribution claimed here is the decomposition itself — Proposition 1 (an exact orthogonal
+split) and Proposition 2 (a hard bound from the trunk span) — and the negative result and the
+branch localisation that follow from it. The empirical threshold rule of section 5.8 is a
+finding of the study, not a claimed theorem, and is labelled as such where it appears.*
+
+The study covers six operator families — linear advection, Burgers at two viscosities,
+diffusion-sorption, steady 2D Darcy, a three-field compressible system and a two-field
+reaction-diffusion system — plus a physics-informed arm. "Family" counts a distinct PDEBench
+dataset; Burgers at two viscosities and Darcy at two `beta` values are one family each, giving
+eight setting-instances in total.
 
 **Latest 2026-09-29 follow-up:** [mean/fluctuation decomposition](../docs/FLUCTUATION_DIAGNOSIS_V1.md).
 The target spatial mean is a conserved quantity, so the previously reported "input-mean
@@ -67,9 +73,9 @@ On linear advection, the same seven horizons show constant fluctuation energy (0
 +0.9994), so the decay tracks nonlinear spectral evolution rather than elapsed forecast
 time. On diffusion-sorption, whose fluctuation energy decays from 0.7333 to 0.6506 without
 approaching any threshold, no architecture decays either (all +0.998 to +1.000), supporting
-the threshold form of the rule over "a longer forecast is harder". A fluctuation-energy
-threshold fitted on the first two PDEs, and never refitted, predicts the sign of skill on
-both held-out families: 6 of 6 diffusion-sorption settings and 21 of 21 Burgers Nu=0.01
+the threshold form of the rule over "a longer forecast is harder". Empirically, a
+fluctuation-energy threshold fitted on the first two PDEs, and never refitted, predicts the
+sign of skill on both held-out families: 6 of 6 diffusion-sorption settings and 21 of 21 Burgers Nu=0.01
 settings, including every threshold crossing, with predicted skill horizons 0.740 / 0.860 /
 1.650 against measured 0.735 / 0.924 / 1.839, and 3 of 3 on a steady elliptic operator where
 the input-output mean correlation is -0.873 and the mean baseline is consequently worthless.
@@ -88,8 +94,9 @@ training, which uses no supervision at the target time, also fails to produce po
 fluctuation skill (-0.0003 and -0.2240), and the split shows it is not worse at the
 fluctuation but at the conserved mean (mean share 0.1246 against 0.0334 supervised).
 
-We claim a diagnostic decomposition and a reproducible negative result, not a new
-architecture or optimizer. Six operator families are studied, most at a single parameter
+We claim a diagnostic decomposition — an exact split and a hard bound, both proved — and a
+reproducible negative result, not a new architecture or optimizer and not a theorem for the
+empirical rule. Six operator families are studied, most at a single parameter
 setting (Burgers at two viscosities, Darcy at two `beta` values), with one physics-informed
 arm and one split per family. Two of the six families are systems of equations, one of which
 falsifies the threshold rule of section 5.8 and one of which confirms it, so systems are
@@ -102,12 +109,17 @@ stable training fit did not produce better validation error. That statement is d
 This version asks what the models actually predict, and answers it with a decomposition
 that turns the dissociation into a measurement.
 
-Contribution candidates:
+**Claimed contributions** (1-5, 7) are the decomposition, the negative result it measures,
+and the localisations that follow. Item 6 is an **empirical regularity found by the study**,
+reported with its falsification; it is not claimed as a theorem and is not what the
+decomposition rests on.
 
-1. A **mean/fluctuation decomposition** with a defined zero-fluctuation reference, an
-   exact orthogonal split of squared error, and two skill measures that differ in how they
-   weight samples. It identifies the widely used "input spatial-mean baseline" as a
-   conservation-law predictor.
+1. A **mean/fluctuation decomposition**, stated as two propositions with proofs: an exact
+   orthogonal split of squared error into a conserved-mean part and a fluctuation part
+   (Proposition 1), and a hard upper bound on fluctuation skill depending only on the trunk
+   span (Proposition 2). It supplies a defined zero-fluctuation reference and two skill
+   measures that differ in how they weight samples, and it identifies the widely used
+   "input spatial-mean baseline" as a conservation-law predictor.
 2. A **negative result with a boundary rather than a mechanism**: on this protocol DeepONet
    reproduces a conserved quantity and has no per-sample fluctuation skill, and the skill it
    does have at short forecast horizons decays to zero as the horizon grows. The decay is
@@ -123,7 +135,8 @@ Contribution candidates:
    with forecast horizon while the map onto it does, so on this protocol the constraint is
    the branch — the input-to-coefficient mapping — and not the trunk basis. This qualifies
    rather than contradicts the basis-quality line of work in [2].
-6. A **prospective predictor, stated with its boundary**. An a-priori fluctuation-energy
+6. *(Empirical, not claimed as theory.)* A **prospective predictor, stated with its boundary**.
+   An a-priori fluctuation-energy
    threshold, fitted on two scalar families and never refitted, predicts the sign of
    fluctuation skill on held-out settings: 52 of 55 preregistered sign predictions are
    correct, of which 27 of 30 are on settings that can actually discriminate and 5 of 6 are
@@ -650,7 +663,15 @@ This is what the skill horizon reflects: the reachable set does not shrink with 
 the map onto it does. It is a statement about where the loss occurs, not a causal mechanism
 for why.
 
-### 5.8 Toward a prospective predictor
+### 5.8 An empirical boundary, not a theorem
+
+> **Status of this section.** Everything below is an empirical regularity observed in this
+> study. It is not derived from Proposition 1 or 2, no theorem is claimed for it, and the
+> decomposition in section 3 does not depend on it. It is included because it is the only part
+> of the study that makes a *prospective* prediction and because its failure on one operator is
+> informative; readers interested only in the decomposition can skip to section 5.9 without
+> loss of continuity. The thresholds are numbers fitted on two families, not derived
+> quantities, and the rule is stated with the operator on which it fails.
 
 The skill horizon is measured after training. A diagnostic method should predict it before.
 `scripts/predict_skill_horizon.py` computes five statistics from the **training split only**,
