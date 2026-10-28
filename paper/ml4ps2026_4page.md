@@ -1,9 +1,9 @@
 > Compatibility filename retained from an earlier venue-specific draft. This file does not
 > assert submission, anonymity compliance, a verified 2026 call, or four-page length.
 
-# Conserved Means and Lost Fluctuations: A Mean/Fluctuation Diagnosis of Operator Learning Across Six PDEBench Settings
+# Conserved Means and Lost Fluctuations: A Mean/Fluctuation Diagnosis of Operator Learning Across Six PDEBench Operator Families
 
-**Short research draft — revised 2026-10-08. Not submitted; no venue acceptance or page-limit
+**Short research draft — revised 2026-10-28. Not submitted; no venue acceptance or page-limit
 compliance implied.**
 
 ## Abstract

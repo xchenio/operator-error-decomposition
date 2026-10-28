@@ -1,10 +1,13 @@
-# Conserved Means and Lost Fluctuations: A Mean/Fluctuation Diagnosis of Operator Learning Across Five PDEBench Settings
+# Conserved Means and Lost Fluctuations: A Mean/Fluctuation Diagnosis of Operator Learning Across Six PDEBench Operator Families
 
-**Evidence-audited research draft v4 — 2026-10-08. Not a submitted manuscript.**
+**Evidence-audited research draft v5 — 2026-10-28. Not a submitted manuscript.**
 
-The earlier title named Burgers only; the study now covers linear advection, Burgers at two
-viscosities, diffusion-sorption, steady 2D Darcy and a three-field CFD system, plus a
-physics-informed arm, so the title was narrowed to the method rather than the benchmark.
+The earlier title named Burgers only; the study now covers six operator families — linear
+advection, Burgers at two viscosities, diffusion-sorption, steady 2D Darcy, a three-field
+compressible system and a two-field reaction-diffusion system — plus a physics-informed arm,
+so the title was narrowed to the method rather than to one benchmark problem. "Family" counts
+a distinct PDEBench dataset; Burgers at two viscosities and Darcy at two `beta` values are
+one family each, giving eight setting-instances in total.
 
 **Latest 2026-09-29 follow-up:** [mean/fluctuation decomposition](../docs/FLUCTUATION_DIAGNOSIS_V1.md).
 The target spatial mean is a conserved quantity, so the previously reported "input-mean
@@ -28,8 +31,9 @@ supervised operator learning, not a physics-informed training result.
 On periodic Burgers the spatial mean of the solution is conserved, so a model can appear
 competitive on relative L2 while predicting nothing beyond a conserved scalar. We separate
 prediction error into a conserved-mean part and a fluctuation part and measure skill on
-each, across five PDEBench settings (linear advection, Burgers at two viscosities,
-diffusion-sorption, steady 2D Darcy, a three-field CFD system) and one physics-informed arm.
+each, across six PDEBench operator families (linear advection, Burgers at two viscosities,
+diffusion-sorption, steady 2D Darcy, a three-field compressible system and a two-field
+reaction-diffusion system) and one physics-informed arm.
 On PDEBench 1D Burgers (Nu0.001), forecasting t=0 to t=1.0, the conserved mean
 carries 97.4% of the target energy and the fluctuation carries 23.7% of the per-sample
 squared norm; the exact input mean alone already achieves 0.37577 mean relative L2.
@@ -85,8 +89,11 @@ fluctuation skill (-0.0003 and -0.2240), and the split shows it is not worse at 
 fluctuation but at the conserved mean (mean share 0.1246 against 0.0334 supervised).
 
 We claim a diagnostic decomposition and a reproducible negative result, not a new
-architecture or optimizer. Four operators at one parameter setting each, one physics-informed
-arm, and one split per family are studied; a system of equations remains open.
+architecture or optimizer. Six operator families are studied, most at a single parameter
+setting (Burgers at two viscosities, Darcy at two `beta` values), with one physics-informed
+arm and one split per family. Two of the six families are systems of equations, one of which
+falsifies the threshold rule of section 5.8 and one of which confirms it, so systems are
+covered but not settled.
 
 ## 1. Research question and contribution
 
@@ -609,7 +616,7 @@ diffusion-sorption 6), and correlates them with the measured skill.
 Within Burgers alone the correlation of fluctuation energy with skill is 1.000 for MLP and
 FNO and 0.964 for Fourier, n = 7.)
 
-**The threshold rule now has two out-of-sample tests, and it passes both.** The thresholds
+**The threshold rule now has three out-of-sample tests, and it passes all three.** The thresholds
 are interpolated from Burgers Nu0.001 and advection only — about 0.248 for MLP DeepONet,
 0.273 for Fourier DeepONet and 0.150 for FNO — and then applied unchanged to:
 
@@ -1033,11 +1040,13 @@ superior; at t=2.00 FNO is below zero as well.
 
 Limitations:
 
-- Six settings, one parameter set each: linear transport, nonlinear convection-diffusion at
-  two viscosities, dissipative parabolic, one steady elliptic two-dimensional problem, a
-  three-field compressible system, and a two-field two-dimensional system. Splits are
-  1000/200/200 except the reaction-diffusion file, which holds only 1000 samples and uses
-  600/200/200. No shallow-water data exists in the deposit used.
+- Six operator families, eight setting-instances: linear transport; nonlinear
+  convection-diffusion at two viscosities; dissipative parabolic; one steady elliptic
+  two-dimensional problem at two `beta` values; a three-field compressible system; and a
+  two-field two-dimensional reaction-diffusion system. Most families are studied at one
+  parameter setting each. Splits are 1000/200/200 except the reaction-diffusion file, which
+  holds only 1000 samples and uses 600/200/200. No shallow-water data exists in the deposit
+  used.
 - **Benchmark age and data version.** The PDEBench *paper* is 2022 [4], but the *data* is a
   separately versioned deposit: we use DaRUS `doi:10.18419/darus-2986` **version 8, released
   2024-02-13, the latest released version as of 2026-10-08**. The files were downloaded between 2026-09-22 and
