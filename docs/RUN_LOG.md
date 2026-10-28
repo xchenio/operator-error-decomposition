@@ -1084,3 +1084,78 @@ manifest before launching and the FNO job checkpoints every 25 steps.
   operator-horizon combinations the recovered fraction of supervised skill is at most 0.38 and
   is never close to 1. Reported as measured; nothing adjusted.
 - Full discovery: 78 tests passed.
+
+## 2026-10-28 — submission-readiness pass (no new experiments)
+
+Interpreter: conda env pytorch, Python 3.11.16, torch 2.14.0+cu130, numpy 2.4.6,
+scipy 1.17.1, h5py 3.16.0, matplotlib 3.11.2. No training was run; no dataset was downloaded.
+Full suite at the end: **95 tests, all pass**.
+
+### Manuscript corrections
+- **FLOP contradiction removed.** Section 6 still said "No FLOP-level accounting or
+  FLOP-matched control was run" and section 8 listed it as future work, while section 5.9
+  reports both. Replaced with the limitation that actually remains: the FFT term is an
+  analytic estimate that belongs to FNO, so any error in it favours FNO.
+- **Operator count unified at six families** (advection, Burgers, diffusion-sorption, Darcy,
+  compressible CFD, reaction-diffusion), with Burgers at two viscosities and Darcy at two
+  beta values called out as setting-instances. The title said five, the abstract listed five
+  while omitting reaction-diffusion, the short draft said six and section 6 said six while
+  listing seven.
+- **Contribution list completed** with the trunk-span bound, the preregistered threshold rule
+  and the physics-informed localisation. Contribution 2 said "a negative result with a
+  mechanism" while section 6 disclaims any causal mechanism; restated as a result with a
+  quantified boundary. The same word softened in 5.7.
+- **Proposition 1 and 2 added** with proofs (the manuscript previously had no theorem-like
+  environment at all), which is what JCP/SISC/CMAME expect.
+
+### The 52-of-55 record is now stratified
+experiments/prediction_ledger.json records all 55 predictions with preregistration doc and
+commit, a-priori fluctuation energy, threshold, and measured value with seed sd.
+scripts/analyze_prediction_ledger.py recomputes each prediction from the rule (so a
+hand-typed sign cannot drift), stratifies, and compares with an always-positive baseline.
+
+| stratum | n | correct | accuracy | 95% Wilson CI |
+|---|---:|---:|---:|---|
+| all | 55 | 52 | 94.5% | [85.1, 98.1] |
+| saturated (R^2 >= 0.9) | 25 | 25 | 100% | [86.7, 100] |
+| informative | 30 | 27 | 90.0% | [74.4, 96.5] |
+| boundary (within 15% of threshold) | 6 | 5 | 83.3% | [43.6, 97.0] |
+| resolvable (\|R^2\| > 2 sd) | 47 | 46 | 97.9% | [88.9, 99.6] |
+| informative AND resolvable | 22 | 21 | 95.5% | [78.2, 99.2] |
+
+Always-positive baseline: 41/55 overall but **16/30 (53.3%, CI [36.1, 69.8])** on the
+informative subset against the rule's 27/30 (90.0%, CI [74.4, 96.5]); the intervals do not
+overlap there. The saturated cut is signed on purpose — a large negative R^2 is a decisive
+failure and stays informative.
+
+### Engineering
+- README rewritten: it described the withdrawn Basis-Align programme and cited only its legacy
+  scripts, restating claims that main.md section 7 retracts.
+- Hardcoded D:\miniconda3 and :\Desktop\temp removed from AGENTS.md, RUNBOOK.md,
+  PDEBENCH_PROTOCOL.md, README.md, six .cmd drivers and one test docstring. Historical logs
+  keep their original interpreter path on purpose — they are records of what ran.
+- environment.yml pinned (matplotlib was unpinned); equirements.txt added with torch
+  deliberately excluded because the right wheel depends on the local CUDA runtime.
+- Dead scripts removed (ench2.py, ench3.py, plot_gain_vs_std.py); src/__init__.py
+  completed; legacy anonymous bundle moved to paper/archive/pre_audit_20260924/.
+- Archive-dependent tests now skip instead of erroring, so the suite runs on a fresh clone
+  where external_data/ is absent. 	ests/conftest.py and a GitHub Actions workflow added.
+
+### Attempted and deliberately not done
+Unifying the four source_hash() copies into one import. Each frozen list begins with the
+entry script itself, so editing un_public_benchmark.py to import a shared function changes
+that script's bytes and therefore its own hash, invalidating every run recorded under it.
+Instead src/source_hash.py records the authoritative lists with the reason, and
+	ests/test_source_hash.py pins each live value against esults/source_hash_baseline.json.
+
+That tripwire caught a real incident: with core.autocrlf = true, a git checkout -- during
+this work rewrote un_public_benchmark.py with CRLF and changed its hash from
+c76c1a62... to 1e618e5b.... The file has been restored to its committed bytes and
+re-verified. Lesson: on this repository, a checkout can silently change a run identity.
+
+### Next
+- arXiv preprint (cs.LG, cross-list math.NA); a single author without an institutional
+  address may need an endorser, so start early.
+- Primary submission JCP; fallback CMAME, TMLR, Neurocomputing. See docs/VENUE_STRATEGY_V1.md.
+- Before submitting, re-check APC policy, editorial scope, and that the PDEBench deposit is
+  still version 8.
