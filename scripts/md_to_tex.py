@@ -34,6 +34,21 @@ SKIP_PREFIXES = (
     "*Retitled 2026-10-28",
 )
 
+# JCP wants keywords and so does the front matter; the metadata file is the
+# single place they are defined, so the two documents cannot diverge.
+def _load_keywords() -> list[str]:
+    meta = ROOT / "paper/arxiv_metadata.md"
+    try:
+        block = meta.read_text(encoding="utf-8").split("## Keywords", 1)[1]
+        block = block.split("## Highlights", 1)[0]
+        keys = [k.strip() for k in block.replace("\n", " ").split(";") if k.strip()]
+        return [k for k in keys if not k.startswith("(")]
+    except (IndexError, OSError):
+        return []
+
+
+KEYWORDS = _load_keywords()
+
 
 # pdflatex, which arXiv uses by default, has no glyphs for several characters
 # the manuscript uses. Replacing them here keeps the source compilable there
@@ -117,6 +132,15 @@ def protect(text: str):
         return stash("$" + m.group(0) + "$")
 
     text = re.sub(r"R\^2", sup, text)
+
+    # Bare URLs. Escaping would mangle them and they do not break across lines,
+    # so they are stashed as \url, which hyperref allows to break. The
+    # lookbehind keeps URLs that are the target of a Markdown link untouched;
+    # those become \href later.
+    def url(m):
+        return stash(r"\url{" + m.group(1) + "}")
+
+    text = re.sub(r"(?<!\()\b(https?://[^\s\)\]]+)", url, text)
     return text, slots
 
 
@@ -178,6 +202,10 @@ def to_tabular(rows: list[str], slots: list[str]) -> str:
     spec = "".join(aligns[:ncols])
 
     out = [r"\begin{center}",
+           # Shrink to fit only when the table is wider than the text block;
+           # narrow tables are left at natural size.
+           r"\begin{adjustbox}{max width=\linewidth}",
+           r"\small",
            r"\begin{tabular}{%s}" % spec, r"\toprule"]
     head, *body = cells
     out.append(" & ".join(inline(c, slots) for c in head) + r" \\")
@@ -185,7 +213,7 @@ def to_tabular(rows: list[str], slots: list[str]) -> str:
     for row in body:
         padded = row + [""] * (ncols - len(row))
         out.append(" & ".join(inline(c, slots) for c in padded) + r" \\")
-    out += [r"\bottomrule", r"\end{tabular}", r"\end{center}"]
+    out += [r"\bottomrule", r"\end{tabular}", r"\end{adjustbox}", r"\end{center}"]
     return "\n".join(out)
 
 
@@ -202,9 +230,12 @@ def convert(md: str) -> str:
     lines = md.splitlines()
 
     body: list[str] = []
+    preface: list[str] = []
     i = 0
     title_done = False
     orcid = ""
+    in_pre = False            # between the author block and the abstract
+    first_section_done = False
     abstract_open = False
     keywords_open = False
     in_refs = False
@@ -242,6 +273,7 @@ def convert(md: str) -> str:
             addr = raw.strip().split("·")[0].strip().rstrip(".")
             body.append(r"\address{%s. %s}" % (addr, orcid) if orcid
                         else r"\address{%s}" % addr)
+            in_pre = True
             i += 1
             continue
 
@@ -249,7 +281,9 @@ def convert(md: str) -> str:
         m = re.match(r"^(#{2,4})\s+(.*)$", line)
         if m:
             level, title = len(m.group(1)), m.group(2).strip()
-            title = re.sub(r"^(\d+(\.\d+)*)\.?\s*", r"\1 ", title)
+            # LaTeX numbers sections itself; keeping the manuscript's manual
+            # numbers would double them up ("2. 2 Related work and overlap").
+            title = re.sub(r"^(\d+(\.\d+)*)\.?\s*", "", title)
             cmd = {2: "section", 3: "subsection", 4: "subsubsection"}[level]
             if in_refs:
                 in_refs = False  # a new heading closes the reference list
@@ -267,10 +301,27 @@ def convert(md: str) -> str:
                 i += 1
                 continue
             if title.startswith("Abstract"):
+                in_pre = False
                 body.append(r"\begin{abstract}")
                 abstract_open = True
                 i += 1
                 continue
+
+            # The first numbered section ends the front matter. Anything read
+            # before the abstract (the scope paragraph and the changelog notes)
+            # belongs to the body, not to front matter, where it would suppress
+            # the title block entirely.
+            if not first_section_done:
+                if abstract_open:
+                    body.append(r"\end{abstract}")
+                    abstract_open = False
+                body.append(r"\begin{keyword}")
+                body.append(r" \sep ".join(KEYWORDS))
+                body.append(r"\end{keyword}")
+                body.append(r"\end{frontmatter}")
+                body.extend(preface)
+                preface.clear()
+                first_section_done = True
             if title.startswith("Keywords"):
                 body.append(r"\begin{keyword}")
                 keywords_open = True
@@ -348,9 +399,8 @@ def convert(md: str) -> str:
             continue
 
         # --- ordinary paragraph ---
-        if abstract_open and re.match(r"^##\s", line):
-            abstract_open = False
-        body.append(inline(line, slots))
+        target = preface if in_pre else body
+        target.append(inline(line, slots))
         i += 1
 
     if ref_buf:
@@ -358,14 +408,13 @@ def convert(md: str) -> str:
 
     text = "\n".join(body)
 
-    # The abstract is closed by the next section, and frontmatter closes with it.
-    if r"\begin{abstract}" in text and r"\end{abstract}" not in text:
-        first = text.find("\\section")
-        if first > 0:
-            text = (text[:first] + "\\end{abstract}\n\n\\end{frontmatter}\n\n"
-                    + text[first:])
-        else:
-            text += "\n\\end{abstract}\n\n\\end{frontmatter}\n"
+    # Safety net: if the document somehow ends without a numbered section, the
+    # front matter must still be closed or nothing will render.
+    if not first_section_done:
+        if r"\begin{abstract}" in text and r"\end{abstract}" not in text:
+            text += "\n\\end{abstract}"
+        text += "\n\\begin{keyword}\n" + r" \sep ".join(KEYWORDS) \
+            + "\n\\end{keyword}\n\\end{frontmatter}\n" + "\n".join(preface)
 
     # Emit the reference list.
     if refs:
@@ -385,6 +434,7 @@ PREAMBLE = r"""\documentclass[preprint,12pt]{elsarticle}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{adjustbox}
 \usepackage{hyperref}
 
 % Left empty: the arXiv version is not tied to a journal.
