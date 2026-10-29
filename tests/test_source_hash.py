@@ -11,7 +11,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
     sys_path_inserted = True
 
-from src.source_hash import FROZEN_FILE_LISTS, source_files, source_hash  # noqa: E402
+from src.source_hash import (  # noqa: E402
+    FROZEN_FILE_LISTS, file_bytes, source_files, source_hash)
 
 
 class FrozenValueTest(unittest.TestCase):
@@ -50,7 +51,7 @@ class ContractTest(unittest.TestCase):
         manual = hashlib.sha256()
         for path in source_files("public_benchmark"):
             manual.update(path.name.encode())
-            manual.update(path.read_bytes())
+            manual.update(file_bytes(path))
         self.assertEqual(manual.hexdigest(), source_hash("public_benchmark"))
 
 

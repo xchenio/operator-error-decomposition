@@ -7,6 +7,11 @@ from scripts.allen_cahn_data import initial,solve,reaction
 
 
 class FieldModalTest(unittest.TestCase):
+    def setUp(self):
+        root=Path(__file__).resolve().parents[1]
+        if not (root/'external_data/pdebench/fixed_t1_v1/protocol.json').exists():
+            self.skipTest('external_data is git-ignored and absent on a fresh checkout')
+
     def test_fresh_id_reservations(self):
         root=Path(__file__).resolve().parents[1]
         p=json.loads((root/'results/public_field_modal_v1/plan.json').read_text())

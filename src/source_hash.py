@@ -29,7 +29,10 @@ Hashing scheme (unchanged)
 --------------------------
 For each file in order: update with the file's *name*, then with its *bytes*. Including the
 name and not the full path keeps the value independent of where the repository is checked
-out.
+out. Line endings are normalised to LF before hashing, so the identity depends on the code
+and not on the platform that checked it out: `core.autocrlf=true` on Windows and a Linux
+checkout otherwise produce different bytes for the same commit, which would give the same
+run two different identities.
 """
 from __future__ import annotations
 
@@ -77,6 +80,15 @@ FROZEN_FILE_LISTS: dict[str, list[str]] = {
 }
 
 
+def file_bytes(path: Path) -> bytes:
+    """The bytes that enter the hash: the file with line endings normalised.
+
+    Shared with the test that recomputes the hash by hand, so the two cannot
+    disagree about what is being hashed.
+    """
+    return path.read_bytes().replace(b"\r\n", b"\n")
+
+
 def source_hash(kind: str) -> str:
     """Return the frozen source hash for `kind`.
 
@@ -90,7 +102,7 @@ def source_hash(kind: str) -> str:
     for relative in FROZEN_FILE_LISTS[kind]:
         path = ROOT / relative
         h.update(path.name.encode())
-        h.update(path.read_bytes())
+        h.update(file_bytes(path))
     return h.hexdigest()
 
 
