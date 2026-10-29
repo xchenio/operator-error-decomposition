@@ -71,8 +71,8 @@ learning; reproducibility
 
 ## Notes for the author before submitting
 
-1. The Data availability statement still carries the marker
-   `[fill: Zenodo concept DOI once the deposit is public]`. Replace it with the concept DOI.
+1. The code archive DOI is `https://doi.org/10.5281/zenodo.23765688` (concept DOI, all
+   versions). It is already filled into the Data availability statement.
 2. arXiv requires preprints to be labelled as such. The arXiv-only references already carry
    `https://arxiv.org/abs/...`; confirm the surrounding text says "preprint".
 3. JCP imposes no page limit, so the ~30-page length is not a defect in itself, but the handling

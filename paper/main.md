@@ -1470,7 +1470,7 @@ MD5 together with a publisher revision identifier (`HuggingFace pdebench/Burgers
 `97bf5bb5315b9a083b4f9fc03e5c84d35286d52c`; DaRUS `doi:10.18419/darus-2986` version 8), and the
 repository provides the download scripts, so every result in this paper is reproducible on the
 exact bytes used. All recomputed quantities and every protocol document are retained in the
-repository. The code is archived with a DOI: [fill: Zenodo concept DOI once the deposit is public].
+repository. The code is archived with a DOI: https://doi.org/10.5281/zenodo.23765688.
 
 ## Author contribution
 
