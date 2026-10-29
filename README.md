@@ -6,10 +6,15 @@ operator families, with preregistered protocols and prediction ledgers.
 **Xiaochen Yan** · ORCID [0009-0002-9280-4323](https://orcid.org/0009-0002-9280-4323) ·
 Independent Researcher · MIT licensed
 
-> **Status.** Evidence-audited research draft, not a submitted manuscript.
-> **The authoritative text is [`paper/main.md`](paper/main.md);** this file is only a map of
-> the repository. The current scientific position is summarised in
+> **Status — preprint, not peer-reviewed.** [`paper/main.md`](paper/main.md) is the unrefereed
+> manuscript submitted for review. It is posted here so that every number in it can be checked
+> against the archived runs, and it must not be cited as a published result. The code for this
+> version is archived at [10.5281/zenodo.23765688](https://doi.org/10.5281/zenodo.23765688);
+> this file is only a map of the repository. The current scientific position is summarised in
 > [`docs/CURRENT_CONCLUSIONS.md`](docs/CURRENT_CONCLUSIONS.md).
+>
+> Once a version of record exists, cite that instead. Per the publisher's policy the accepted
+> manuscript is deliberately **not** posted here — only this preprint is.
 >
 > *The previous title was "Conserved Means and Lost Fluctuations". It was changed because it read
 > as a claim about which architecture wins, whereas what is offered here is the decomposition

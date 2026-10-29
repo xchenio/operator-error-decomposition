@@ -6,7 +6,13 @@ ORCID: 0009-0002-9280-4323
 
 Independent Researcher, Shenzhen, China · [fill: email]
 
-**Evidence-audited research draft v6 — 2026-10-28. Not a submitted manuscript.**
+**Preprint — not peer-reviewed.** This is the version submitted for review; it has not been
+through peer review and should not be cited as a published result. The code that produced
+every number in it is archived at https://doi.org/10.5281/zenodo.23765688. Once a version of
+record exists, cite that instead of this document.
+
+> Repository note: the paragraph below records why the title changed and is not part of the
+> submission. It is stripped from the LaTeX source by `scripts/md_to_tex.py`.
 
 *Retitled 2026-10-28 for a computational-mathematics venue. The previous title, "Conserved
 Means and Lost Fluctuations", read as a leaderboard claim about which architecture wins. The
