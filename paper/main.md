@@ -244,7 +244,7 @@ the claim. For tightness, take `p_j = P y_{c,j} + c\,1 \in S` for any constant `
 fluctuation is `P y_{c,j}`, which attains equality. Such a `p_j` is realised by choosing
 the coefficient vector per sample, i.e. by an oracle branch. ∎
 
-The bound is evaluated in section 5.7 on 50 trained trunks and is never violated. This is an
+The bound is evaluated in section 5.7 on 45 trained trunks and is never violated. This is an
 identity about the trunk's span, hence a **hard upper bound**, not an attribution.
 It requires the trunk but no branch training. Comparing it with achieved skill separates two
 failure modes: achieved near the bound means the trunk span is binding; achieved far below it
@@ -605,7 +605,7 @@ well defined for any field, which is why the skill measure carries over unchange
 ### 5.7 The binding constraint is the branch, not the trunk
 
 Section 3.3 gives an exact upper bound on fluctuation skill that depends only on the trunk
-span. `scripts/skill_bound.py` evaluates it on the trained trunks of five settings, using
+span. `scripts/skill_bound.py` evaluates it on the trained trunks of nine settings, using
 the same rcond as the projection audit.
 
 | Setting | Trunk | basis rank | **bound** | achieved | **branch gap** |
@@ -620,7 +620,7 @@ the same rcond as the projection audit.
 | Burgers t = 1.00 | MLP | 4.4 | +0.5072 ± 0.0516 | -0.0042 | 0.511 |
 | Burgers t = 2.00 | MLP | 4.2 | +0.5180 ± 0.0462 | -0.0918 | 0.610 |
 
-The bound is never violated in any of the 50 evaluated trunks, which is the empirical check
+The bound is never violated in any of the 45 evaluated trunks, which is the empirical check
 that the statement in section 3.3 holds on real checkpoints and not only on paper.
 
 Three consequences:
@@ -969,7 +969,7 @@ a missing reference:
 | Vx | 1.12518 | **-0.8215 ± 0.4606** | -0.0160 | -0.2356 |
 | pressure | 0.08858 | **-0.2501 ± 0.0689** | -0.0448 | -0.1967 |
 
-**FNO is worse than both DeepONet trunks on every component of the system**, whereas on every
+**FNO is worse than both DeepONet trunks on `Vx` and `pressure`, and worse than the MLP trunk but not the Fourier trunk on `density` (-0.0628 +- 0.0323 against -0.1132)**, whereas on every
 scalar problem it is far better (+0.65 to +0.99 against -0.09 to -0.24). The FNO advantage is
 therefore specific to single-field inputs: it does not merely shrink on a system, it reverses.
 This also explains the rule's failure, since the thresholds encode a large FNO-to-DeepONet gap
@@ -1033,7 +1033,8 @@ the same as on every scalar problem:
 | 1 | **+0.9879 ± 0.0053** | +0.3734 | +0.0910 |
 
 FNO dominates here by more than 0.6 in R^2, exactly as it does on the scalar families, and in
-complete contrast to 1D compressible CFD, where FNO is the *worst* of the three (section
+complete contrast to 1D compressible CFD, where FNO is the *worst* of the three on `Vx` and
+`pressure`, though not on `density` (section
 5.13). So it is not coupling, and not a multi-field input, that costs FNO its advantage; the
 CFD system remains the single exception in the study, on every architecture.
 
@@ -1236,7 +1237,7 @@ a PDE with a conserved spatial mean, three numbers are cheap and each answers a 
    separate these cases, because the conserved mean is the easy part and it sits in the
    denominator.
 2. **Report per-sample fluctuation `R^2` alongside the energy-weighted one.** The two disagree in
-   sign on Burgers `Nu = 0.01` (section 5.4), and which is chosen determines whether the
+   sign on Burgers `Nu = 0.001` (section 5.4), and which is chosen determines whether the
    same result reads as success or failure. Say which is the headline.
 3. **State the forecast horizon and re-measure at it.** Trunk quality is horizon-dependent: the
    Fourier trunk leads the MLP trunk by +0.2553 at `t = 0.25` and trails it by -0.0892 at
