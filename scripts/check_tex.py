@@ -39,22 +39,32 @@ def main() -> None:
 
     # Structural counts: the LaTeX must carry every section of the manuscript.
     # "Abstract" and "References" become environments rather than \section, so
-    # they are expected to be absent from the section count.
+    # they are expected to be absent from the section count. Heading depth is
+    # read from the numbering, because the manuscript writes "5.6" and "5.6.1"
+    # with the same number of hashes.
+    def depth(title: str) -> int | None:
+        m = re.match(r"^(\d+(?:\.\d+)*)", title)
+        return len(m.group(1).split(".")) if m else None
+
     md_sections = [s for s in re.findall(r"^##\s+(.+)$", md, flags=re.M)
                    if not s.startswith(("Abstract", "References"))]
-    md_subs = re.findall(r"^###\s+(.+)$", md, flags=re.M)
+    md_third = re.findall(r"^###\s+(.+)$", md, flags=re.M)
+    md_subs = [s for s in md_third if depth(s) == 2]
+    md_subsubs = [s for s in md_third if depth(s) == 3]
+
     tex_sections = re.findall(r"\\section\{", tex)
     tex_subs = re.findall(r"\\subsection\{", tex)
-    lines.append(f"sections: manuscript {len(md_sections)}, tex {len(tex_sections)}")
-    lines.append(f"subsections: manuscript {len(md_subs)}, tex {len(tex_subs)}")
-    if len(tex_sections) != len(md_sections):
-        lines.append(f"FAIL  section count differs by "
-                     f"{len(md_sections) - len(tex_sections)}")
-        fail += 1
-    if len(tex_subs) != len(md_subs):
-        lines.append(f"FAIL  subsection count differs by "
-                     f"{len(md_subs) - len(tex_subs)}")
-        fail += 1
+    tex_subsubs = re.findall(r"\\subsubsection\{", tex)
+
+    lines.append(f"sections:      manuscript {len(md_sections)}, tex {len(tex_sections)}")
+    lines.append(f"subsections:   manuscript {len(md_subs)}, tex {len(tex_subs)}")
+    lines.append(f"subsubsections: manuscript {len(md_subsubs)}, tex {len(tex_subsubs)}")
+    for label, a, b in (("section", len(md_sections), len(tex_sections)),
+                        ("subsection", len(md_subs), len(tex_subs)),
+                        ("subsubsection", len(md_subsubs), len(tex_subsubs))):
+        if a != b:
+            lines.append(f"FAIL  {label} count differs by {a - b}")
+            fail += 1
 
     # Tables.
     md_tables = len([m for m in re.finditer(r"^\|\s*---", md, flags=re.M)])

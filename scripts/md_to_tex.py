@@ -32,6 +32,12 @@ SKIP_HEADINGS: set[str] = set()
 SKIP_PREFIXES = (
     "**Evidence-audited research draft",
     "*Retitled 2026-10-28",
+    # Change-log entries addressed to readers of the repository, not of the
+    # paper. They report what changed on a given date, which has no place in a
+    # submitted manuscript.
+    "**Latest 2026-09-29 follow-up",
+    "**Earlier 2026-09-29",
+    "**2026-09-24 audit",
 )
 
 # JCP wants keywords and so does the front matter; the metadata file is the
@@ -53,8 +59,13 @@ KEYWORDS = _load_keywords()
 # pdflatex, which arXiv uses by default, has no glyphs for several characters
 # the manuscript uses. Replacing them here keeps the source compilable there
 # rather than only locally under xelatex.
+# U+00B1 becomes a sentinel rather than "$\pm$" straight away: the backslash
+# would make looks_math() treat a plain numeric span as a formula and wrap it
+# in a second pair of dollars. The sentinel is expanded per context instead.
+PM = "@@PM@@"
+
 UNICODE_MAP = {
-    "\u00b1": r"$\pm$",        # PLUS-MINUS SIGN
+    "\u00b1": PM,              # PLUS-MINUS SIGN
     "\u2014": "---",           # EM DASH
     "\u2013": "--",            # EN DASH
     "\u220e": r"$\blacksquare$",  # END OF PROOF
@@ -106,7 +117,7 @@ def protect(text: str):
 
     # Display math: \[ ... \]
     def disp(m):
-        return stash("\\[" + m.group(1) + "\\]")
+        return stash("\\[" + m.group(1).replace(PM, r"\pm") + "\\]")
 
     text = re.sub(r"\\\[(.*?)\\\]", disp, text, flags=re.S)
 
@@ -114,7 +125,8 @@ def protect(text: str):
     def code(m):
         body = m.group(1)
         if looks_math(body):
-            return stash("$" + body + "$")
+            return stash("$" + body.replace(PM, r"\pm") + "$")
+        body = body.replace(PM, r"$\pm$")
         return stash(r"\texttt{" + body.replace("_", r"\_").replace("^", r"\^{}") + "}")
 
     text = re.sub(r"`([^`]+)`", code, text)
@@ -283,8 +295,14 @@ def convert(md: str) -> str:
             level, title = len(m.group(1)), m.group(2).strip()
             # LaTeX numbers sections itself; keeping the manuscript's manual
             # numbers would double them up ("2. 2 Related work and overlap").
+            num = re.match(r"^(\d+(?:\.\d+)*)\.?\s", title)
             title = re.sub(r"^(\d+(\.\d+)*)\.?\s*", "", title)
-            cmd = {2: "section", 3: "subsection", 4: "subsubsection"}[level]
+            # Heading depth comes from the numbering, not from the number of
+            # hashes: the manuscript writes both "5.6" and "5.6.1" as ###, and
+            # taking the hashes would turn 5.6.1 into 5.7, leaving every cross
+            # reference in the text pointing at a section that does not exist.
+            depth = len(num.group(1).split(".")) if num else {2: 1, 3: 2, 4: 3}[level]
+            cmd = {1: "section", 2: "subsection", 3: "subsubsection"}.get(depth, "subsubsection")
             if in_refs:
                 in_refs = False  # a new heading closes the reference list
             if title in SKIP_HEADINGS:
@@ -378,10 +396,22 @@ def convert(md: str) -> str:
             items = []
             while i < len(lines):
                 mm = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)$", lines[i])
-                if not mm or (mm.group(2)[0].isdigit() != ordered):
-                    break
-                items.append(inline(mm.group(3), slots))
-                i += 1
+                if mm and (mm.group(2)[0].isdigit() == ordered):
+                    items.append(inline(mm.group(3), slots))
+                    i += 1
+                    continue
+                # A list entry runs over several source lines. Without absorbing
+                # the continuation each entry becomes its own list and every one
+                # is numbered 1, which is what the seven contributions in
+                # section 1 did.
+                if (items and lines[i].strip()
+                        and re.match(r"^\s{2,}", lines[i])
+                        and not re.match(r"^\s*([-*]|\d+\.)\s+", lines[i])
+                        and not re.match(r"^\s*(#{1,4}\s|\||!\[)", lines[i])):
+                    items[-1] += " " + inline(lines[i].strip(), slots)
+                    i += 1
+                    continue
+                break
             body.append(f"\\begin{{{env}}}")
             for it in items:
                 body.append(r"\item " + it)
@@ -416,12 +446,20 @@ def convert(md: str) -> str:
         text += "\n\\begin{keyword}\n" + r" \sep ".join(KEYWORDS) \
             + "\n\\end{keyword}\n\\end{frontmatter}\n" + "\n".join(preface)
 
+    # Whatever sentinel is left sits in ordinary prose.
+    text = text.replace(PM, r"$\pm$")
+
     # Emit the reference list.
     if refs:
         text += "\n\n\\begin{thebibliography}{%d}\n" % len(refs)
         for r in refs:
             entry = restore(r, slots)
             entry = re.sub(r"\*([^*]+)\*", r"\\emph{\1}", entry)
+            # "(added 2026-10-08; ...)" is a note to co-readers of the
+            # repository about when an entry was checked. It is editorial and
+            # does not belong in a reference list.
+            entry = re.sub(r"\((?:added|checked)\s+[\d-]{10}[^)]*\)", "", entry)
+            entry = re.sub(r"\s{2,}", " ", entry).strip()
             text += "\\bibitem{}\n" + entry + "\n\n"
         text += "\\end{thebibliography}\n"
 

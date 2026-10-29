@@ -4,7 +4,7 @@
 
 ORCID: 0009-0002-9280-4323
 
-Independent Researcher, [fill: city], China · [fill: email]
+Independent Researcher, Shenzhen, China · [fill: email]
 
 **Evidence-audited research draft v6 — 2026-10-28. Not a submitted manuscript.**
 
@@ -46,8 +46,8 @@ conserved-mean part and a fluctuation part and prove a hard upper bound on fluct
 that depends only on the trunk span.
 
 Against a defined zero-fluctuation reference on 1D Burgers (Nu = 0.001, t = 1.0), MLP DeepONet
-scores -0.0042 +- 0.0072 and Fourier DeepONet -0.0934 +- 0.0886 in per-sample fluctuation R^2,
-while FNO scores +0.6503 +- 0.0222 on identical data, split and budget.
+scores -0.0042 ± 0.0072 and Fourier DeepONet -0.0934 ± 0.0886 in per-sample fluctuation R^2,
+while FNO scores +0.6503 ± 0.0222 on identical data, split and budget.
 
 The deficit is horizon-dependent rather than absolute. Across seven horizons every architecture
 decays monotonically, giving an interpolated skill horizon near 0.98 (MLP), 0.86 (Fourier) and
@@ -1126,12 +1126,12 @@ ledger.)
    `Nu = 0.01` trunks at `t = 0.75` (whose energies straddle the two thresholds and for which
    the rule therefore makes *opposite* predictions on the same target), MLP at `t = 1.00`,
    FNO at `t = 1.50`, and both CFD density trunks. The rule is **5 of 6** there, and the
-   single miss is CFD density on the MLP trunk, at `-0.0237 +- 0.0150`.
+   single miss is CFD density on the MLP trunk, at `-0.0237 ± 0.0150`.
 3. **Eight predictions are not statistically resolvable** — the measured value is within two
    seed standard deviations of zero, so their sign is partly a coin flip. The rule is 6 of 8
    there and 46 of 47 where the sign *is* resolvable. Two of the three misses are
    non-resolvable; the one miss with real magnitude is CFD `Vx` on the Fourier trunk at
-   `-0.2356 +- 0.0813` (2.9 sd).
+   `-0.2356 ± 0.0813` (2.9 sd).
 
 **Baseline.** The rule predicted `+` in 44 of 55 cases, so the obvious skeptical baseline is
 "always predict positive". That baseline scores 41 of 55 (74.5%, CI [61.7, 84.2]) overall but
@@ -1163,8 +1163,8 @@ metric exactly.
 
 | | split 1 | split 2 |
 |---|---:|---:|
-| MLP DeepONet per-sample R^2 | -0.0042 +- 0.0072 | **-0.0003 +- 0.0167** |
-| FNO per-sample R^2 | +0.6503 +- 0.0222 | **+0.6162 +- 0.0347** |
+| MLP DeepONet per-sample R^2 | -0.0042 ± 0.0072 | **-0.0003 ± 0.0167** |
+| FNO per-sample R^2 | +0.6503 ± 0.0222 | **+0.6162 ± 0.0347** |
 | FNO - MLP gap | +0.6545 | **+0.6165** |
 
 All three fall inside the predeclared bands, so R0 passes. **The dissociation is not an artifact of
@@ -1173,36 +1173,36 @@ one split.**
 **Secondary endpoint: thresholds are stable where they exist.** MLP moved 0.2477 → **0.2444**
 (1.3% drift) and Fourier 0.2728 → **0.3045** (11.6% drift), both inside the 25% band with the
 ordering preserved. **The FNO branch has no threshold on split 2 at all**: FNO's measured per-sample
-fluctuation R^2 stays positive across all seven fitting horizons, reaching +0.0972 +- 0.1689 at
-`t = 2.00` where split 1 gave -0.0586 +- 0.2357. With no sign change there is nothing to
+fluctuation R^2 stays positive across all seven fitting horizons, reaching +0.0972 ± 0.1689 at
+`t = 2.00` where split 1 gave -0.0586 ± 0.2357. With no sign change there is nothing to
 interpolate, so the rule issues no FNO prediction. That is not a miss — nothing was predicted and
 nothing was wrong — but it removes the FNO arm from the replication, and it shows that section 5.5's
 statement that FNO falls below zero at `t = 2.00` is split-dependent. On split 2 it does not
-cross, though at +0.0972 +- 0.1689 the margin is not distinguishable from zero either way.
+cross, though at +0.0972 ± 0.1689 the margin is not distinguishable from zero either way.
 
 **Secondary endpoint: held-out signs, 13 of 14.** With FNO unscored, the 21 preregistered
 predictions become 14 (two architectures, seven horizons).
 
 | t | fluctE | architecture | predicted | measured | |
 |---:|---:|---|---|---:|---|
-| 0.10 | 0.5721 | MLP | + | **+0.1798 +- 0.0119** | correct |
-| 0.10 | 0.5721 | Fourier | + | **+0.6467 +- 0.0271** | correct |
-| 0.25 | 0.4551 | MLP | + | **+0.1409 +- 0.0163** | correct |
-| 0.25 | 0.4551 | Fourier | + | **+0.3680 +- 0.0220** | correct |
-| 0.50 | 0.3403 | MLP | + | **+0.0555 +- 0.0434** | correct |
-| 0.50 | 0.3403 | Fourier | + | **+0.0318 +- 0.1243** | correct |
-| 0.75 | 0.2678 | MLP | + | **-0.0332 +- 0.0708** | **wrong** |
-| 0.75 | 0.2678 | Fourier | - | **-0.4405 +- 0.3456** | correct |
-| 1.00 | 0.2190 | MLP | - | **-0.1032 +- 0.1055** | correct |
-| 1.00 | 0.2190 | Fourier | - | **-0.8114 +- 0.2929** | correct |
-| 1.50 | 0.1597 | MLP | - | **-0.1206 +- 0.0334** | correct |
-| 1.50 | 0.1597 | Fourier | - | **-0.8781 +- 0.0611** | correct |
-| 2.00 | 0.1248 | MLP | - | **-0.0431 +- 0.0453** | correct |
-| 2.00 | 0.1248 | Fourier | - | **-0.5368 +- 0.1474** | correct |
+| 0.10 | 0.5721 | MLP | + | **+0.1798 ± 0.0119** | correct |
+| 0.10 | 0.5721 | Fourier | + | **+0.6467 ± 0.0271** | correct |
+| 0.25 | 0.4551 | MLP | + | **+0.1409 ± 0.0163** | correct |
+| 0.25 | 0.4551 | Fourier | + | **+0.3680 ± 0.0220** | correct |
+| 0.50 | 0.3403 | MLP | + | **+0.0555 ± 0.0434** | correct |
+| 0.50 | 0.3403 | Fourier | + | **+0.0318 ± 0.1243** | correct |
+| 0.75 | 0.2678 | MLP | + | **-0.0332 ± 0.0708** | **wrong** |
+| 0.75 | 0.2678 | Fourier | - | **-0.4405 ± 0.3456** | correct |
+| 1.00 | 0.2190 | MLP | - | **-0.1032 ± 0.1055** | correct |
+| 1.00 | 0.2190 | Fourier | - | **-0.8114 ± 0.2929** | correct |
+| 1.50 | 0.1597 | MLP | - | **-0.1206 ± 0.0334** | correct |
+| 1.50 | 0.1597 | Fourier | - | **-0.8781 ± 0.0611** | correct |
+| 2.00 | 0.1248 | MLP | - | **-0.0431 ± 0.0453** | correct |
+| 2.00 | 0.1248 | Fourier | - | **-0.5368 ± 0.1474** | correct |
 
 **13 of 14** (92.9%, CI [68.5, 98.7]) against **6 of 14 (42.9%, CI [21.4, 67.4])** for
 always predicting positive. The two splits agree on where the rule is fragile: the only miss on
-split 2 is Burgers Nu = 0.01 at `t = 0.75` on the MLP trunk, measured at -0.0332 +- 0.0708,
+split 2 is Burgers Nu = 0.01 at `t = 0.75` on the MLP trunk, measured at -0.0332 ± 0.0708,
 i.e. within two seed standard deviations of zero — the same statistically unresolvable band
 that produced two of split 1's three misses.
 

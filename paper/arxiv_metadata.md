@@ -32,8 +32,8 @@ conserved-mean part and a fluctuation part and prove a hard upper bound on fluct
 that depends only on the trunk span.
 
 Against a defined zero-fluctuation reference on 1D Burgers (Nu = 0.001, t = 1.0), MLP DeepONet
-scores -0.0042 +- 0.0072 and Fourier DeepONet -0.0934 +- 0.0886 in per-sample fluctuation R^2,
-while FNO scores +0.6503 +- 0.0222 on identical data, split and budget.
+scores -0.0042 ± 0.0072 and Fourier DeepONet -0.0934 ± 0.0886 in per-sample fluctuation R^2,
+while FNO scores +0.6503 ± 0.0222 on identical data, split and budget.
 
 The deficit is horizon-dependent rather than absolute. Across seven horizons every architecture
 decays monotonically, giving an interpolated skill horizon near 0.98 (MLP), 0.86 (Fourier) and

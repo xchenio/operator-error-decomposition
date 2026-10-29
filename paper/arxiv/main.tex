@@ -18,7 +18,7 @@
 \author{Xiaochen Yan}
 
 
-\address{Independent Researcher, [fill: city], China. ORCID: 0009-0002-9280-4323}
+\address{Independent Researcher, Shenzhen, China. ORCID: 0009-0002-9280-4323}
 
 
 
@@ -34,8 +34,8 @@ conserved-mean part and a fluctuation part and prove a hard upper bound on fluct
 that depends only on the trunk span.
 
 Against a defined zero-fluctuation reference on 1D Burgers (Nu = 0.001, t = 1.0), MLP DeepONet
-scores -0.0042 +- 0.0072 and Fourier DeepONet -0.0934 +- 0.0886 in per-sample fluctuation $R^2$,
-while FNO scores +0.6503 +- 0.0222 on identical data, split and budget.
+scores -0.0042 $\pm$ 0.0072 and Fourier DeepONet -0.0934 $\pm$ 0.0886 in per-sample fluctuation $R^2$,
+while FNO scores +0.6503 $\pm$ 0.0222 on identical data, split and budget.
 
 The deficit is horizon-dependent rather than absolute. Across seven horizons every architecture
 decays monotonically, giving an interpolated skill horizon near 0.98 (MLP), 0.86 (Fourier) and
@@ -62,20 +62,6 @@ diffusion-sorption, steady 2D Darcy, a three-field compressible system and a two
 reaction-diffusion system --- plus a physics-informed arm. "Family" counts a distinct PDEBench
 dataset; Burgers at two viscosities and Darcy at two \texttt{beta} values are one family each, giving
 eight setting-instances in total.
-\textbf{Latest 2026-09-29 follow-up:} mean/fluctuation decomposition.
-The target spatial mean is a conserved quantity, so the previously reported "input-mean
-baseline" is a conservation-law predictor rather than a strawman. Measuring fluctuation
-skill separately shows that every DeepONet configuration in this repository scores at or
-below the zero-fluctuation reference at forecast time 1.0, at every update budget tested,
-while FNO explains about 65\% of the per-sample fluctuation variance. The deficit is
-horizon-dependent, not absolute: DeepONet has positive fluctuation skill at t=0.25 and
-t=0.50 that decays to zero by t=1.00.
-\textbf{Earlier 2026-09-29:} the modal-shrinkage line was
-closed after its confirmation failed 0 of 12 comparisons against strong controls; those
-experiments are recorded as a negative result and are not part of the current argument.
-\textbf{2026-09-24 audit:} see the historical archive
-and the pre-rewrite version. The study is
-supervised operator learning, not a physics-informed training result.
 \section{Research question and contribution}
 
 Prior drafts of this study reported a dissociation: better offline basis quality and more
@@ -89,61 +75,15 @@ reported with its falsification; it is not claimed as a theorem and is not what 
 decomposition rests on.
 
 \begin{enumerate}
-\item A \textbf{mean/fluctuation decomposition}, stated as two propositions with proofs: an exact
+\item A \textbf{mean/fluctuation decomposition}, stated as two propositions with proofs: an exact orthogonal split of squared error into a conserved-mean part and a fluctuation part (Proposition 1), and a hard upper bound on fluctuation skill depending only on the trunk span (Proposition 2). It supplies a defined zero-fluctuation reference and two skill measures that differ in how they weight samples, and it identifies the widely used "input spatial-mean baseline" as a conservation-law predictor.
+\item A \textbf{negative result with a boundary rather than a mechanism}: on this protocol DeepONet reproduces a conserved quantity and has no per-sample fluctuation skill, and the skill it does have at short forecast horizons decays to zero as the horizon grows. The decay is quantified as an interpolated \emph{skill horizon} that differs by architecture, and it is shown to track nonlinear spectral evolution rather than elapsed forecast time, because it is absent on linear advection (section 5.6.1).
+\item A \textbf{budget control}: the near-zero skill is not undertraining, and additional updates make the per-sample measure worse while leaving total relative L2 flat.
+\item A \textbf{measurement warning}: an energy-weighted skill measure can report improvement where the per-sample measure reports degradation. Both are reported throughout.
+\item A \textbf{localisation of the binding constraint}. An exact upper bound on fluctuation skill that depends only on the trunk span (section 3.3) shows the reachable set does not shrink with forecast horizon while the map onto it does, so on this protocol the constraint is the branch --- the input-to-coefficient mapping --- and not the trunk basis. This qualifies rather than contradicts the basis-quality line of work in [2].
+\item \emph{(Empirical, not claimed as theory.)} A \textbf{prospective predictor, stated with its boundary}. An a-priori fluctuation-energy threshold, fitted on two scalar families and never refitted, predicts the sign of fluctuation skill on held-out settings: 52 of 55 preregistered sign predictions are correct, of which 27 of 30 are on settings that can actually discriminate and 5 of 6 are at the threshold boundary (sections 5.15-5.16). It fails on 1D compressible CFD (3 of 6, every prediction of positive skill wrong) and holds on 2D reaction-diffusion (4 of 4), so the failure is specific to that operator rather than to coupled fields. Both the confirmations and the falsification are reported; nothing was adjusted in response.
+\item A \textbf{localisation of where physics-informed training fails}. With no supervision at the target time, the decomposition shows the deficit sits in the conserved mean and not in the fluctuation: the fluctuation share reaches the oracle value while the mean share rises by roughly a factor of four (section 5.11).
 \end{enumerate}
 
-   orthogonal split of squared error into a conserved-mean part and a fluctuation part
-   (Proposition 1), and a hard upper bound on fluctuation skill depending only on the trunk
-   span (Proposition 2). It supplies a defined zero-fluctuation reference and two skill
-   measures that differ in how they weight samples, and it identifies the widely used
-   "input spatial-mean baseline" as a conservation-law predictor.
-\begin{enumerate}
-\item A \textbf{negative result with a boundary rather than a mechanism}: on this protocol DeepONet
-\end{enumerate}
-
-   reproduces a conserved quantity and has no per-sample fluctuation skill, and the skill it
-   does have at short forecast horizons decays to zero as the horizon grows. The decay is
-   quantified as an interpolated \emph{skill horizon} that differs by architecture, and it is
-   shown to track nonlinear spectral evolution rather than elapsed forecast time, because it
-   is absent on linear advection (section 5.6.1).
-\begin{enumerate}
-\item A \textbf{budget control}: the near-zero skill is not undertraining, and additional updates
-\end{enumerate}
-
-   make the per-sample measure worse while leaving total relative L2 flat.
-\begin{enumerate}
-\item A \textbf{measurement warning}: an energy-weighted skill measure can report improvement where
-\end{enumerate}
-
-   the per-sample measure reports degradation. Both are reported throughout.
-\begin{enumerate}
-\item A \textbf{localisation of the binding constraint}. An exact upper bound on fluctuation skill
-\end{enumerate}
-
-   that depends only on the trunk span (section 3.3) shows the reachable set does not shrink
-   with forecast horizon while the map onto it does, so on this protocol the constraint is
-   the branch --- the input-to-coefficient mapping --- and not the trunk basis. This qualifies
-   rather than contradicts the basis-quality line of work in [2].
-\begin{enumerate}
-\item \emph{(Empirical, not claimed as theory.)} A \textbf{prospective predictor, stated with its boundary}.
-\end{enumerate}
-
-   An a-priori fluctuation-energy
-   threshold, fitted on two scalar families and never refitted, predicts the sign of
-   fluctuation skill on held-out settings: 52 of 55 preregistered sign predictions are
-   correct, of which 27 of 30 are on settings that can actually discriminate and 5 of 6 are
-   at the threshold boundary (sections 5.15-5.16). It fails on 1D compressible CFD (3 of 6,
-   every prediction of positive skill wrong) and holds on 2D reaction-diffusion (4 of 4), so
-   the failure is
-   specific to that operator rather than to coupled fields. Both the confirmations and the
-   falsification are reported; nothing was adjusted in response.
-\begin{enumerate}
-\item A \textbf{localisation of where physics-informed training fails}. With no supervision at the
-\end{enumerate}
-
-   target time, the decomposition shows the deficit sits in the conserved mean and not in the
-   fluctuation: the fluctuation share reaches the oracle value while the mean share rises by
-   roughly a factor of four (section 5.11).
 
 The linear-algebra identities below are standard, not new approximation theory. Neither
 orthonormalization, zero-residual initialization, cosine decay, nor POD truncation is
@@ -519,20 +459,10 @@ Budget & Method & Test relL2 & $R^2$ (energy) & \textbf{$R^2$ (per sample)} \\
 Two readings, and the second is the one that matters:
 
 \begin{enumerate}
-\item \textbf{Undertraining is not the explanation.} Across a 33x budget range the total relative
+\item \textbf{Undertraining is not the explanation.} Across a 33x budget range the total relative L2 of MLP DeepONet never improves (0.39357 / 0.39729 / 0.39311 / 0.42075) and FNO is stable (0.22835 / 0.21619 / 0.22243 / 0.22190). The ranking never changes, and at the largest budget DeepONet is worse, not better.
+\item \textbf{The energy-weighted measure would have produced a false positive.} At 20000 updates MLP DeepONet reads +0.2126 energy-weighted but -0.2470 per sample: improvement is concentrated in high-energy samples while typical samples get worse. Since the manuscript's metric is a per-sample mean, the per-sample measure decides the claim and the energy-weighted one is reported only alongside it.
 \end{enumerate}
 
-   L2 of MLP DeepONet never improves (0.39357 / 0.39729 / 0.39311 / 0.42075) and FNO is
-   stable (0.22835 / 0.21619 / 0.22243 / 0.22190). The ranking never changes, and at the
-   largest budget DeepONet is worse, not better.
-\begin{enumerate}
-\item \textbf{The energy-weighted measure would have produced a false positive.} At 20000 updates
-\end{enumerate}
-
-   MLP DeepONet reads +0.2126 energy-weighted but -0.2470 per sample: improvement is
-   concentrated in high-energy samples while typical samples get worse. Since the
-   manuscript's metric is a per-sample mean, the per-sample measure decides the claim and
-   the energy-weighted one is reported only alongside it.
 
 The normalized mean error also grows with budget for MLP DeepONet (0.081 -> 0.076 -> 0.111
 -> 0.138) while staying at 0.024-0.034 for FNO, so extra updates trade conserved-mean
@@ -608,7 +538,7 @@ unchanged rather than editing \texttt{prepare()}, because that function pins the
 would change \texttt{source\_hash()} in every run identity. The layouts are identical, so training
 and diagnostics run unmodified, and all recomputations reproduce stored metrics exactly.
 
-\subsection{Linear advection}
+\subsubsection{Linear advection}
 
 The Burgers result could be a generic consequence of forecasting further into the future
 rather than a consequence of nonlinear evolution. To separate these, the same seven
@@ -638,17 +568,10 @@ t & fluctuation energy & MLP DeepONet & Fourier DeepONet & FNO \\
 Two things change at once, and both matter:
 
 \begin{enumerate}
-\item \textbf{Fluctuation energy is constant across horizons} (0.6446 at every t), as it must be
+\item \textbf{Fluctuation energy is constant across horizons} (0.6446 at every t), as it must be for pure translation, against a monotone decay from 0.5939 to 0.1428 on Burgers.
+\item \textbf{No architecture shows a skill horizon.} MLP DeepONet stays within +0.18 to +0.25, Fourier DeepONet within +0.92 to +0.95 and FNO at +0.9994, with no trend in t. The ranges are the observed extrema over the seven horizons, not confidence intervals; five seeds share one split (section 6).
 \end{enumerate}
 
-   for pure translation, against a monotone decay from 0.5939 to 0.1428 on Burgers.
-\begin{enumerate}
-\item \textbf{No architecture shows a skill horizon.} MLP DeepONet stays within +0.18 to +0.25,
-\end{enumerate}
-
-   Fourier DeepONet within +0.92 to +0.95 and FNO at +0.9994, with no trend in t. The ranges
-   are the observed extrema over the seven horizons, not confidence intervals; five seeds share
-   one split (section 6).
 
 So the decay measured on Burgers is not a generic effect of forecasting further ahead. It
 appears in the problem whose fluctuation spectrum evolves nonlinearly and is absent in the
@@ -662,7 +585,7 @@ being a phase shift in a Fourier basis; on Burgers that advantage is present at 
 well matched to the \emph{linear} part of the operator is not automatically well matched once
 nonlinear steepening dominates.
 
-\subsection{A third class: diffusion-dominated, dissipative}
+\subsubsection{A third class: diffusion-dominated, dissipative}
 
 PDEBench 1D diffusion-sorption (\texttt{t} in [0, 500], 101 layers) is parabolic and dissipative
 with no shocks and no translation. **Its stored $t = 0$ state is spatially constant for
@@ -703,7 +626,7 @@ discriminate between architectures. A confirmation here is weak support; a falsi
 would have been strong evidence. No setting on this PDE lies near a threshold, so the rule's
 boundary remains untested out of sample.
 
-\subsection{A viscosity ladder: the rule at its boundary}
+\subsubsection{A viscosity ladder: the rule at its boundary}
 
 Section 5.6.2 confirms the rule where every model saturates, which is easy. A stronger test
 needs settings that straddle a threshold. Burgers at $Nu = 0.01$, ten times the viscosity,
@@ -756,7 +679,7 @@ which is what linear interpolation over a coarse grid implies at the far end of 
 This is a parameter ladder on one operator, so it shows the rule tracks a physical parameter;
 it does not by itself show the rule transfers to a new operator class.
 
-\subsection{A steady elliptic operator, and what it says about the mean baseline}
+\subsubsection{A steady elliptic operator, and what it says about the mean baseline}
 
 PDEBench 2D Darcy is steady, elliptic and two-dimensional: \texttt{nu (10000,128,128)} is a
 coefficient field and \texttt{tensor (10000,1,128,128)} the solution, subsampled with stride 2 to
@@ -828,26 +751,11 @@ that the statement in section 3.3 holds on real checkpoints and not only on pape
 Three consequences:
 
 \begin{enumerate}
-\item \textbf{The Fourier trunk's span is not the constraint anywhere.} Its bound is 0.96 to 1.00 on
+\item \textbf{The Fourier trunk's span is not the constraint anywhere.} Its bound is 0.96 to 1.00 on \emph{both} PDEs and at \emph{every} horizon, including t = 2.00 where the achieved value is -0.3774. The trunk could represent the fluctuation almost perfectly; the model simply does not produce it.
+\item \textbf{The branch gap is what tracks the difficulty.} On advection with a Fourier trunk the branch loses only 0.06, i.e. it nearly attains the bound, which is consistent with translation being a phase shift that a linear readout on Fourier modes can express. On Burgers the same trunk loses 0.53 at t = 0.25 and 1.36 at t = 2.00.
+\item \textbf{The MLP trunk is additionally span-limited but not primarily so.} Its bound is lower (0.51 to 0.59) because the trained basis collapses to about 4 to 7 effective dimensions, yet the achieved skill is still far below even that reduced bound. So both trunks fail mainly through the branch.
 \end{enumerate}
 
-   \emph{both} PDEs and at \emph{every} horizon, including t = 2.00 where the achieved value is
-   -0.3774. The trunk could represent the fluctuation almost perfectly; the model simply
-   does not produce it.
-\begin{enumerate}
-\item \textbf{The branch gap is what tracks the difficulty.} On advection with a Fourier trunk the
-\end{enumerate}
-
-   branch loses only 0.06, i.e. it nearly attains the bound, which is consistent with
-   translation being a phase shift that a linear readout on Fourier modes can express. On
-   Burgers the same trunk loses 0.53 at t = 0.25 and 1.36 at t = 2.00.
-\begin{enumerate}
-\item \textbf{The MLP trunk is additionally span-limited but not primarily so.} Its bound is lower
-\end{enumerate}
-
-   (0.51 to 0.59) because the trained basis collapses to about 4 to 7 effective dimensions,
-   yet the achieved skill is still far below even that reduced bound. So both trunks fail
-   mainly through the branch.
 
 This is what the skill horizon reflects: the reachable set does not shrink with horizon,
 the map onto it does. It is a statement about where the loss occurs, not a causal mechanism
@@ -896,12 +804,7 @@ are interpolated from Burgers Nu0.001 and advection only --- about 0.248 for MLP
 
 \begin{itemize}
 \item the six held-out diffusion-sorption settings: 6/6 correct for each architecture;
-\item the 21 held-out Burgers Nu=0.01 settings: 21/21 correct (7/7 per architecture), with
-\end{itemize}
-
-  predicted skill horizons 0.740 / 0.860 / 1.650 against measured 0.735 / 0.924 / 1.839
-  (section 5.6.3);
-\begin{itemize}
+\item the 21 held-out Burgers Nu=0.01 settings: 21/21 correct (7/7 per architecture), with predicted skill horizons 0.740 / 0.860 / 1.650 against measured 0.735 / 0.924 / 1.839 (section 5.6.3);
 \item the 3 held-out steady elliptic Darcy settings: 3/3 correct (section 5.6.4).
 \end{itemize}
 
@@ -921,27 +824,11 @@ systems differ simultaneously in PDE type, fluctuation energy and component coun
 Three qualifications still limit the claim:
 
 \begin{enumerate}
-\item \textbf{The pooled correlations are inflated by clustering.} Within advection the fluctuation
+\item \textbf{The pooled correlations are inflated by clustering.} Within advection the fluctuation energy is constant and within diffusion-sorption all models saturate, so neither contributes within-PDE ordering; the pooled values largely reflect the separation of clusters. The trustworthy statement is the within-Burgers monotonicity.
+\item \textbf{The out-of-sample confirmation is weak.} As predeclared in THIRD\_PDE\_DIFFSORP\_V1.md, every model scores essentially 1.000 on diffusion-sorption, so those settings do not discriminate. They confirm the rule where it is easy and do not probe it where it is hard.
+\item \textbf{What remains untested.} The rule now has three out-of-sample confirmations, but only the viscosity ladder probes its boundary, and no held-out setting on the non-evolution operator lies near a threshold. Whether the specific numeric thresholds transfer to a steady operator at its boundary is therefore still open, and no refitting was done to make them appear to.
 \end{enumerate}
 
-   energy is constant and within diffusion-sorption all models saturate, so neither
-   contributes within-PDE ordering; the pooled values largely reflect the separation of
-   clusters. The trustworthy statement is the within-Burgers monotonicity.
-\begin{enumerate}
-\item \textbf{The out-of-sample confirmation is weak.} As predeclared in
-\end{enumerate}
-
-   THIRD\_PDE\_DIFFSORP\_V1.md, every model scores
-   essentially 1.000 on diffusion-sorption, so those settings do not discriminate. They
-   confirm the rule where it is easy and do not probe it where it is hard.
-\begin{enumerate}
-\item \textbf{What remains untested.} The rule now has three out-of-sample confirmations, but only
-\end{enumerate}
-
-   the viscosity ladder probes its boundary, and no held-out setting on the non-evolution
-   operator lies near a threshold. Whether the specific numeric thresholds transfer to a
-   steady operator at its boundary is therefore still open, and no refitting was done to
-   make them appear to.
 
 One hypothesis was tested and failed: the input-to-target subspace distance was expected to
 grow with horizon where the fluctuation spectrum evolves. It does the opposite on Burgers
@@ -1510,30 +1397,11 @@ informative \textbf{and} resolvable & 22 & 21 & 95.5\% & [78.2, 99.2] \\
 ledger.)
 
 \begin{enumerate}
-\item \textbf{25 of the 55 are nearly free.} On diffusion-sorption every setting scores above 0.998,
+\item \textbf{25 of the 55 are nearly free.} On diffusion-sorption every setting scores above 0.998, and on Darcy the two non-MLP arms score above 0.91; where a model is essentially perfect the sign is not in doubt and the prediction cannot discriminate between methods. The rule is 25 of 25 there, which says little. The saturated cut is \textbf{signed on purpose}: a large negative $R^2$ is a decisive failure and stays in the informative set.
+\item \textbf{Only six predictions test the rule where it could go either way} --- those whose fluctuation energy lies within 15\% of the relevant threshold. They are the two Burgers $Nu = 0.01$ trunks at $t = 0.75$ (whose energies straddle the two thresholds and for which the rule therefore makes \emph{opposite} predictions on the same target), MLP at $t = 1.00$, FNO at $t = 1.50$, and both CFD density trunks. The rule is \textbf{5 of 6} there, and the single miss is CFD density on the MLP trunk, at \texttt{-0.0237 $\pm$ 0.0150}.
+\item \textbf{Eight predictions are not statistically resolvable} --- the measured value is within two seed standard deviations of zero, so their sign is partly a coin flip. The rule is 6 of 8 there and 46 of 47 where the sign \emph{is} resolvable. Two of the three misses are non-resolvable; the one miss with real magnitude is CFD \texttt{Vx} on the Fourier trunk at \texttt{-0.2356 $\pm$ 0.0813} (2.9 sd).
 \end{enumerate}
 
-   and on Darcy the two non-MLP arms score above 0.91; where a model is essentially perfect
-   the sign is not in doubt and the prediction cannot discriminate between methods. The rule
-   is 25 of 25 there, which says little. The saturated cut is \textbf{signed on purpose}: a large
-   negative $R^2$ is a decisive failure and stays in the informative set.
-\begin{enumerate}
-\item \textbf{Only six predictions test the rule where it could go either way} --- those whose
-\end{enumerate}
-
-   fluctuation energy lies within 15\% of the relevant threshold. They are the two Burgers
-   $Nu = 0.01$ trunks at $t = 0.75$ (whose energies straddle the two thresholds and for which
-   the rule therefore makes \emph{opposite} predictions on the same target), MLP at $t = 1.00$,
-   FNO at $t = 1.50$, and both CFD density trunks. The rule is \textbf{5 of 6} there, and the
-   single miss is CFD density on the MLP trunk, at \texttt{-0.0237 +- 0.0150}.
-\begin{enumerate}
-\item \textbf{Eight predictions are not statistically resolvable} --- the measured value is within two
-\end{enumerate}
-
-   seed standard deviations of zero, so their sign is partly a coin flip. The rule is 6 of 8
-   there and 46 of 47 where the sign \emph{is} resolvable. Two of the three misses are
-   non-resolvable; the one miss with real magnitude is CFD \texttt{Vx} on the Fourier trunk at
-   \texttt{-0.2356 +- 0.0813} (2.9 sd).
 
 \textbf{Baseline.} The rule predicted \texttt{+} in 44 of 55 cases, so the obvious skeptical baseline is
 "always predict positive". That baseline scores 41 of 55 (74.5\%, CI [61.7, 84.2]) overall but
@@ -1570,8 +1438,8 @@ metric exactly.
 \toprule
  & split 1 & split 2 \\
 \midrule
-MLP DeepONet per-sample $R^2$ & -0.0042 +- 0.0072 & \textbf{-0.0003 +- 0.0167} \\
-FNO per-sample $R^2$ & +0.6503 +- 0.0222 & \textbf{+0.6162 +- 0.0347} \\
+MLP DeepONet per-sample $R^2$ & -0.0042 $\pm$ 0.0072 & \textbf{-0.0003 $\pm$ 0.0167} \\
+FNO per-sample $R^2$ & +0.6503 $\pm$ 0.0222 & \textbf{+0.6162 $\pm$ 0.0347} \\
 FNO - MLP gap & +0.6545 & \textbf{+0.6165} \\
 \bottomrule
 \end{tabular}
@@ -1585,12 +1453,12 @@ one split.**
 \textbf{Secondary endpoint: thresholds are stable where they exist.} MLP moved 0.2477 $\to$ \textbf{0.2444}
 (1.3\% drift) and Fourier 0.2728 $\to$ \textbf{0.3045} (11.6\% drift), both inside the 25\% band with the
 ordering preserved. \textbf{The FNO branch has no threshold on split 2 at all}: FNO's measured per-sample
-fluctuation $R^2$ stays positive across all seven fitting horizons, reaching +0.0972 +- 0.1689 at
-$t = 2.00$ where split 1 gave -0.0586 +- 0.2357. With no sign change there is nothing to
+fluctuation $R^2$ stays positive across all seven fitting horizons, reaching +0.0972 $\pm$ 0.1689 at
+$t = 2.00$ where split 1 gave -0.0586 $\pm$ 0.2357. With no sign change there is nothing to
 interpolate, so the rule issues no FNO prediction. That is not a miss --- nothing was predicted and
 nothing was wrong --- but it removes the FNO arm from the replication, and it shows that section 5.5's
 statement that FNO falls below zero at $t = 2.00$ is split-dependent. On split 2 it does not
-cross, though at +0.0972 +- 0.1689 the margin is not distinguishable from zero either way.
+cross, though at +0.0972 $\pm$ 0.1689 the margin is not distinguishable from zero either way.
 
 \textbf{Secondary endpoint: held-out signs, 13 of 14.} With FNO unscored, the 21 preregistered
 predictions become 14 (two architectures, seven horizons).
@@ -1602,20 +1470,20 @@ predictions become 14 (two architectures, seven horizons).
 \toprule
 t & fluctE & architecture & predicted & measured &  \\
 \midrule
-0.10 & 0.5721 & MLP & + & \textbf{+0.1798 +- 0.0119} & correct \\
-0.10 & 0.5721 & Fourier & + & \textbf{+0.6467 +- 0.0271} & correct \\
-0.25 & 0.4551 & MLP & + & \textbf{+0.1409 +- 0.0163} & correct \\
-0.25 & 0.4551 & Fourier & + & \textbf{+0.3680 +- 0.0220} & correct \\
-0.50 & 0.3403 & MLP & + & \textbf{+0.0555 +- 0.0434} & correct \\
-0.50 & 0.3403 & Fourier & + & \textbf{+0.0318 +- 0.1243} & correct \\
-0.75 & 0.2678 & MLP & + & \textbf{-0.0332 +- 0.0708} & \textbf{wrong} \\
-0.75 & 0.2678 & Fourier & - & \textbf{-0.4405 +- 0.3456} & correct \\
-1.00 & 0.2190 & MLP & - & \textbf{-0.1032 +- 0.1055} & correct \\
-1.00 & 0.2190 & Fourier & - & \textbf{-0.8114 +- 0.2929} & correct \\
-1.50 & 0.1597 & MLP & - & \textbf{-0.1206 +- 0.0334} & correct \\
-1.50 & 0.1597 & Fourier & - & \textbf{-0.8781 +- 0.0611} & correct \\
-2.00 & 0.1248 & MLP & - & \textbf{-0.0431 +- 0.0453} & correct \\
-2.00 & 0.1248 & Fourier & - & \textbf{-0.5368 +- 0.1474} & correct \\
+0.10 & 0.5721 & MLP & + & \textbf{+0.1798 $\pm$ 0.0119} & correct \\
+0.10 & 0.5721 & Fourier & + & \textbf{+0.6467 $\pm$ 0.0271} & correct \\
+0.25 & 0.4551 & MLP & + & \textbf{+0.1409 $\pm$ 0.0163} & correct \\
+0.25 & 0.4551 & Fourier & + & \textbf{+0.3680 $\pm$ 0.0220} & correct \\
+0.50 & 0.3403 & MLP & + & \textbf{+0.0555 $\pm$ 0.0434} & correct \\
+0.50 & 0.3403 & Fourier & + & \textbf{+0.0318 $\pm$ 0.1243} & correct \\
+0.75 & 0.2678 & MLP & + & \textbf{-0.0332 $\pm$ 0.0708} & \textbf{wrong} \\
+0.75 & 0.2678 & Fourier & - & \textbf{-0.4405 $\pm$ 0.3456} & correct \\
+1.00 & 0.2190 & MLP & - & \textbf{-0.1032 $\pm$ 0.1055} & correct \\
+1.00 & 0.2190 & Fourier & - & \textbf{-0.8114 $\pm$ 0.2929} & correct \\
+1.50 & 0.1597 & MLP & - & \textbf{-0.1206 $\pm$ 0.0334} & correct \\
+1.50 & 0.1597 & Fourier & - & \textbf{-0.8781 $\pm$ 0.0611} & correct \\
+2.00 & 0.1248 & MLP & - & \textbf{-0.0431 $\pm$ 0.0453} & correct \\
+2.00 & 0.1248 & Fourier & - & \textbf{-0.5368 $\pm$ 0.1474} & correct \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
@@ -1624,7 +1492,7 @@ t & fluctE & architecture & predicted & measured &  \\
 
 \textbf{13 of 14} (92.9\%, CI [68.5, 98.7]) against \textbf{6 of 14 (42.9\%, CI [21.4, 67.4])} for
 always predicting positive. The two splits agree on where the rule is fragile: the only miss on
-split 2 is Burgers Nu = 0.01 at $t = 0.75$ on the MLP trunk, measured at -0.0332 +- 0.0708,
+split 2 is Burgers Nu = 0.01 at $t = 0.75$ on the MLP trunk, measured at -0.0332 $\pm$ 0.0708,
 i.e. within two seed standard deviations of zero --- the same statistically unresolvable band
 that produced two of split 1's three misses.
 
@@ -1651,25 +1519,11 @@ A diagnostic earns its keep only if it changes what gets written down. For a lea
 a PDE with a conserved spatial mean, three numbers are cheap and each answers a different question.
 
 \begin{enumerate}
-\item \textbf{Report the mean share, not only total relative L2.} If the mean share is near 1, the model is
+\item \textbf{Report the mean share, not only total relative L2.} If the mean share is near 1, the model is level with the conservation law and predicting nothing beyond it. Total relative L2 cannot separate these cases, because the conserved mean is the easy part and it sits in the denominator.
+\item \textbf{Report per-sample fluctuation $R^2$ alongside the energy-weighted one.} The two disagree in sign on Burgers $Nu = 0.01$ (section 5.4), and which is chosen determines whether the same result reads as success or failure. Say which is the headline.
+\item \textbf{State the forecast horizon and re-measure at it.} Trunk quality is horizon-dependent: the Fourier trunk leads the MLP trunk by +0.2553 at $t = 0.25$ and trails it by -0.0892 at $t = 1.00$ (section 5.5). A claim about basis quality that omits the horizon is incomplete.
 \end{enumerate}
 
-   level with the conservation law and predicting nothing beyond it. Total relative L2 cannot
-   separate these cases, because the conserved mean is the easy part and it sits in the
-   denominator.
-\begin{enumerate}
-\item \textbf{Report per-sample fluctuation $R^2$ alongside the energy-weighted one.} The two disagree in
-\end{enumerate}
-
-   sign on Burgers $Nu = 0.01$ (section 5.4), and which is chosen determines whether the
-   same result reads as success or failure. Say which is the headline.
-\begin{enumerate}
-\item \textbf{State the forecast horizon and re-measure at it.} Trunk quality is horizon-dependent: the
-\end{enumerate}
-
-   Fourier trunk leads the MLP trunk by +0.2553 at $t = 0.25$ and trails it by -0.0892 at
-   $t = 1.00$ (section 5.5). A claim about basis quality that omits the horizon is
-   incomplete.
 
 Two warnings follow. Optimising total relative L2 can make the per-sample fluctuation measure
 \textbf{worse} (section 5.10), so total error is not a safe proxy for fluctuation skill. And a
@@ -1701,86 +1555,16 @@ superior; at t=2.00 FNO is below zero as well.
 Limitations:
 
 \begin{itemize}
-\item Six operator families, eight setting-instances: linear transport; nonlinear
+\item Six operator families, eight setting-instances: linear transport; nonlinear convection-diffusion at two viscosities; dissipative parabolic; one steady elliptic two-dimensional problem at two \texttt{beta} values; a three-field compressible system; and a two-field two-dimensional reaction-diffusion system. Most families are studied at one parameter setting each. Splits are 1000/200/200 except the reaction-diffusion file, which holds only 1000 samples and uses 600/200/200. No shallow-water data exists in the deposit used.
+\item \textbf{Benchmark age and data version.} The PDEBench \emph{paper} is 2022 [4], but the \emph{data} is a separately versioned deposit: we use DaRUS \texttt{doi:10.18419/darus-2986} **version 8, released 2024-02-13, the latest released version as of 2026-10-08**. The files were downloaded between 2026-09-22 and 2026-10-08, so they are the current upstream content rather than an archived 2022 snapshot. Maintenance of the \emph{code} repository is a separate matter and does not by itself change any data byte: the Burgers file is fetched from the HuggingFace \texttt{pdebench/Burgers} dataset pinned to git revision \texttt{97bf5bb5315b9a083b4f9fc03e5c84d35286d52c}, and the other seven files from DaRUS. Every file is byte-pinned (section 4), so the results are reproducible on the exact bytes used regardless of any future upstream revision. PDEBench remains the most widely used public benchmark for time-dependent operator learning with ground-truth trajectories, but newer surrogate-benchmark frameworks exist (for example PDEArena). Because our claim is a \emph{diagnostic decomposition} and not a state-of-the-art accuracy result, the conclusion does not depend on the benchmark being current; a reader should nevertheless read the absolute error levels as 2024-generation baselines rather than as a comparison against the newest architectures. Nothing here is claimed to transfer to foundation-model-scale operator training. A version history of the deposit is kept outside the manuscript in docs/PDEBENCH\_DATA\_VERSIONS\_V1.md.
+\item **The threshold rule holds on every scalar family tested and on 2D reaction-diffusion, and fails on 1D compressible CFD** (sections 5.13 and 5.14), with the thresholds unrefitted throughout. Why CFD fails is not established, and any use of the rule on a compressible hyperbolic system is unsupported by this study.
+\item Two families are weak in the specific sense that every model saturates far from the thresholds: diffusion-sorption, whose target fluctuation lies in one spatial mode and whose stored initial state is spatially constant (so it is used from layer 20 onward), and Darcy, whose only setting is far above every threshold. The quantitative boundary evidence rests on the viscosity ladder alone.
+\item \textbf{Compute is measured and matched, but the match rests partly on an estimate.} Parameter counts are within 18\% and FNO costs about 2.2x more wall-clock per update, so the gap is not explained by DeepONet having less of either. A FLOP-matched control was run at the measured dense FLOP budget (5135 and 4233 updates) and again at a budget that adds an analytic FFT term (6744 and 5559 updates); the gap survives both and is larger at the larger budget, and DeepONet given 3.9x the FLOP budget is still negative (section 5.9). The remaining limitation is that the FFT portion of the FNO count is an analytic estimate rather than a measurement, because \texttt{torch.utils.flop\_counter} registers no FFT op. The estimated part belongs to FNO, so the direction of any error in it favours FNO, but equal \emph{estimated} FLOPs are still not provably equal real work.
+\item \textbf{Split 1 is still the reference for section 5.15, but the study is no longer single-split.} The test split was exposed during exploratory development and validation guided later study choices, so the numbers in sections 5.2-5.16 are descriptive. The dissociation, the horizon decay and the threshold values were then **replicated on a second split sharing no trajectory with the first**, with the thresholds refitted on it, under the protocol predeclared in docs/REPLICATION\_SPLIT2\_V1.md and committed before any run (section 5.17). Two limitations survive that replication unchanged: the held-out family is still Burgers at a second viscosity rather than a new operator class, and the five seeds still share one split.
+\item Five seeds share one data split, so seed standard deviations do not measure task variability.
+\item Numerical-rank sensitivity of the projection oracle (rcond 1e-12 versus 1e-6) is reported in the retained diagnostic section and affects how basis quality is read.
 \end{itemize}
 
-  convection-diffusion at two viscosities; dissipative parabolic; one steady elliptic
-  two-dimensional problem at two \texttt{beta} values; a three-field compressible system; and a
-  two-field two-dimensional reaction-diffusion system. Most families are studied at one
-  parameter setting each. Splits are 1000/200/200 except the reaction-diffusion file, which
-  holds only 1000 samples and uses 600/200/200. No shallow-water data exists in the deposit
-  used.
-\begin{itemize}
-\item \textbf{Benchmark age and data version.} The PDEBench \emph{paper} is 2022 [4], but the \emph{data} is a
-\end{itemize}
-
-  separately versioned deposit: we use DaRUS \texttt{doi:10.18419/darus-2986} **version 8, released
-  2024-02-13, the latest released version as of 2026-10-08**. The files were downloaded between 2026-09-22 and
-  2026-10-08, so they are the current upstream content rather than an archived 2022
-  snapshot. Maintenance of the \emph{code} repository is a separate matter and does not by itself
-  change any data byte: the Burgers file is fetched from the HuggingFace \texttt{pdebench/Burgers}
-  dataset pinned to git revision \texttt{97bf5bb5315b9a083b4f9fc03e5c84d35286d52c}, and the other
-  seven files from DaRUS. Every file is byte-pinned (section 4), so the results are
-  reproducible on the exact bytes used regardless of any future upstream revision.
-  PDEBench remains the most widely used public benchmark for time-dependent operator
-  learning with ground-truth trajectories, but newer surrogate-benchmark frameworks exist
-  (for example PDEArena). Because our claim is a \emph{diagnostic decomposition} and not a
-  state-of-the-art accuracy result, the conclusion does not depend on the benchmark being
-  current; a reader should nevertheless read the absolute error levels as 2024-generation
-  baselines rather than as a comparison against the newest architectures. Nothing here is
-  claimed to transfer to foundation-model-scale operator training. A version history of the
-  deposit is kept outside the manuscript in
-  docs/PDEBENCH\_DATA\_VERSIONS\_V1.md.
-\begin{itemize}
-\item **The threshold rule holds on every scalar family tested and on 2D reaction-diffusion, and
-\end{itemize}
-
-  fails on 1D compressible CFD** (sections 5.13 and 5.14), with the thresholds unrefitted
-  throughout. Why CFD fails is not established, and any use of the rule on a compressible
-  hyperbolic system is unsupported by this study.
-\begin{itemize}
-\item Two families are weak in the specific sense that every model saturates far from the
-\end{itemize}
-
-  thresholds: diffusion-sorption, whose target fluctuation lies in one spatial mode and
-  whose stored initial state is spatially constant (so it is used from layer 20 onward),
-  and Darcy, whose only setting is far above every threshold. The quantitative boundary
-  evidence rests on the viscosity ladder alone.
-\begin{itemize}
-\item \textbf{Compute is measured and matched, but the match rests partly on an estimate.} Parameter
-\end{itemize}
-
-  counts are within 18\% and FNO costs about 2.2x more wall-clock per update, so the gap is
-  not explained by DeepONet having less of either. A FLOP-matched control was run at the
-  measured dense FLOP budget (5135 and 4233 updates) and again at a budget that adds an
-  analytic FFT term (6744 and 5559 updates); the gap survives both and is larger at the
-  larger budget, and DeepONet given 3.9x the FLOP budget is still negative (section 5.9).
-  The remaining limitation is that the FFT portion of the FNO count is an analytic estimate
-  rather than a measurement, because \texttt{torch.utils.flop\_counter} registers no FFT op. The
-  estimated part belongs to FNO, so the direction of any error in it favours FNO, but equal
-  \emph{estimated} FLOPs are still not provably equal real work.
-\begin{itemize}
-\item \textbf{Split 1 is still the reference for section 5.15, but the study is no longer single-split.}
-\end{itemize}
-
-  The test split was exposed during exploratory development and validation guided later study
-  choices, so the numbers in sections 5.2-5.16 are descriptive. The dissociation, the horizon
-  decay and the threshold values were then **replicated on a second split sharing no trajectory
-  with the first**, with the thresholds refitted on it, under the protocol predeclared in
-  docs/REPLICATION\_SPLIT2\_V1.md and committed before any
-  run (section 5.17). Two limitations survive that replication unchanged: the held-out family
-  is still Burgers at a second viscosity rather than a new operator class, and the five seeds still
-  share one split.
-\begin{itemize}
-\item Five seeds share one data split, so seed standard deviations do not measure task
-\end{itemize}
-
-  variability.
-\begin{itemize}
-\item Numerical-rank sensitivity of the projection oracle (rcond 1e-12 versus 1e-6) is reported
-\end{itemize}
-
-  in the retained diagnostic section and affects how basis quality is read.
 
 \section{Historical correctness audit and withdrawn claims}
 
@@ -1925,22 +1709,22 @@ Nitish Shirish Keskar et al. \emph{On Large-Batch Training for Deep Learning: Ge
 Nicola Demo, Marco Tezzele and Gianluigi Rozza. \emph{A DeepONet multi-fidelity approach for residual learning in reduced order modeling}. Advanced Modeling and Simulation in Engineering Sciences, 2023. \url{https://doi.org/10.1186/s40323-023-00249-9} ; \url{https://arxiv.org/abs/2302.12682} (corrected 2026-10-08: the first author is Nicola Demo, not Niccolo Demo)
 
 \bibitem{}
-Koike et al. \emph{Sparse POD Mode Selection and Manifold Dimensionality Reduction with Neural Networks} (SparseModesNet). 2026. \url{https://arxiv.org/abs/2605.27756} (checked 2026-10-08; targets and implementation differ from the closed modal-shrinkage line and do not establish priority for it)
+Koike et al. \emph{Sparse POD Mode Selection and Manifold Dimensionality Reduction with Neural Networks} (SparseModesNet). 2026. \url{https://arxiv.org/abs/2605.27756}
 
 \bibitem{}
-Lu Lu, Pengzhan Jin, Guofei Pang, Zhongqiang Zhang and George Em Karniadakis. \emph{Learning nonlinear operators via DeepONet based on the universal approximation theorem of operators}. Nature Machine Intelligence 3, 218-229, 2021. \url{https://doi.org/10.1038/s42256-021-00302-5} ; \url{https://arxiv.org/abs/1910.03193} (added 2026-10-08; the architecture under study was previously uncited)
+Lu Lu, Pengzhan Jin, Guofei Pang, Zhongqiang Zhang and George Em Karniadakis. \emph{Learning nonlinear operators via DeepONet based on the universal approximation theorem of operators}. Nature Machine Intelligence 3, 218-229, 2021. \url{https://doi.org/10.1038/s42256-021-00302-5} ; \url{https://arxiv.org/abs/1910.03193}
 
 \bibitem{}
-Zongyi Li, Nikola Kovachki, Kamyar Azizzadenesheli, Burigede Liu, Kaushik Bhattacharya, Andrew Stuart and Anima Anandkumar. \emph{Fourier Neural Operator for Parametric Partial Differential Equations}. ICLR 2021. \url{https://arxiv.org/abs/2010.08895} (added 2026-10-08; the comparison architecture was previously uncited)
+Zongyi Li, Nikola Kovachki, Kamyar Azizzadenesheli, Burigede Liu, Kaushik Bhattacharya, Andrew Stuart and Anima Anandkumar. \emph{Fourier Neural Operator for Parametric Partial Differential Equations}. ICLR 2021. \url{https://arxiv.org/abs/2010.08895}
 
 \bibitem{}
-Siavash Khodakarami, Vivek Oommen, Nazanin Ahmadi Daryakenari et al. \emph{Spectral bias in physics-informed and operator learning: Analysis and mitigation guidelines}. Computer Methods in Applied Mechanics and Engineering, 2026. \url{https://www.sciencedirect.com/science/article/pii/S0045782526004299} ; \url{https://arxiv.org/abs/2602.19265} (added 2026-10-08; reports that spectral bias in neural operators is architecture dependent, consistent with the horizon-dependent trunk result in section 5.5)
+Siavash Khodakarami, Vivek Oommen, Nazanin Ahmadi Daryakenari et al. \emph{Spectral bias in physics-informed and operator learning: Analysis and mitigation guidelines}. Computer Methods in Applied Mechanics and Engineering, 2026. \url{https://www.sciencedirect.com/science/article/pii/S0045782526004299} ; \url{https://arxiv.org/abs/2602.19265}
 
 \bibitem{}
 Mark Ainsworth and J. Tinsley Oden. \emph{A Posteriori Error Estimation in Finite Element Analysis}. Wiley-Interscience, 2000.
 
 \bibitem{}
-Roland Becker and Rolf Rannacher. \emph{An optimal control approach to a posteriori error estimation in finite element methods}. Acta Numerica 10, 1-102, 2001. \url{https://doi.org/10.1017/S0962492901000010} (added 2026-10-28; cited in section 2 to distinguish an exact error account from a classical error estimator)
+Roland Becker and Rolf Rannacher. \emph{An optimal control approach to a posteriori error estimation in finite element methods}. Acta Numerica 10, 1-102, 2001. \url{https://doi.org/10.1017/S0962492901000010}
 
 \end{thebibliography}
 

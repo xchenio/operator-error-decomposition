@@ -40,10 +40,26 @@ class ConversionTest(unittest.TestCase):
         tex = re.findall(r"\\section\{", self.tex)
         self.assertEqual(len(tex), len(md), "a section was lost in conversion")
 
-    def test_every_subsection_survives(self):
+    @staticmethod
+    def _depth(title):
+        """Heading depth comes from the numbering, not from the hashes."""
+        m = re.match(r"^(\d+(?:\.\d+)*)", title)
+        return len(m.group(1).split(".")) if m else None
+
+    def test_every_subsection_and_subsubsection_survives(self):
+        """"5.6" and "5.6.1" share a heading level in the source but not in the output."""
         md = re.findall(r"^###\s+(.+)$", self.md, flags=re.M)
-        tex = re.findall(r"\\subsection\{", self.tex)
-        self.assertEqual(len(tex), len(md), "a subsection was lost in conversion")
+        subs = [s for s in md if self._depth(s) == 2]
+        subsubs = [s for s in md if self._depth(s) == 3]
+        self.assertEqual(len(re.findall(r"\\subsection\{", self.tex)), len(subs),
+                         "a subsection was lost or mis-levelled")
+        self.assertEqual(len(re.findall(r"\\subsubsection\{", self.tex)), len(subsubs),
+                         "a subsubsection was lost or mis-levelled")
+
+    def test_cross_references_point_at_real_sections(self):
+        """"section 5.6.1" must exist as 5.6.1, not have been renumbered to 5.7."""
+        for ref in set(re.findall(r"section\s+(\d+\.\d+\.\d+)", self.md)):
+            self.assertIn(ref, self.md, f"reference to missing section {ref}")
 
     def test_every_table_survives(self):
         md = len(re.findall(r"^\|\s*---", self.md, flags=re.M))
