@@ -46,4 +46,4 @@ No publication, acceptance, official template verification or PDF compilation is
 
 Completed public records: 15 + 40 + 60 + 40 = 155, including 10 repeated controls.
 Do not count these as independent data partitions or as 155 novel method evaluations.
-Publication gap assessment and proposed next work are in ../docs/PUBLICATION_ASSESSMENT.md.
+Publication gap assessment and proposed next work are in ../docs/the publication assessment.

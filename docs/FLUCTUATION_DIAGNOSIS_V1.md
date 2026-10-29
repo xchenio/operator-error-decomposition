@@ -198,7 +198,7 @@ recomputations reproduce their stored metrics exactly.
 
 A viscosity ladder needs additional multi-gigabyte downloads, so the difficulty ladder was
 run over the **forecast horizon** instead, which the existing 201-layer file already
-supports and which `PUBLICATION_ASSESSMENT.md` explicitly allows as a sensitivity check
+supports and which `the publication assessment` explicitly allows as a sensitivity check
 (while warning that another time point is not a second PDE). `src.public_benchmark.prepare`
 was called with `time_index` 25 and 50 and the same split seed 20260922 and sizes
 (1000,200,200), so the trajectories are identical and only the target time changes.
@@ -247,7 +247,7 @@ All recomputations again reproduce their stored metrics exactly (`max_abs_metric
 ### Caveats on this section
 
 - A horizon ladder is a sensitivity check on one PDE, **not a second PDE**. The
-  cross-PDE gap identified in PUBLICATION_ASSESSMENT.md is not closed by this experiment.
+  cross-PDE gap identified in the publication assessment is not closed by this experiment.
 - The same 1000/200/200 trajectories are reused, so the three rows are paired but not
   independent samples of a PDE distribution.
 - FNO and DeepONet differ in per-update cost even at matched update counts; parameter

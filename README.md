@@ -245,7 +245,6 @@ are absent.
 3. `docs/FLUCTUATION_DIAGNOSIS_V1.md` — the decomposition and its protocol.
 4. `docs/REPLICATION_SPLIT2_V1.md` — the disjoint-split replication and its outcome.
 5. `docs/REMAINING_GAPS_V1.md` — what is still open.
-6. `docs/VENUE_STRATEGY_V1.md` — venue reasoning.
 7. `docs/RUNBOOK.md` — rules for long, sleep-safe runs.
 
 ---

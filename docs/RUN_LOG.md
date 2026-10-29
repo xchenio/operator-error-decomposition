@@ -206,7 +206,7 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Checked primary sources for Lee/Shin two-step training, Williams et al. basis diagnostics,
   Lu et al. POD comparisons, PDEBench, ReZero, SGDR and large-batch generalization work.
   References and novelty boundaries are documented in the manuscript and
-  PUBLICATION_ASSESSMENT.md; this is targeted screening, not an exhaustive novelty review.
+  the publication assessment; this is targeted screening, not an exhaustive novelty review.
 - Added evidence tests for numeric tables, run/control counts, citation keys, local links
   and basic TeX balance. No TeX compiler was detected; no PDF or page-count certification.
 - `tests/test_paper_evidence.py`: 2 tests passed. Full unittest discovery: 18 tests passed.
@@ -522,7 +522,7 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 - Under the predeclared rule this prohibits claiming a superior shrinkage method.
   The modal-shrinkage line is closed; 2000 targets are consumed. No sixth variant and
   no retuning on these targets. Recorded in UNCERTAINTY_MODAL_V1.md,
-  CURRENT_CONCLUSIONS.md and PUBLICATION_ASSESSMENT.md.
+  CURRENT_CONCLUSIONS.md and the publication assessment.
 
 ## 2026-09-29 — mean/fluctuation decomposition of the public protocol (new direction)
 
@@ -609,7 +609,7 @@ manifest before launching and the FNO job checkpoints every 25 steps.
 
 - A viscosity ladder would need more multi-gigabyte downloads, so difficulty was varied
   over the forecast horizon instead, which the existing 201-layer file supports and which
-  PUBLICATION_ASSESSMENT.md permits as a sensitivity check (not a second PDE). Prepared
+  the publication assessment permits as a sensitivity check (not a second PDE). Prepared
   `external_data/pdebench/fixed_t025_v1` and `fixed_t050_v1` with `time_index` 25 and 50
   using the same split seed 20260922 and sizes (1000,200,200), so trajectories are
   identical and only the target time differs. Ran 15 runs per horizon at the same
@@ -1134,7 +1134,8 @@ failure and stays informative.
 - Hardcoded D:\miniconda3 and :\Desktop\temp removed from AGENTS.md, RUNBOOK.md,
   PDEBENCH_PROTOCOL.md, README.md, six .cmd drivers and one test docstring. Historical logs
   keep their original interpreter path on purpose — they are records of what ran.
-- environment.yml pinned (matplotlib was unpinned); equirements.txt added with torch
+- environment.yml pinned (matplotlib was unpinned); 
+equirements.txt added with torch
   deliberately excluded because the right wheel depends on the local CUDA runtime.
 - Dead scripts removed (ench2.py, ench3.py, plot_gain_vs_std.py); src/__init__.py
   completed; legacy anonymous bundle moved to paper/archive/pre_audit_20260924/.
@@ -1143,20 +1144,23 @@ failure and stays informative.
 
 ### Attempted and deliberately not done
 Unifying the four source_hash() copies into one import. Each frozen list begins with the
-entry script itself, so editing un_public_benchmark.py to import a shared function changes
+entry script itself, so editing 
+un_public_benchmark.py to import a shared function changes
 that script's bytes and therefore its own hash, invalidating every run recorded under it.
 Instead src/source_hash.py records the authoritative lists with the reason, and
-	ests/test_source_hash.py pins each live value against esults/source_hash_baseline.json.
+	ests/test_source_hash.py pins each live value against 
+esults/source_hash_baseline.json.
 
 That tripwire caught a real incident: with core.autocrlf = true, a git checkout -- during
-this work rewrote un_public_benchmark.py with CRLF and changed its hash from
+this work rewrote 
+un_public_benchmark.py with CRLF and changed its hash from
 c76c1a62... to 1e618e5b.... The file has been restored to its committed bytes and
 re-verified. Lesson: on this repository, a checkout can silently change a run identity.
 
 ### Next
 - arXiv preprint (cs.LG, cross-list math.NA); a single author without an institutional
   address may need an endorser, so start early.
-- Primary submission JCP; fallback CMAME, TMLR, Neurocomputing. See docs/VENUE_STRATEGY_V1.md.
+- Primary submission JCP; fallback CMAME, TMLR, Neurocomputing. See the venue strategy note.
 - Before submitting, re-check APC policy, editorial scope, and that the PDEBench deposit is
   still version 8.
 
