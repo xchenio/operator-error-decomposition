@@ -39,27 +39,37 @@ def main() -> None:
 
     # Structural counts: the LaTeX must carry every section of the manuscript.
     # "Abstract" and "References" become environments rather than \section, so
-    # they are expected to be absent from the section count. Heading depth is
-    # read from the numbering, because the manuscript writes "5.6" and "5.6.1"
-    # with the same number of hashes.
+    # they are expected to be absent from the section count. The declarations
+    # after the references are emitted as \section*, so they are counted apart.
+    # Heading depth is read from the numbering, because the manuscript writes
+    # "5.6" and "5.6.1" with the same number of hashes.
+    BACKMATTER = {"Declaration of competing interest", "Funding", "Data availability",
+                  "Author contribution", "Relation to the author's prior thesis",
+                  "Acknowledgments"}
+
     def depth(title: str) -> int | None:
         m = re.match(r"^(\d+(?:\.\d+)*)", title)
         return len(m.group(1).split(".")) if m else None
 
     md_sections = [s for s in re.findall(r"^##\s+(.+)$", md, flags=re.M)
                    if not s.startswith(("Abstract", "References"))]
+    md_back = [s for s in md_sections if s in BACKMATTER]
+    md_sections = [s for s in md_sections if s not in BACKMATTER]
     md_third = re.findall(r"^###\s+(.+)$", md, flags=re.M)
     md_subs = [s for s in md_third if depth(s) == 2]
     md_subsubs = [s for s in md_third if depth(s) == 3]
 
     tex_sections = re.findall(r"\\section\{", tex)
+    tex_back = re.findall(r"\\section\*\{", tex)
     tex_subs = re.findall(r"\\subsection\{", tex)
     tex_subsubs = re.findall(r"\\subsubsection\{", tex)
 
     lines.append(f"sections:      manuscript {len(md_sections)}, tex {len(tex_sections)}")
+    lines.append(f"back matter:   manuscript {len(md_back)}, tex {len(tex_back)}")
     lines.append(f"subsections:   manuscript {len(md_subs)}, tex {len(tex_subs)}")
     lines.append(f"subsubsections: manuscript {len(md_subsubs)}, tex {len(tex_subsubs)}")
     for label, a, b in (("section", len(md_sections), len(tex_sections)),
+                        ("back matter", len(md_back), len(tex_back)),
                         ("subsection", len(md_subs), len(tex_subs)),
                         ("subsubsection", len(md_subsubs), len(tex_subsubs))):
         if a != b:

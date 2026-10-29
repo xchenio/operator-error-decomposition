@@ -49,9 +49,9 @@ Against a defined zero-fluctuation reference on 1D Burgers (Nu = 0.001, t = 1.0)
 scores -0.0042 ± 0.0072 and Fourier DeepONet -0.0934 ± 0.0886 in per-sample fluctuation R^2,
 while FNO scores +0.6503 ± 0.0222 on identical data, split and budget.
 
-The deficit is horizon-dependent rather than absolute. Across seven horizons every architecture
-decays monotonically, giving an interpolated skill horizon near 0.98 (MLP), 0.86 (Fourier) and
-1.94 (FNO). The decay tracks nonlinear spectral evolution rather than elapsed time, and is
+The deficit is horizon-dependent rather than absolute. Across seven horizons skill decays for every
+architecture, monotone but for one Fourier reversal, giving an interpolated skill horizon near 0.98 (MLP), 0.86 (Fourier) and
+1.94 (FNO). The decay tracks nonlinear spectral evolution, and is
 absent on linear advection.
 
 An a-priori fluctuation-energy threshold, fitted on two scalar families and never refitted,
@@ -458,8 +458,11 @@ The fluctuation energy fraction decreases monotonically over the same horizons
 (0.5939 -> 0.1428) and can be computed from the data before any training, so it is an
 a-priori monotone proxy for horizon difficulty. It does **not** by itself predict skill
 across architectures: at a fixed fluctuation energy the three models differ by up to 0.8 in
-R^2. Skill is monotone in the horizon within each architecture, but the curve itself is set
-by the architecture.
+R^2. Skill decreases with horizon in every architecture, but only MLP DeepONet and FNO do so
+monotonically: the Fourier trunk reverses once, from -0.4064 +- 0.1757 at `t = 1.50` to
+-0.3774 +- 0.0571 at `t = 2.00`. That single reversal is why the within-Burgers rank
+correlation between fluctuation energy and skill is 0.964 for the Fourier trunk where it is
+1.000 for the other two. The curve itself is set by the architecture.
 
 ### 5.6 Other operators and a viscosity ladder
 
@@ -1206,7 +1209,7 @@ split 2 is Burgers Nu = 0.01 at `t = 0.75` on the MLP trunk, measured at -0.0332
 i.e. within two seed standard deviations of zero — the same statistically unresolvable band
 that produced two of split 1's three misses.
 
-**What this settles and what it does not.** The dissociation, the monotone horizon decay and the
+**What this settles and what it does not.** The dissociation, the horizon decay and the
 approximate threshold values are reproducible on trajectories none of which entered split 1. It does
 **not** close the gap identified above: the held-out family is still Burgers at a second viscosity,
 so the replication demonstrates stability across *data*, not reach across *operator classes*. It

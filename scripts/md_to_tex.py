@@ -55,6 +55,16 @@ def _load_keywords() -> list[str]:
 
 KEYWORDS = _load_keywords()
 
+# Back matter: unnumbered, and outside the paper's own section numbering.
+BACKMATTER = {
+    "Declaration of competing interest",
+    "Funding",
+    "Data availability",
+    "Author contribution",
+    "Relation to the author's prior thesis",
+    "Acknowledgments",
+}
+
 
 # pdflatex, which arXiv uses by default, has no glyphs for several characters
 # the manuscript uses. Replacing them here keeps the source compilable there
@@ -264,6 +274,18 @@ def convert(md: str) -> str:
                 i += 1
             continue
 
+        # --- block quote, used for the status note in section 5.8 ---
+        if raw.lstrip().startswith(">"):
+            block = []
+            while i < len(lines) and lines[i].lstrip().startswith(">"):
+                block.append(lines[i].lstrip()[1:].strip())
+                i += 1
+            body.append(r"\begin{quote}")
+            body.append(inline(" ".join(block), slots))
+            body.append(r"\end{quote}")
+            body.append("")
+            continue
+
         # --- title ---
         if line.startswith("# ") and not title_done:
             body.append(r"\title{" + inline(line[2:].strip(), slots) + "}")
@@ -345,7 +367,11 @@ def convert(md: str) -> str:
                 keywords_open = True
                 i += 1
                 continue
-            body.append(f"\\{cmd}{{{inline(title, slots)}}}")
+            # Declarations after the references are back matter, not numbered
+            # sections. Numbering them also collides with "section 9 of the
+            # protocol", which means the protocol document, not this paper.
+            marker = "*" if title in BACKMATTER else ""
+            body.append(f"\\{cmd}{marker}{{{inline(title, slots)}}}")
             i += 1
             continue
 
@@ -397,24 +423,28 @@ def convert(md: str) -> str:
             while i < len(lines):
                 mm = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)$", lines[i])
                 if mm and (mm.group(2)[0].isdigit() == ordered):
-                    items.append(inline(mm.group(3), slots))
+                    items.append([mm.group(3)])
                     i += 1
                     continue
                 # A list entry runs over several source lines. Without absorbing
                 # the continuation each entry becomes its own list and every one
                 # is numbered 1, which is what the seven contributions in
                 # section 1 did.
+                # Lazy continuation: Markdown counts an unindented line as part
+                # of the item, so requiring indentation leaves the rest of the
+                # entry outside it and its markup unhandled.
                 if (items and lines[i].strip()
-                        and re.match(r"^\s{2,}", lines[i])
                         and not re.match(r"^\s*([-*]|\d+\.)\s+", lines[i])
-                        and not re.match(r"^\s*(#{1,4}\s|\||!\[)", lines[i])):
-                    items[-1] += " " + inline(lines[i].strip(), slots)
+                        and not re.match(r"^\s*(#{1,4}\s|\||!\[|>)", lines[i])):
+                    items[-1].append(lines[i].strip())
                     i += 1
                     continue
                 break
             body.append(f"\\begin{{{env}}}")
+            # Joined before conversion, so emphasis spanning two source lines
+            # is converted rather than left as literal asterisks.
             for it in items:
-                body.append(r"\item " + it)
+                body.append(r"\item " + inline(" ".join(it), slots))
             body.append(f"\\end{{{env}}}")
             body.append("")
             continue
@@ -429,9 +459,21 @@ def convert(md: str) -> str:
             continue
 
         # --- ordinary paragraph ---
-        target = preface if in_pre else body
-        target.append(inline(line, slots))
+        # Collected as a whole rather than line by line: emphasis in this
+        # manuscript routinely spans two source lines, and a per-line pass
+        # leaves the asterisks in the output as literal text.
+        para = [line]
         i += 1
+        while i < len(lines):
+            nxt = lines[i]
+            if not nxt.strip():
+                break
+            if re.match(r"^\s*(#{1,4}\s|\||!\[|>|- |\* |\d+\.\s)", nxt):
+                break
+            para.append(nxt.rstrip())
+            i += 1
+        target = preface if in_pre else body
+        target.append(inline(" ".join(para), slots))
 
     if ref_buf:
         refs.append(" ".join(ref_buf))

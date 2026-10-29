@@ -34,11 +34,21 @@ class ConversionTest(unittest.TestCase):
         cls.tex = TEX.read_text(encoding="utf-8")
         cls.md = MD.read_text(encoding="utf-8")
 
+    # Declarations after the references are emitted unnumbered, and numbering
+    # them would also collide with "section 9 of the protocol".
+    BACKMATTER = {"Declaration of competing interest", "Funding", "Data availability",
+                  "Author contribution", "Relation to the author's prior thesis",
+                  "Acknowledgments"}
+
     def test_every_section_survives(self):
         md = [s for s in re.findall(r"^##\s+(.+)$", self.md, flags=re.M)
               if not s.startswith(("Abstract", "References"))]
-        tex = re.findall(r"\\section\{", self.tex)
-        self.assertEqual(len(tex), len(md), "a section was lost in conversion")
+        numbered = [s for s in md if s not in self.BACKMATTER]
+        back = [s for s in md if s in self.BACKMATTER]
+        self.assertEqual(len(re.findall(r"\\section\{", self.tex)), len(numbered),
+                         "a numbered section was lost in conversion")
+        self.assertEqual(len(re.findall(r"\\section\*\{", self.tex)), len(back),
+                         "a back-matter declaration was lost or wrongly numbered")
 
     @staticmethod
     def _depth(title):

@@ -35,9 +35,9 @@ Against a defined zero-fluctuation reference on 1D Burgers (Nu = 0.001, t = 1.0)
 scores -0.0042 ± 0.0072 and Fourier DeepONet -0.0934 ± 0.0886 in per-sample fluctuation R^2,
 while FNO scores +0.6503 ± 0.0222 on identical data, split and budget.
 
-The deficit is horizon-dependent rather than absolute. Across seven horizons every architecture
-decays monotonically, giving an interpolated skill horizon near 0.98 (MLP), 0.86 (Fourier) and
-1.94 (FNO). The decay tracks nonlinear spectral evolution rather than elapsed time, and is
+The deficit is horizon-dependent rather than absolute. Across seven horizons skill decays for every
+architecture, monotone but for one Fourier reversal, giving an interpolated skill horizon near 0.98 (MLP), 0.86 (Fourier) and
+1.94 (FNO). The decay tracks nonlinear spectral evolution, and is
 absent on linear advection.
 
 An a-priori fluctuation-energy threshold, fitted on two scalar families and never refitted,
