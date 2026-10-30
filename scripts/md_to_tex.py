@@ -55,8 +55,12 @@ def _load_keywords() -> list[str]:
     try:
         block = meta.read_text(encoding="utf-8").split("## Keywords", 1)[1]
         block = block.split("## Highlights", 1)[0]
+        # The heading carries a count, "## Keywords (6)". It used to be read as
+        # part of the first keyword and then filtered out, which silently
+        # dropped "operator learning" from the front matter.
+        block = re.sub(r"^\s*\(\d+\)", "", block)
         keys = [k.strip() for k in block.replace("\n", " ").split(";") if k.strip()]
-        return [k for k in keys if not k.startswith("(")]
+        return keys
     except (IndexError, OSError):
         return []
 
