@@ -132,6 +132,21 @@ thesis. No figure, table, experiment or number is reused.
 The editors may therefore treat this as new work. It is disclosed rather than hidden because the
 earlier framing is part of what this paper corrects, and that is worth the reviewer knowing.
 
+## 6. On the title: in what sense this is a posteriori
+
+The title uses "a posteriori" in the plain sense that the decomposition is evaluated on a
+trained model's predictions and requires no retraining. It is **not** a residual-based
+estimator of the classical kind, and it is not intended to drive mesh or architecture
+adaptivity, so a reader who opens the paper expecting a computable error estimator with an
+adaptivity loop will be looking for something that is deliberately not here.
+
+What is offered instead is stated in section 2 against the classical literature: there the
+operator is known and the exact solution is not, so the error is unobservable and an estimator
+must stand in for it, whereas here the operator is learned but the target is known, so nothing
+has to be estimated — Proposition 1 is exact by orthogonality, and Proposition 2 bounds what
+the architecture can represent rather than the error of any particular fit. The two shares are
+therefore error *accounts* rather than error *estimates*.
+
 ## Relation to the venue and suggested reviewers
 
 JCP publishes the two nearest neighbours to this work — Williams et al. on what
