@@ -522,6 +522,8 @@ PREAMBLE = r"""\documentclass[preprint,12pt]{elsarticle}
 \usepackage{booktabs}
 \usepackage{adjustbox}
 \usepackage{xurl}
+% Needed: without it four paragraphs run past the margin. It prints an
+% advisory that it may cause font warnings, which is harmless.
 \usepackage[htt]{hyphenat}
 \usepackage{hyperref}
 
