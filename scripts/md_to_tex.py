@@ -497,7 +497,7 @@ def convert(md: str) -> str:
     # Emit the reference list.
     if refs:
         text += "\n\n\\begin{thebibliography}{%d}\n" % len(refs)
-        for r in refs:
+        for n, r in enumerate(refs, 1):
             entry = restore(r, slots)
             entry = re.sub(r"\*([^*]+)\*", r"\\emph{\1}", entry)
             # "(added 2026-10-08; ...)" is a note to co-readers of the
@@ -505,7 +505,10 @@ def convert(md: str) -> str:
             # does not belong in a reference list.
             entry = re.sub(r"\((?:added|checked)\s+[\d-]{10}[^)]*\)", "", entry)
             entry = re.sub(r"\s{2,}", " ", entry).strip()
-            text += "\\bibitem{}\n" + entry + "\n\n"
+            # Citations are written literally in the text, "[10]", rather than
+            # through \cite, so the keys are labels only. Leaving them empty
+            # made natbib report one "multiply defined" warning per entry.
+            text += "\\bibitem{ref%d}\n" % n + entry + "\n\n"
         text += "\\end{thebibliography}\n"
 
     return text
