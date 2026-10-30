@@ -304,9 +304,12 @@ def convert(md: str) -> str:
             i += 1
             continue
         if raw.strip().startswith("Independent Researcher"):
-            addr = raw.strip().split("·")[0].strip().rstrip(".")
+            parts = [p.strip() for p in raw.strip().split("·")]
+            addr = parts[0].rstrip(".")
             body.append(r"\address{%s. %s}" % (addr, orcid) if orcid
                         else r"\address{%s}" % addr)
+            if len(parts) > 1 and "@" in parts[1]:
+                body.append(r"\ead{%s}" % parts[1])
             in_pre = True
             i += 1
             continue

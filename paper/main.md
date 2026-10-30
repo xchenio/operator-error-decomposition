@@ -4,7 +4,7 @@
 
 ORCID: 0009-0002-9280-4323
 
-Independent Researcher, Shenzhen, China · [fill: email]
+Independent Researcher, Shenzhen, China · 319914780@qq.com
 
 **Preprint — not peer-reviewed.** This is the version submitted for review; it has not been
 through peer review and should not be cited as a published result. The code that produced
