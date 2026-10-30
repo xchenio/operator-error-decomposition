@@ -521,7 +521,15 @@ PREAMBLE = r"""\documentclass[preprint,12pt]{elsarticle}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{adjustbox}
+\usepackage{xurl}
+\usepackage[htt]{hyphenat}
 \usepackage{hyperref}
+
+% Typewriter runs of DOIs, paths and commit hashes cannot break on their own and
+% pushed whole paragraphs past the right margin, in one case by 207pt. Breaking
+% them plus a little emergency slack removes that without touching the text.
+\setlength{\emergencystretch}{2em}
+\tolerance=2000
 
 % Left empty: the arXiv version is not tied to a journal.
 \journal{}
