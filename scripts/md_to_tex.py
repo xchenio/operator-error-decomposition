@@ -1,7 +1,15 @@
 """Convert the manuscript from Markdown to an elsarticle LaTeX source.
 
-One source serves both purposes: the same file can be uploaded to arXiv and,
-later, submitted to the journal, which asks for elsarticle anyway.
+This was the bootstrap for the two LaTeX sources: it produced
+paper/arxiv/main.tex and, for a time, paper/jcp/main.tex. Both are now
+maintained by hand, so running it overwrites work. It is kept for provenance
+and for anyone who wants to see how the first conversion was done; do not run
+it against either file without checking the output in first.
+
+The two sources are independent on purpose. The journal draft carries things
+only it needs — the journal name, the highlights and the declaration on
+AI-assisted writing — that cannot be expressed in the Markdown, and it has to
+be editable directly through the review rounds.
 
 Two things make this more than a mechanical replacement:
 
@@ -56,18 +64,7 @@ def _load_keywords() -> list[str]:
 KEYWORDS = _load_keywords()
 
 
-def _load_highlights() -> list[str]:
-    meta = ROOT / "paper/arxiv_metadata.md"
-    try:
-        block = meta.read_text(encoding="utf-8").split("## Highlights", 1)[1]
-        block = block.split("\n## ", 1)[0]
-        return [ln[2:].strip() for ln in block.splitlines()
-                if ln.strip().startswith("- ")]
-    except (IndexError, OSError):
-        return []
 
-
-HIGHLIGHTS = _load_highlights()
 
 # Back matter: unnumbered, and outside the paper's own section numbering.
 BACKMATTER = {
@@ -559,53 +556,20 @@ POSTMATTER = r"""
 \end{frontmatter}
 """
 
-# Elsevier asks for a declaration about AI assistance in the writing process.
-# Stated honestly: the tools were used for editing and for the LaTeX
-# conversion, not for the science.
-AI_DECLARATION = r"""
-\section*{Declaration of generative AI and AI-assisted technologies in the
-writing process}
-
-During the preparation of this work the author used AI-based tools for
-copy-editing, for checking internal consistency between the manuscript and the
-archived results, and for converting the manuscript to LaTeX. The research, the
-analysis and every conclusion are the author's own. After using these tools the
-author reviewed and edited the content as needed and takes full responsibility
-for the content of the publication.
-"""
-
-
-def jcp_preamble() -> str:
-    """The journal variant: same body, but with the journal, the highlights and
-    the keywords that Elsevier asks for on a first submission."""
-    tex = PREAMBLE.replace(
-        "% Left empty: the arXiv version is not tied to a journal.\n\\journal{}",
-        r"\journal{Journal of Computational Physics}")
-    highlights = "\n".join(
-        [r"\begin{highlights}"] + [r"\item " + h for h in HIGHLIGHTS]
-        + [r"\end{highlights}", ""])
-    return tex + highlights
-
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", default=str(DEFAULT_IN))
     ap.add_argument("-o", default=str(DEFAULT_OUT))
-    ap.add_argument("--variant", choices=("arxiv", "jcp"), default="arxiv",
-                    help="arxiv: journal field left empty. "
-                         "jcp: journal named, highlights and the AI declaration added.")
     args = ap.parse_args()
 
     md = deunicode(Path(args.i).read_text(encoding="utf-8"))
     body = convert(md)
 
-    head = PREAMBLE if args.variant == "arxiv" else jcp_preamble()
-    tail = AI_DECLARATION if args.variant == "jcp" else ""
-
     out = Path(args.o)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(head + body + tail + "\n\\end{document}\n", encoding="utf-8")
-    print("wrote", out, f"({args.variant})")
+    out.write_text(PREAMBLE + body + "\n\\end{document}\n", encoding="utf-8")
+    print("wrote", out)
 
 
 if __name__ == "__main__":
