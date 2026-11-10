@@ -153,7 +153,7 @@ paper/main.md 的表格
 
 ### 4.3 预注册与双划分
 
-30 份 `docs/*_V1.md` 协议事先写明端点、口径和判定规则。split 2 取自 split 1 全部 1400 个 id 的**补集**（seed 20261028），不相交是硬门禁（`verify_split_disjointness.py`），阈值在新划分上**重新拟合**而非沿用。
+23 份 `docs/*_V1.md` 协议事先写明端点、口径和判定规则。split 2 取自 split 1 全部 1400 个 id 的**补集**（seed 20261028），不相交是硬门禁（`verify_split_disjointness.py`），阈值在新划分上**重新拟合**而非沿用。
 
 ---
 
