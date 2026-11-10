@@ -2,7 +2,8 @@
 
 ## 技术向版本
 
-> 这一版保留完整数学表述与 §5.7 的上界表，面向想核查推导的同行。公式需要 MathJax / KaTeX 渲染。
+> 这一版保留完整数学表述与 §5.7 的上界表，面向想核查推导的同行。行内公式用 `$...$`、块公式用 `$$...$$`，需要 MathJax / KaTeX 渲染。
+> 若平台只渲染块公式、不渲染行内公式，改用 `relative-l2-is-a-sum-technical-plaintext.md`（行内符号为纯文本，内容一致）。
 > 数字与结论以英文原稿 `paper/main.md` 为准；本文不是投稿版本译文。
 
 ---
@@ -13,7 +14,7 @@
 
 $$\frac{d}{dt}\int u\,dx = -\Big[\frac{u^2}{2}\Big] + \nu[u_x] = 0,$$
 
-所以目标场的空间均值等于输入场的空间均值。在三个划分上实测 `corr(mean(x), mean(y)) = 1.000000`，平均绝对差约 \(3\times10^{-5}\)（§3.4）。
+所以目标场的空间均值等于输入场的空间均值。在三个划分上实测 `corr(mean(x), mean(y)) = 1.000000`，平均绝对差约 $3\times10^{-5}$（§3.4）。
 
 常用的相对 L2 把整个场一起算：
 
@@ -29,11 +30,11 @@ $$\mathrm{relL2}_j^2 = \frac{\|p_j - y_j\|^2}{\|y_j\|^2}.$$
 
 ## 2. 命题 1：精确正交分解
 
-写 \(\bar y_j = N^{-1}\mathbf{1}^{\top}y_j\)、\(y_{c,j}=y_j-\bar y_j\mathbf{1}\)，对 \(p\) 同理。因为 \(\mathbf{1}^{\top}(p_{c,j}-y_{c,j})=0\)，两项正交，由毕达哥拉斯定理（§3.1）：
+写 $\bar y_j = N^{-1}\mathbf{1}^{\top}y_j$、$y_{c,j}=y_j-\bar y_j\mathbf{1}$，对 $p$ 同理。因为 $\mathbf{1}^{\top}(p_{c,j}-y_{c,j})=0$，两项正交，由毕达哥拉斯定理（§3.1）：
 
 $$\|p_j-y_j\|^2 = N(\bar p_j-\bar y_j)^2 + \|p_{c,j}-y_{c,j}\|^2 .$$
 
-除以 \(\|y_j\|^2\) 并对样本取平均，得两个**精确可加**的份额：
+除以 $\|y_j\|^2$ 并对样本取平均，得两个**精确可加**的份额：
 
 $$\underbrace{\mathbb{E}_j\frac{N(\bar p_j-\bar y_j)^2}{\|y_j\|^2}}_{\text{mean share}} + \underbrace{\mathbb{E}_j\frac{\|p_{c,j}-y_{c,j}\|^2}{\|y_j\|^2}}_{\text{fluctuation share}} = \mathbb{E}_j\,\mathrm{relL2}_j^2 .$$
 
@@ -45,14 +46,14 @@ $$\underbrace{\mathbb{E}_j\frac{N(\bar p_j-\bar y_j)^2}{\|y_j\|^2}}_{\text{mean 
 
 ## 3. 两个技能度量与零波动参照
 
-记逐样本波动能量 \(e = \mathbb{E}_j\|y_{c,j}\|^2/\|y_j\|^2\)。§3.2 定义：
+记逐样本波动能量 $e = \mathbb{E}_j\|y_{c,j}\|^2/\|y_j\|^2$。§3.2 定义：
 
 | 度量 | 定义 | 主导者 |
 |---|---|---|
-| `fluctuation_r2` | \(1 - \sum_j\|p_{c,j}-y_{c,j}\|^2 / \sum_j\|y_{c,j}\|^2\) | 高能量样本 |
-| `fluctuation_r2_per_sample`（**主指标**） | \(1 - (\text{fluctuation share})/e\) | 每个样本等权 |
+| `fluctuation_r2` | $1 - \sum_j\|p_{c,j}-y_{c,j}\|^2 / \sum_j\|y_{c,j}\|^2$ | 高能量样本 |
+| `fluctuation_r2_per_sample`（**主指标**） | $1 - (\text{fluctuation share})/e$ | 每个样本等权 |
 
-**零波动参考**：令 \(p_{c,j}=0\)，则波动份额 \(=e\)，于是 \(R^2 = 1-e/e = 0\)。因此**任何波动为零的预测都得 0 分**——包括精确均值预测（相对 L2 0.37577）和全零预测。这正说明 \(R^2\) 对均值不敏感，*never a measure of total accuracy*。
+**零波动参考**：令 $p_{c,j}=0$，则波动份额 $=e$，于是 $R^2 = 1-e/e = 0$。因此**任何波动为零的预测都得 0 分**——包括精确均值预测（相对 L2 0.37577）和全零预测。这正说明 $R^2$ 对均值不敏感，*never a measure of total accuracy*。
 
 两者必须并列报告：§5.4 在 20000 步时能量加权 **+0.2126**、逐样本 **−0.2470**，符号相反。
 
@@ -60,17 +61,17 @@ $$\underbrace{\mathbb{E}_j\frac{N(\bar p_j-\bar y_j)^2}{\|y_j\|^2}}_{\text{mean 
 
 ## 4. 命题 2：trunk 张成空间上的紧上界
 
-设 trunk 特征矩阵 \(\Phi\in\mathbb{R}^{N\times p}\)，\(S=\mathrm{span}([\Phi,\mathbf{1}])\)，\(P\) 是到 \(S\) 的正交投影。任何 DeepONet 输出 \(p_j\in S\)，且 \(\mathbf{1}\in S\) 使 \(p_{c,j}\in S\)。分解
+设 trunk 特征矩阵 $\Phi\in\mathbb{R}^{N\times p}$，$S=\mathrm{span}([\Phi,\mathbf{1}])$，$P$ 是到 $S$ 的正交投影。任何 DeepONet 输出 $p_j\in S$，且 $\mathbf{1}\in S$ 使 $p_{c,j}\in S$。分解
 
 $$p_{c,j}-y_{c,j} = \underbrace{(p_{c,j}-Py_{c,j})}_{\in S} - \underbrace{(I-P)y_{c,j}}_{\in S^\perp}$$
 
-两项正交，故 \(\|p_{c,j}-y_{c,j}\|^2 \ge \|(I-P)y_{c,j}\|^2\)，得（§3.3）
+两项正交，故 $\|p_{c,j}-y_{c,j}\|^2 \ge \|(I-P)y_{c,j}\|^2$，得（§3.3）
 
 $$R^2_{\text{per sample}} \le 1-\frac{s_{\min}}{e}, \qquad s_{\min}= \mathbb{E}_j\frac{\|(I-P)y_{c,j}\|^2}{\|y_j\|^2}.$$
 
-取 \(p_j = Py_{c,j}+c\mathbf{1}\) 即达等号，故**对给定 trunk 是紧的**，不改 \(\Phi\) 无法提高；且计算它**只需 trunk，不需训练 branch**。
+取 $p_j = Py_{c,j}+c\mathbf{1}$ 即达等号，故**对给定 trunk 是紧的**，不改 $\Phi$ 无法提高；且计算它**只需 trunk，不需训练 branch**。
 
-> 适用范围：只对 \(p_j\in S\) 的 DeepONet 类输出成立，**FNO 不适用**。它是关于可达集合的陈述，不是对某次拟合误差的归因。
+> 适用范围：只对 $p_j\in S$ 的 DeepONet 类输出成立，**FNO 不适用**。它是关于可达集合的陈述，不是对某次拟合误差的归因。
 
 比较上界与实际技能可分离两种失败模式：达近上界 → trunk span 是约束；远低于上界 → branch（输入到系数的映射）是约束。**gap 就是 branch 损失掉的份额**。
 
@@ -78,9 +79,9 @@ $$R^2_{\text{per sample}} \le 1-\frac{s_{\min}}{e}, \qquad s_{\min}= \mathbb{E}_
 
 ## 5. 为什么是常向量这个投影（§3.5）
 
-1. **代数**：\(\mathbf{1}\) 与其零均值补空间是 \(\mathbb{R}^N\) 里唯一不需要选基、不需训练量、不需超参的正交二分。POD 模态、低/高频截断、按空间或按样本分，都需先选基或截断点，份额便不再对任意预测精确可加、也不再跨架构可比。\(\mathbf{1}\) 是一维、补空间 \(N-1\) 维，这也是最粗的划分。
+1. **代数**：$\mathbf{1}$ 与其零均值补空间是 $\mathbb{R}^N$ 里唯一不需要选基、不需训练量、不需超参的正交二分。POD 模态、低/高频截断、按空间或按样本分，都需先选基或截断点，份额便不再对任意预测精确可加、也不再跨架构可比。$\mathbf{1}$ 是一维、补空间 $N-1$ 维，这也是最粗的划分。
 2. **物理**：守恒均值可从输入直接读出，均值份额是白送的、波动份额才是要学的。**反例对照**：稳态 Darcy 上 input–output 均值相关 **−0.873**，无守恒律，同一构造的相对 L2 变成 **3.6843**（§5.6.4）。基线地位是算子物理的属性；零波动参照则是纯代数的。
-3. **诊断**：只有这一半给得出自然零点；命题 2 也依赖 \(\mathbf{1}\in S\)。
+3. **诊断**：只有这一半给得出自然零点；命题 2 也依赖 $\mathbf{1}\in S$。
 
 命题 1 可推广到任意正交投影（其它守恒量、低/高频分裂），代价是失去跨族可比性且零点不再对应"什么都不学"。
 
