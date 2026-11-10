@@ -273,6 +273,67 @@ relative L2, with a fluctuation share of 0.22002 and a mean share of 0. The repo
 "input spatial-mean baseline" is not a weak strawman: it is the best possible
 conservation-law predictor, and matching it is a real, nontrivial requirement.
 
+### 3.5 Why this decomposition, and what validates it
+
+The two propositions are elementary orthogonal-projector identities, and the choice of the
+constant vector as the projector is not arbitrary. Three properties single it out; a fourth
+states what the diagnostic has actually been shown to do.
+
+**Why this split.** In $\mathbb{R}^N$, writing a field as a multiple of the constant vector
+plus a zero-mean residual is the only orthogonal split that requires no choice of basis, no
+trained quantity and no hyperparameter. Every alternative -- POD modes, a low/high frequency
+cut, a split by spatial region or by sample -- needs a basis or a truncation point chosen from
+data or supplied by hand, after which the shares are neither exact for an arbitrary prediction
+nor comparable across architectures. The constant vector spans one dimension and its
+complement $N-1$, so this is also the coarsest available split; subdividing further requires
+introducing precisely the basis that this choice avoids.
+
+The split has a physical meaning on the operators studied here. Section 3.4 shows that the
+conserved spatial mean is available from the input without solving the equation, so the mean
+share is the part a model gets for free and the fluctuation share is the part it must learn.
+Section 5.6.4 supplies the control: on a steady elliptic operator whose input-output mean
+correlation is -0.873 there is no conservation law, the same construction gives a relative L2
+of 3.6843, and the standing of the mean baseline changes. That standing is a property of the
+operator's physics, not of the metric, whereas the zero-fluctuation reference is purely
+algebraic. Finally, this is the split with a natural zero: the exact-mean predictor and the
+all-zero predictor both score zero, and section 3.3 depends on the constant vector lying in
+the trunk span. Without that zero there is no defined reference for "no skill" and no gap to
+localise.
+
+**What the diagnostic has been shown to do.** It is not claimed to be more accurate than
+total relative L2, which answers a different question: section 3.2 notes that fluctuation
+$R^2$ is invariant to the mean and is never a measure of total accuracy. The claim is that
+the quantity is reliable, discriminating, predictive and bounded in scope.
+
+1. *Construct.* The two shares add exactly to
+   $\mathbb{E}_j\,\mathrm{relL2}_j^2$, and the closure term is asserted to zero to machine
+   precision by the test suite (section 3.1). The zero-fluctuation reference puts both the
+   exact-mean and the all-zero predictor at zero, and Proposition 2's bound is attained by an
+   oracle branch and is never violated on 45 trained trunks (section 5.7).
+2. *Discrimination.* The measure does not return a negative value by construction: FNO scores
+   +0.6503 ± 0.0222 on the same protocol (section 5.2), all three architectures are positive
+   at t = 0.10, and the branch gap is 0.058 on linear advection against 1.362 on Burgers
+   (section 5.7). It separates cases that should differ in difficulty.
+3. *Localisation.* On the physics-informed arm the fluctuation share reaches 0.1875, exactly
+   the oracle value, while the mean share rises from 0.0334 to 0.1246 (section 5.11). The
+   split identifies which half changed, in agreement with a converged PDE residual.
+4. *Prediction.* An a-priori threshold fitted on two scalar families and never refitted gets
+   52 of 55 preregistered sign predictions right, stratified as 27 of 30 and 5 of 6 against a
+   16 of 30 baseline, and fails on compressible CFD (sections 5.15 and 5.16). A quantity that
+   predicts held-out signs prospectively and has a recorded falsification is not an arbitrary
+   score.
+5. *Reliability and scope.* On a second split sharing no trajectory with the first the gap is
+   +0.6165 against +0.6545 and the refitted thresholds move 1.3% and 11.6% (section 5.17).
+   Section 5.12 states the scope condition explicitly and excludes a setting where target
+   norms vary too widely for a per-sample quotient to be interpretable.
+
+**What has not been shown.** There is no external ground truth for fluctuation skill against
+which the measure could be called closer to the truth than relative L2; there is no formal
+optimality or axiomatic characterisation; and there is no downstream study showing that
+selecting models by this diagnostic improves a later decision. The claims above concern
+reliability, discrimination and prospective prediction on the families studied, not the
+replacement of total error as a measure of accuracy.
+
 ## 4. Data, controls and sequential study design
 
 We use PDEBench's 1D Burgers Nu0.001 file, verified by SHA-256, with 10000 trajectories,
